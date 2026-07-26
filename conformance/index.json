@@ -1,74 +1,89 @@
 {
-  "format": "MIF-CONFORMANCE-INDEX/0.2",
-  "draft": "MIF Community Working Draft 0.2",
+  "format": "MIF-CONFORMANCE-INDEX/0.3",
+  "draft": "MIF Community Working Draft 0.3",
   "hashAlgorithm": "sha256",
   "digestDomain": "raw-file-bytes",
   "selfExcluded": true,
   "files": [
     {
-      "path": "README.md",
-      "bytes": 2473,
-      "sha256": "b9764b20f8060ba42ce8bc6fad082ae32ade968c1baeae91a50620367ab511a1"
-    },
-    {
       "path": "examples/mstate-pending-board.json",
       "bytes": 4231,
-      "sha256": "00fa4215e1d46514bcc663da3a8ad7d4eb53a30d9cd8300222ed9b5a1ed8fb84"
+      "sha256": "7f857595cd0918cff88e9bd07a2ed22aaa0f8931f66f17131f3c7750af5dc79f"
     },
     {
       "path": "manifests/x-mif-fixture-delay@1.json",
       "bytes": 2609,
-      "sha256": "32e7c681e182a3470ec73978900c25ed425e97d2f802b6dc16114bde46789610"
+      "sha256": "9ac53cccc081309c83181310fead798f0059d10ccae81bba9690fdb0628191fb"
     },
     {
       "path": "manifests/x-mif-fixture-dooz@1.json",
       "bytes": 2606,
-      "sha256": "576249a95e230981921ad9ae4826446506a3bdd3ca165ffc4b226619f166113e"
+      "sha256": "f5b20737aca2c47dc5cc43eb949110ed296caf4a9a666bf7bc0ccae8a7c0d410"
+    },
+    {
+      "path": "manifests/x-mif-fixture-mill-multi@1.json",
+      "bytes": 2725,
+      "sha256": "ddfae0ea7edf8e1bc5eb800db4373c4c50e4a0235490dc086aa9ff55b9d644ec"
+    },
+    {
+      "path": "manifests/x-mif-fixture-nmm-claim@1.json",
+      "bytes": 2721,
+      "sha256": "c8a610c47cadfca4263c8aa514363896295943c1bf708dcd49c977914826e4f2"
     },
     {
       "path": "manifests/x-mif-fixture-nmm@1.json",
       "bytes": 2600,
-      "sha256": "4e2b69fac3b9dcfbb950cdc6854fc01df00b84d7b394eb11f5831f13baae10df"
+      "sha256": "b7dfe4144c5748edea61535e431a431ec0a45e808ab1bfb999e0af088982fa2c"
+    },
+    {
+      "path": "manifests/x-mif-fixture-stalemate-change@1.json",
+      "bytes": 2751,
+      "sha256": "9cdee1b2b3bed47c29076c4ae8651e5c1e46152384eda47d02f1ebcc81e08d54"
     },
     {
       "path": "manifests/x-mif-fixture-stateful@1.json",
       "bytes": 2633,
-      "sha256": "acb9942065b116c06f26cfaf2d5d1d353a5fb4bef4b2a991854ea4d7a5b337ce"
+      "sha256": "063035af4453b45c6dbf9ea5f8aa4ffc1879df50b9f9d66a4a9a2b039b735c83"
     },
     {
-      "path": "mif-0.2.abnf",
-      "bytes": 2902,
-      "sha256": "de62f789570e866f3f084967fe72f4aafb15ad228177edebf54e7b12b60bd0f6"
+      "path": "mif-0.3.abnf",
+      "bytes": 3149,
+      "sha256": "7029620925cbdb2e54ed128a709db7995055e88dc738c50ffa51e97344bf5e1e"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2747,
+      "sha256": "97d1208dc0f99814a64922efc00e98134e071eb40798df6a3797d8652f892b84"
     },
     {
       "path": "vectors/implementation-mappings.json",
       "bytes": 1849,
-      "sha256": "9cf383fa4976d30ac8a0a1a5220094ad80c5b755691514adbefd01e8863e7acc"
+      "sha256": "abadab6a23fba8779f0b277fcbcd73938e29ae8b8876287b5ccff597667055c6"
     },
     {
       "path": "vectors/json-jcs.json",
       "bytes": 7272,
-      "sha256": "4ad2a04f77b9e7713c4f269384cfacdb9e6d322198562b55a4af9b0908dc28ff"
+      "sha256": "529e753b7889f86e45f17dcf1acbba870537683aae3c1f6a1e2ba479fbd96bcd"
     },
     {
       "path": "vectors/mfen.json",
-      "bytes": 12317,
-      "sha256": "c92a80a4a82f1010952986807f01fa577f84924c242612bcada986b222396798"
+      "bytes": 13441,
+      "sha256": "7573017a3a9cc802c73d3a63961295d7a100096f9d1951b305f2a34ce9d0cd90"
     },
     {
       "path": "vectors/mpk.json",
-      "bytes": 5831,
-      "sha256": "b77036844ba9e077e3f61ec83aee4ea0d8b82f6ba468d994ed3923e472ec698f"
+      "bytes": 6363,
+      "sha256": "2b127ea38d2478ab842c243f86b5cce01d1511f7ad2139f1267992c1de1a3f7a"
     },
     {
       "path": "vectors/mstate.json",
-      "bytes": 12044,
-      "sha256": "dcea61764a9f01d8269d2c935a2b85d9f7b3880e49ece3bf804e7d1bb569e142"
+      "bytes": 21671,
+      "sha256": "da0a4b14614af5264053629d0699edd5db7eeb4861691db6a60a99e8f81234c0"
     },
     {
       "path": "vectors/transforms.json",
-      "bytes": 6271,
-      "sha256": "96f9b2e44a44e00f80c6e007b5a5af42df42cbb9d3564636fb04d2169d67f513"
+      "bytes": 16199,
+      "sha256": "e0d8ca760f4d05b0f3b73822258300936436d9b000a4117be3d82a23c87d3d80"
     }
   ]
 }

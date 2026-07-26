@@ -1,11 +1,11 @@
 {
   "format": "MRS/0.3",
-  "id": "x-mif-fixture-dooz",
+  "id": "x-mif-fixture-stalemate-change",
   "version": 1,
-  "title": "Conformance fixture: hand-removal placing rule",
+  "title": "Conformance fixture: change-player stalemate with board-full disabled",
   "status": "fixture",
   "semanticsProfile": "mif-finite-rules-v1",
-  "topology": "mill24-diagonal-v1",
+  "topology": "mill24-orthogonal-v1",
   "pieces": {
     "white": 12,
     "black": 12,
@@ -13,10 +13,10 @@
   },
   "turn": {
     "initial": "w",
-    "placingEndActivePlayer": "retain"
+    "placingEndActivePlayer": "w"
   },
   "flying": {
-    "enabled": true,
+    "enabled": false,
     "maximumLive": 3
   },
   "placing": {
@@ -27,7 +27,7 @@
     }
   },
   "mills": {
-    "placingEffect": "remove-opponent-hand-change",
+    "placingEffect": "remove-opponent-board",
     "movingEffect": "remove-opponent-board",
     "removalMultiplicity": "one-per-primary",
     "targetProtection": "outside-mill-first",
@@ -78,10 +78,10 @@
     }
   },
   "boardFull": {
-    "action": "first-player-loses"
+    "action": "disabled"
   },
   "stalemate": {
-    "action": "loss",
+    "action": "change-player",
     "boardRemovalTargets": "adjacent-opponent"
   },
   "draw": {

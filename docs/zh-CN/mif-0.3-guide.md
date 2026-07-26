@@ -1,31 +1,39 @@
-# MIF Community Working Draft 0.2 中文导读与讨论提要
+# MIF Community Working Draft 0.3 中文导读与讨论提要
 
-**2026 年 7 月 25 日**
+**2026 年 7 月 26 日**
 
 > 本文是英文规范的中文导读，不是独立的规范性文本。发生歧义时，以
-> 仓库根目录 `mif-0.2.md` 的英文条文和 `conformance/`
+> 仓库根目录 `mif-0.3.md` 的英文条文和 `conformance/`
 > 机器可读语料为准。
 
 ## 1. 文档定位
 
-0.2 版是一轮有意为之的破坏性修订，不冻结此前建议的 `MFEN/2`、
-`MPK/1`、`MSTATE/2`、`MRS/1`。
-
-本稿采用实验性签名：
+0.3 在已公开的 0.2 基线（`4346b24`）上闭合若干会让两个独立实现产生不同
+结果的协议冲突。签名仍是实验性的：
 
 ```text
-MFEN/0.2
-MPK/0.2
-MSTATE/0.2
-MRS/0.2
+MFEN/0.3
+MPK/0.3
+MSTATE/0.3
+MRS/0.3
 ```
 
 它是独立社区工作稿，不是 ISO、IEC、CEN、WMD 或任何赛事组织发布、
 批准或认证的标准。
 
+相对 0.2，0.3 的要点包括：
+
+- 缩窄 MSTATE actor 通用条款，使和棋协商可与当前 `side` 不一致；
+- 独立 MFEN 不得把已可判定的 automatic 终局仍标成 ongoing（repetition 除外）；
+- `change-player` 在一次 stable-boundary 中至多换边一次，双方仍无着则判和；
+- board-removal 的 `remaining` 不得超过合法盘面目标数；
+- MPK 禁止非语义私有扩展；未成磨的 primary action 清除 `lm`；
+- 允许 `pre-origin` claims，并在非协议终局时关闭 open offer；
+- 与 MPK 关联的 line ID（含 `interventionLine`）须随 line permutation 变换。
+
 ## 2. 总体架构
 
-0.2 继续保留 0.1 最重要的成果：不再用一种“Mill FEN”承担所有用途。
+0.3 继续保留 0.1/0.2 最重要的成果：不再用一种“Mill FEN”承担所有用途。
 
 | 层次 | 解决的问题 | 不承担的职责 |
 |---|---|---|
@@ -34,8 +42,8 @@ MRS/0.2
 | MSTATE | 对局如何重放、恢复、核验声明 | 搜索引擎热路径键 |
 | MRS | 同一规则集到底如何确定性执行 | 任意规则脚本或通用 DSL |
 
-数据库键不等于无损存档；无损存档也不等于搜索键。这个边界在 0.2
-中进一步落实为三个独立 profile：
+数据库键不等于无损存档；无损存档也不等于搜索键。这个边界在 0.2/0.3
+中落实为三个独立 profile：
 
 ```text
 ruleset       = 游戏规则语义
@@ -46,10 +54,10 @@ key-profile   = MPK 投影和对称归一化
 因此，将 D4 改成完整 16 个拓扑自同构，不需要把游戏规则从
 `nmm@1` 升成 `nmm@2`。
 
-## 3. MFEN/0.2 的核心形式
+## 3. MFEN/0.3 的核心形式
 
 ```text
-MFEN/0.2 <state-profile> <ruleset> <board> <side> <phase> <action>
+MFEN/0.3 <state-profile> <ruleset> <board> <side> <phase> <action>
 <hands> <obligations> <no-progress> <primary-ply> <outcome>
 [<extension> ...]
 ```
@@ -465,7 +473,7 @@ claim 或 resign。
 MSTATE 顶层增加：
 
 ```json
-"positionFormat": "MFEN/0.2"
+"positionFormat": "MFEN/0.3"
 ```
 
 不再一边声称版本独立，一边把 MFEN 版本隐式写死。
@@ -596,7 +604,7 @@ JCS 不会排序数组，所以规范逐项说明：
 
 ```text
 英文规范 Annex C
-conformance/mif-0.2.abnf
+conformance/mif-0.3.abnf
 ```
 
 它定义了此前缺失的：
@@ -619,7 +627,7 @@ conformance/mif-0.2.abnf
 `conformance/` 现在包含：
 
 ```text
-mif-0.2.abnf
+mif-0.3.abnf
 四份 provisional manifest
 MFEN 正反向量
 MPK D4/Aut16 向量
@@ -633,10 +641,10 @@ Sanmill/NMM_LLM 固定版本映射
 
 | Fixture | SHA-256 |
 |---|---|
-| `x-mif-fixture-nmm@1` | `2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd` |
-| `x-mif-fixture-dooz@1` | `f37eb3bf82877d747000ea08951470f70cc61f4a861830c396ee62a0399f503d` |
-| `x-mif-fixture-delay@1` | `3da403256d96a2da0a6a8cc579d3cc1555fa4a802dea1672fadf89a481b3d3d9` |
-| `x-mif-fixture-stateful@1` | `ce2bf7b8928a953c839d595ed141fb02523d71424ba4c256f902af2364713075` |
+| `x-mif-fixture-nmm@1` | `5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519` |
+| `x-mif-fixture-dooz@1` | `6a0892cd9553c72e02722ee8a1b6d6b946ef9c85107b3cfc24695b74d649ad15` |
+| `x-mif-fixture-delay@1` | `aee63a15c98e1f579e89fa360c7af9aa56448cc3c63ca0205c59eaffc9941973` |
+| `x-mif-fixture-stateful@1` | `d2fd93a3b1bbc0139a2f95507309057cd8fb79c68c8191ac6f978cb4263d99e8` |
 
 fixture 全部使用 `x-`，不会提前占用未来正式的 `nmm@1` 或 `dooz@1`。
 

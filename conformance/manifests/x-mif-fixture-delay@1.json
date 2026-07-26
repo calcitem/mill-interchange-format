@@ -1,5 +1,5 @@
 {
-  "format": "MRS/0.2",
+  "format": "MRS/0.3",
   "id": "x-mif-fixture-delay",
   "version": 1,
   "title": "Conformance fixture: marked and delayed board removal",

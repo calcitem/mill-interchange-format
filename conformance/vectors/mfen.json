@@ -1,12 +1,12 @@
 {
-  "format": "MIF-CONFORMANCE/0.2",
+  "format": "MIF-CONFORMANCE/0.3",
   "kind": "mfen-vectors",
   "valid": [
     {
       "id": "MFEN-VALID-0001",
       "description": "Initial fixture position",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
-      "canonical": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+      "canonical": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
       "expected": {
         "stateProfile": "mill24-state-v1",
         "ruleset": "x-mif-fixture-nmm@1",
@@ -14,7 +14,10 @@
         "side": "w",
         "phase": "p",
         "action": "p",
-        "hands": [9, 9],
+        "hands": [
+          9,
+          9
+        ],
         "obligations": [],
         "noProgress": 0,
         "primaryPly": 0,
@@ -24,14 +27,14 @@
     {
       "id": "MFEN-VALID-0002",
       "description": "One placement at d7",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 .W....../......../........ b p p 8,9 - 0 1 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
-      "canonical": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 .W....../......../........ b p p 8,9 - 0 1 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd"
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 .W....../......../........ b p p 8,9 - 0 1 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+      "canonical": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 .W....../......../........ b p p 8,9 - 0 1 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519"
     },
     {
       "id": "MFEN-VALID-0003",
       "description": "Board-removal obligation after a primary placement",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 WWW...B./......B./........ w p r 6,7 w:mill:b:b:1:004040:b 0 5 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
-      "canonical": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 WWW...B./......B./........ w p r 6,7 w:mill:b:b:1:004040:b 0 5 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 WWW...B./......B./........ w p r 6,7 w:mill:b:b:1:004040:b 0 5 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+      "canonical": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 WWW...B./......B./........ w p r 6,7 w:mill:b:b:1:004040:b 0 5 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
       "expected": {
         "side": "w",
         "phase": "p",
@@ -54,156 +57,172 @@
     {
       "id": "MFEN-VALID-0004",
       "description": "Final-hand placement remains in placing phase until removal resolves",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 WWWBB.../WW.WBB../WWWBBBB. w p r 0,1 w:mill:b:b:1:083018:b 0 17 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
-      "canonical": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 WWWBB.../WW.WBB../WWWBBBB. w p r 0,1 w:mill:b:b:1:083018:b 0 17 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd"
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 WWWBB.../WW.WBB../WWWBBBB. w p r 0,1 w:mill:b:b:1:083018:b 0 17 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+      "canonical": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 WWWBB.../WW.WBB../WWWBBBB. w p r 0,1 w:mill:b:b:1:083018:b 0 17 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519"
     },
     {
       "id": "MFEN-VALID-0005",
       "description": "Hand-removal obligation is directly copyable",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-dooz@1 WWW...../B......B/........ w p r 9,10 w:mill:h:b:1:-:b 0 5 - rh=sha256:f37eb3bf82877d747000ea08951470f70cc61f4a861830c396ee62a0399f503d",
-      "canonical": "MFEN/0.2 mill24-state-v1 x-mif-fixture-dooz@1 WWW...../B......B/........ w p r 9,10 w:mill:h:b:1:-:b 0 5 - rh=sha256:f37eb3bf82877d747000ea08951470f70cc61f4a861830c396ee62a0399f503d"
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-dooz@1 WWW...../B......B/........ w p r 9,10 w:mill:h:b:1:-:b 0 5 - rh=sha256:6a0892cd9553c72e02722ee8a1b6d6b946ef9c85107b3cfc24695b74d649ad15",
+      "canonical": "MFEN/0.3 mill24-state-v1 x-mif-fixture-dooz@1 WWW...../B......B/........ w p r 9,10 w:mill:h:b:1:-:b 0 5 - rh=sha256:6a0892cd9553c72e02722ee8a1b6d6b946ef9c85107b3cfc24695b74d649ad15"
     },
     {
       "id": "MFEN-VALID-0006",
       "description": "After explicit hand removal, placed count is intentionally not inferable",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-dooz@1 WWW...../B......B/........ b p p 9,9 - 0 5 - rh=sha256:f37eb3bf82877d747000ea08951470f70cc61f4a861830c396ee62a0399f503d",
-      "canonical": "MFEN/0.2 mill24-state-v1 x-mif-fixture-dooz@1 WWW...../B......B/........ b p p 9,9 - 0 5 - rh=sha256:f37eb3bf82877d747000ea08951470f70cc61f4a861830c396ee62a0399f503d"
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-dooz@1 WWW...../B......B/........ b p p 9,9 - 0 5 - rh=sha256:6a0892cd9553c72e02722ee8a1b6d6b946ef9c85107b3cfc24695b74d649ad15",
+      "canonical": "MFEN/0.3 mill24-state-v1 x-mif-fixture-dooz@1 WWW...../B......B/........ b p p 9,9 - 0 5 - rh=sha256:6a0892cd9553c72e02722ee8a1b6d6b946ef9c85107b3cfc24695b74d649ad15"
     },
     {
       "id": "MFEN-VALID-0007",
       "description": "Marked Black token remains owner-preserving and blocked",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-delay@1 WWW...../b......B/........ b p p 9,10 - 0 5 - rh=sha256:3da403256d96a2da0a6a8cc579d3cc1555fa4a802dea1672fadf89a481b3d3d9",
-      "canonical": "MFEN/0.2 mill24-state-v1 x-mif-fixture-delay@1 WWW...../b......B/........ b p p 9,10 - 0 5 - rh=sha256:3da403256d96a2da0a6a8cc579d3cc1555fa4a802dea1672fadf89a481b3d3d9"
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-delay@1 WWW...../b......B/........ b p p 9,10 - 0 5 - rh=sha256:aee63a15c98e1f579e89fa360c7af9aa56448cc3c63ca0205c59eaffc9941973",
+      "canonical": "MFEN/0.3 mill24-state-v1 x-mif-fixture-delay@1 WWW...../b......B/........ b p p 9,10 - 0 5 - rh=sha256:aee63a15c98e1f579e89fa360c7af9aa56448cc3c63ca0205c59eaffc9941973"
     },
     {
       "id": "MFEN-VALID-0008",
       "description": "Sequence-dependent state uses line IDs, not a point union",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-stateful@1 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - lm=d1,d7;-,- rh=sha256:ce2bf7b8928a953c839d595ed141fb02523d71424ba4c256f902af2364713075 ul=0003,0000",
-      "canonical": "MFEN/0.2 mill24-state-v1 x-mif-fixture-stateful@1 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - lm=d1,d7;-,- rh=sha256:ce2bf7b8928a953c839d595ed141fb02523d71424ba4c256f902af2364713075 ul=0003,0000"
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-stateful@1 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - lm=d1,d7;-,- rh=sha256:d2fd93a3b1bbc0139a2f95507309057cd8fb79c68c8191ac6f978cb4263d99e8 ul=0003,0000",
+      "canonical": "MFEN/0.3 mill24-state-v1 x-mif-fixture-stateful@1 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - lm=d1,d7;-,- rh=sha256:d2fd93a3b1bbc0139a2f95507309057cd8fb79c68c8191ac6f978cb4263d99e8 ul=0003,0000"
     },
     {
       "id": "MFEN-VALID-0009",
       "description": "One choice point exposes three complete capture branches",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-stateful@1 BWBW.WB./.W.W..B./.W...... w p r 3,5 w:intervention:b:b:2:000005:b|w:custodian:b:b:1:000040:b|w:mill:b:b:1:004000:b 7 20 - lm=-,-;-,- rh=sha256:ce2bf7b8928a953c839d595ed141fb02523d71424ba4c256f902af2364713075 ul=0000,0000",
-      "canonical": "MFEN/0.2 mill24-state-v1 x-mif-fixture-stateful@1 BWBW.WB./.W.W..B./.W...... w p r 3,5 w:intervention:b:b:2:000005:b|w:custodian:b:b:1:000040:b|w:mill:b:b:1:004000:b 7 20 - lm=-,-;-,- rh=sha256:ce2bf7b8928a953c839d595ed141fb02523d71424ba4c256f902af2364713075 ul=0000,0000"
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-stateful@1 BWBW.WB./.W.W..B./.W...... w p r 3,5 w:intervention:b:b:2:000005:b|w:custodian:b:b:1:000040:b|w:mill:b:b:1:004000:b 7 20 - lm=-,-;-,- rh=sha256:d2fd93a3b1bbc0139a2f95507309057cd8fb79c68c8191ac6f978cb4263d99e8 ul=0000,0000",
+      "canonical": "MFEN/0.3 mill24-state-v1 x-mif-fixture-stateful@1 BWBW.WB./.W.W..B./.W...... w p r 3,5 w:intervention:b:b:2:000005:b|w:custodian:b:b:1:000040:b|w:mill:b:b:1:004000:b 7 20 - lm=-,-;-,- rh=sha256:d2fd93a3b1bbc0139a2f95507309057cd8fb79c68c8191ac6f978cb4263d99e8 ul=0000,0000"
     },
     {
       "id": "MFEN-VALID-0010",
       "description": "An empty private extension value round-trips",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd x-note=",
-      "canonical": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd x-note="
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519 x-note=",
+      "canonical": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519 x-note="
     },
     {
       "id": "MFEN-VALID-0011",
       "description": "Terminal position",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 W.W...../B.B.B.../........ - o o 0,0 - 0 42 b:fewer-than-minimum rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
-      "canonical": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 W.W...../B.B.B.../........ - o o 0,0 - 0 42 b:fewer-than-minimum rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd"
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 W.W...../B.B.B.../........ - o o 0,0 - 0 42 b:fewer-than-minimum rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+      "canonical": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 W.W...../B.B.B.../........ - o o 0,0 - 0 42 b:fewer-than-minimum rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519"
     },
     {
       "id": "MFEN-VALID-0012",
       "description": "One selected branch can order supplementary removals by both players; initial-position reachability is a separate question",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-stateful@1 WWBBW.../B......./........ w m r 0,0 w:stalemate:b:b:1:000004:q;b:stalemate:b:w:1:~:w 4 18 - lm=-,-;-,- rh=sha256:ce2bf7b8928a953c839d595ed141fb02523d71424ba4c256f902af2364713075 ul=0000,0000",
-      "canonical": "MFEN/0.2 mill24-state-v1 x-mif-fixture-stateful@1 WWBBW.../B......./........ w m r 0,0 w:stalemate:b:b:1:000004:q;b:stalemate:b:w:1:~:w 4 18 - lm=-,-;-,- rh=sha256:ce2bf7b8928a953c839d595ed141fb02523d71424ba4c256f902af2364713075 ul=0000,0000"
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-stateful@1 WWBBW.../B......./........ w m r 0,0 w:stalemate:b:b:1:000004:q;b:stalemate:b:w:1:~:w 4 18 - lm=-,-;-,- rh=sha256:d2fd93a3b1bbc0139a2f95507309057cd8fb79c68c8191ac6f978cb4263d99e8 ul=0000,0000",
+      "canonical": "MFEN/0.3 mill24-state-v1 x-mif-fixture-stateful@1 WWBBW.../B......./........ w m r 0,0 w:stalemate:b:b:1:000004:q;b:stalemate:b:w:1:~:w 4 18 - lm=-,-;-,- rh=sha256:d2fd93a3b1bbc0139a2f95507309057cd8fb79c68c8191ac6f978cb4263d99e8 ul=0000,0000"
     }
   ],
   "invalid": [
     {
       "id": "MFEN-INVALID-0001",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w r p 9,9 - 0 0 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w r p 9,9 - 0 0 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
       "expected": "reject",
       "category": "syntax",
       "code": "unknown-phase"
     },
     {
       "id": "MFEN-INVALID-0002",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p r 9,9 - 0 0 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p r 9,9 - 0 0 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
       "expected": "reject",
       "category": "inconsistent",
       "code": "remove-without-obligation"
     },
     {
       "id": "MFEN-INVALID-0003",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 WWW...B./......B./........ b p r 6,7 w:mill:b:b:1:004040:b 0 5 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 WWW...B./......B./........ b p r 6,7 w:mill:b:b:1:004040:b 0 5 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
       "expected": "reject",
       "category": "inconsistent",
       "code": "side-obligation-actor-mismatch"
     },
     {
       "id": "MFEN-INVALID-0004",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-dooz@1 WWW...../B......B/........ w p r 9,10 w:mill:h:b:1:000100:b 0 5 - rh=sha256:f37eb3bf82877d747000ea08951470f70cc61f4a861830c396ee62a0399f503d",
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-dooz@1 WWW...../B......B/........ w p r 9,10 w:mill:h:b:1:000100:b 0 5 - rh=sha256:6a0892cd9553c72e02722ee8a1b6d6b946ef9c85107b3cfc24695b74d649ad15",
       "expected": "reject",
       "category": "inconsistent",
       "code": "hand-obligation-has-board-targets"
     },
     {
       "id": "MFEN-INVALID-0005",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 WWW...B./......B./........ w p r 6,7 w:mill:b:b:1:000001:b 0 5 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 WWW...B./......B./........ w p r 6,7 w:mill:b:b:1:000001:b 0 5 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
       "expected": "reject",
       "category": "inconsistent",
       "code": "target-set-owner-mismatch"
     },
     {
       "id": "MFEN-INVALID-0006",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519 rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
       "expected": "reject",
       "category": "syntax",
       "code": "duplicate-extension"
     },
     {
       "id": "MFEN-INVALID-0007",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-stateful@1 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - rh=sha256:ce2bf7b8928a953c839d595ed141fb02523d71424ba4c256f902af2364713075",
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-stateful@1 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - rh=sha256:d2fd93a3b1bbc0139a2f95507309057cd8fb79c68c8191ac6f978cb4263d99e8",
       "expected": "reject",
       "category": "inconsistent",
       "code": "required-semantic-state-missing"
     },
     {
       "id": "MFEN-INVALID-0008",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 9007199254740992 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 9007199254740992 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
       "expected": "reject",
       "category": "resource",
       "code": "integer-out-of-range"
     },
     {
       "id": "MFEN-INVALID-0009",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 ......../b......./........ w p p 9,9 - 0 0 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 ......../b......./........ w p p 9,9 - 0 0 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
       "expected": "reject",
       "category": "unsupported",
       "code": "delayed-token-not-supported"
     },
     {
       "id": "MFEN-INVALID-0010",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 0 - x-note= rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 0 - x-note= rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
       "expected": "reject",
       "category": "canonical",
       "code": "extension-order"
     },
     {
       "id": "MFEN-INVALID-0011",
-      "input": "mfen/0.2 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+      "input": "mfen/0.3 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
       "expected": "reject",
       "category": "syntax",
       "code": "signature-case"
     },
     {
       "id": "MFEN-INVALID-0012",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ - o o 0,0 w:mill:b:b:1:000001:b 0 9 d:agreement rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ - o o 0,0 w:mill:b:b:1:000001:b 0 9 d:agreement rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
       "expected": "reject",
       "category": "inconsistent",
       "code": "terminal-with-obligation"
     },
     {
       "id": "MFEN-INVALID-0013",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-stateful@1 WWBBW.../B......./........ w m r 0,0 w:stalemate:b:b:1:~:q;b:stalemate:b:w:1:~:w 4 18 - lm=-,-;-,- rh=sha256:ce2bf7b8928a953c839d595ed141fb02523d71424ba4c256f902af2364713075 ul=0000,0000",
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-stateful@1 WWBBW.../B......./........ w m r 0,0 w:stalemate:b:b:1:~:q;b:stalemate:b:w:1:~:w 4 18 - lm=-,-;-,- rh=sha256:d2fd93a3b1bbc0139a2f95507309057cd8fb79c68c8191ac6f978cb4263d99e8 ul=0000,0000",
       "expected": "reject",
       "category": "inconsistent",
       "code": "head-board-targets-deferred"
     },
     {
       "id": "MFEN-INVALID-0014",
-      "input": "MFEN/0.2 mill24-state-v1 x-mif-fixture-stateful@1 WWBBW.../B......./........ w m r 0,0 w:stalemate:b:b:1:000004:q;b:stalemate:b:w:1:000001:w 4 18 - lm=-,-;-,- rh=sha256:ce2bf7b8928a953c839d595ed141fb02523d71424ba4c256f902af2364713075 ul=0000,0000",
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-stateful@1 WWBBW.../B......./........ w m r 0,0 w:stalemate:b:b:1:000004:q;b:stalemate:b:w:1:000001:w 4 18 - lm=-,-;-,- rh=sha256:d2fd93a3b1bbc0139a2f95507309057cd8fb79c68c8191ac6f978cb4263d99e8 ul=0000,0000",
       "expected": "reject",
       "category": "inconsistent",
       "code": "non-head-board-targets-materialized"
+    },
+    {
+      "id": "MFEN-INVALID-AUTOMATIC-NO-PROGRESS",
+      "description": "Ongoing MFEN already at automatic no-progress limit is inconsistent",
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 W.W.W.../B.B.B.../........ w m m 0,0 - 100 18 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+      "expected": "reject",
+      "category": "inconsistent",
+      "code": "automatic-terminal-ongoing"
+    },
+    {
+      "id": "MFEN-INVALID-AUTOMATIC-MATERIAL",
+      "description": "Ongoing MFEN below minimumLive is inconsistent",
+      "input": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 W.W...../B.B.B.../........ w m m 0,0 - 4 42 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+      "expected": "reject",
+      "category": "inconsistent",
+      "code": "automatic-terminal-ongoing"
     }
   ]
 }

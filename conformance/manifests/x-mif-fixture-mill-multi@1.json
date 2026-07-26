@@ -1,19 +1,19 @@
 {
   "format": "MRS/0.3",
-  "id": "x-mif-fixture-dooz",
+  "id": "x-mif-fixture-mill-multi",
   "version": 1,
-  "title": "Conformance fixture: hand-removal placing rule",
+  "title": "Conformance fixture: one-per-new-line mill removal",
   "status": "fixture",
   "semanticsProfile": "mif-finite-rules-v1",
-  "topology": "mill24-diagonal-v1",
+  "topology": "mill24-orthogonal-v1",
   "pieces": {
-    "white": 12,
-    "black": 12,
+    "white": 9,
+    "black": 9,
     "minimumLive": 3
   },
   "turn": {
     "initial": "w",
-    "placingEndActivePlayer": "retain"
+    "placingEndActivePlayer": "w"
   },
   "flying": {
     "enabled": true,
@@ -27,9 +27,9 @@
     }
   },
   "mills": {
-    "placingEffect": "remove-opponent-hand-change",
+    "placingEffect": "remove-opponent-board",
     "movingEffect": "remove-opponent-board",
-    "removalMultiplicity": "one-per-primary",
+    "removalMultiplicity": "one-per-new-line",
     "targetProtection": "outside-mill-first",
     "lineReuse": "unlimited",
     "reverseReformation": "allowed",

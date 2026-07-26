@@ -1,7 +1,7 @@
-# MIF Community Working Draft 0.2 conformance corpus
+# MIF Community Working Draft 0.3 conformance corpus
 
 This directory is the normative machine-readable corpus for
-`MIF Community Working Draft 0.2`. It does not register the provisional
+`MIF Community Working Draft 0.3`. It does not register the provisional
 ruleset names used by its fixtures.
 
 ## Runner contract
@@ -26,15 +26,19 @@ does not merge objects.
 
 ## Files
 
-- `mif-0.2.abnf` is the standalone RFC 5234/RFC 7405 grammar.
-- `manifests/` contains self-contained private MRS fixtures.
+- `mif-0.3.abnf` is the standalone RFC 5234/RFC 7405 grammar.
+- `manifests/` contains self-contained private MRS fixtures, including
+  claim-mode, stalemate `change-player` and `one-per-new-line` cases.
 - `examples/` contains a complete MSTATE envelope.
-- `vectors/mfen.json` covers MFEN parsing, canonicalization and rejection.
-- `vectors/mpk.json` covers eligibility and key-profile normalization.
-- `vectors/mstate.json` covers replay, pending removals, draw state and
-  rejection.
+- `vectors/mfen.json` covers MFEN parsing, canonicalization and rejection,
+  including independent automatic-terminal inconsistency.
+- `vectors/mpk.json` covers eligibility, key-profile normalization and the
+  ban on non-semantic private MPK extensions.
+- `vectors/mstate.json` covers replay, pending removals, draw state, origin
+  automatic/claimable terminals and rejection.
 - `vectors/json-jcs.json` covers I-JSON, JCS and manifest hashing.
-- `vectors/transforms.json` gives all point and line permutations.
+- `vectors/transforms.json` gives all point and line permutations and
+  MPK-associated line-ID transform examples.
 - `vectors/implementation-mappings.json` pins the observed external
   implementation mappings.
 - `index.json` identifies the exact raw bytes of the delivered corpus.

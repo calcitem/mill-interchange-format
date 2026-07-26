@@ -1,5 +1,5 @@
 {
-  "format": "MRS/0.2",
+  "format": "MRS/0.3",
   "id": "x-mif-fixture-stateful",
   "version": 1,
   "title": "Conformance fixture: sequence-dependent mill and capture state",
