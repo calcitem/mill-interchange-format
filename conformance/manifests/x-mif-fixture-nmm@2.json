@@ -1,19 +1,19 @@
 {
-  "format": "MRS/0.3",
-  "id": "x-mif-fixture-dooz",
-  "version": 1,
-  "title": "Conformance fixture: hand-removal placing rule",
+  "format": "MRS/0.4",
+  "id": "x-mif-fixture-nmm",
+  "version": 2,
+  "title": "Conformance fixture: standard-form Nine Men's Morris",
   "status": "fixture",
-  "semanticsProfile": "mif-finite-rules-v1",
-  "topology": "mill24-diagonal-v1",
+  "semanticsProfile": "mif-finite-rules-v2",
+  "topology": "mill24-orthogonal-v1",
   "pieces": {
-    "white": 12,
-    "black": 12,
+    "white": 9,
+    "black": 9,
     "minimumLive": 3
   },
   "turn": {
     "initial": "w",
-    "placingEndActivePlayer": "retain"
+    "placingEndActivePlayer": "w"
   },
   "flying": {
     "enabled": true,
@@ -27,7 +27,7 @@
     }
   },
   "mills": {
-    "placingEffect": "remove-opponent-hand-change",
+    "placingEffect": "remove-opponent-board",
     "movingEffect": "remove-opponent-board",
     "removalMultiplicity": "one-per-primary",
     "targetProtection": "outside-mill-first",

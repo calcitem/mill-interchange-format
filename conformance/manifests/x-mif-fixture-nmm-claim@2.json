@@ -1,10 +1,10 @@
 {
-  "format": "MRS/0.3",
-  "id": "x-mif-fixture-mill-multi",
-  "version": 1,
-  "title": "Conformance fixture: one-per-new-line mill removal",
+  "format": "MRS/0.4",
+  "id": "x-mif-fixture-nmm-claim",
+  "version": 2,
+  "title": "Conformance fixture: NMM with claim-mode no-progress",
   "status": "fixture",
-  "semanticsProfile": "mif-finite-rules-v1",
+  "semanticsProfile": "mif-finite-rules-v2",
   "topology": "mill24-orthogonal-v1",
   "pieces": {
     "white": 9,
@@ -29,7 +29,7 @@
   "mills": {
     "placingEffect": "remove-opponent-board",
     "movingEffect": "remove-opponent-board",
-    "removalMultiplicity": "one-per-new-line",
+    "removalMultiplicity": "one-per-primary",
     "targetProtection": "outside-mill-first",
     "lineReuse": "unlimited",
     "reverseReformation": "allowed",
@@ -89,7 +89,7 @@
       "normalLimit": 100,
       "endgameLimit": 100,
       "endgamePredicate": "either-player-live-equals-3",
-      "mode": "automatic",
+      "mode": "claim",
       "countedPrimaryActions": [
         "move"
       ],

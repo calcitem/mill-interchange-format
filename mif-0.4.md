@@ -1,4 +1,4 @@
-# MIF Community Working Draft 0.3
+# MIF Community Working Draft 0.4
 
 ## Mill games — Interchange formats for positions, analysis keys and resumable game states
 
@@ -57,15 +57,15 @@ This document specifies:
 a) a public coordinate, point, line and transformation model for 24-point Mill
 boards;
 
-b) MFEN/0.3, a canonical textual representation of an instantaneous state;
+b) MFEN/0.4, a canonical textual representation of an instantaneous state;
 
-c) MPK/0.3, a canonical textual key for structural analysis under an explicit
+c) MPK/0.4, a canonical textual key for structural analysis under an explicit
 key profile;
 
-d) MSTATE/0.3, an I-JSON representation of an origin, an event sequence, a
+d) MSTATE/0.4, an I-JSON representation of an origin, an event sequence, a
 current checkpoint, repetition observations and claims;
 
-e) MRS/0.3, a canonical ruleset manifest that selects the finite rule
+e) MRS/0.4, a canonical ruleset manifest that selects the finite rule
 mechanisms defined in this edition; and
 
 f) parsing, validation, canonicalization, error and conformance requirements.
@@ -586,26 +586,32 @@ j) extension keys are in ascending US-ASCII order;
 k) values in authoritative fields are not changed to agree with derived
 caches;
 
-l) the ruleset digest and locally resolved manifest agree; and
+l) the ruleset digest and locally resolved manifest agree;
 
-m) when an MFEN is consumed as an independent position (not as an MSTATE
-`origin` or `current` field), an ongoing MFEN shall be rejected as
-`inconsistent` when the MFEN and ruleset alone already imply an automatic
-terminal condition under Clause 11, other than repetition.
+m) when an MFEN is consumed as an independent position, phase at an ongoing
+stable boundary shall be synchronized with the active player under 11.12; and
 
-Repetition is excluded from item (m) because an independent MFEN carries no
-repetition history. Automatic no-progress, minimum material, board-full and
-stalemate conditions that are fully determined by the MFEN and ruleset shall
-not be left as ongoing in independent interchange. An MSTATE `origin` may
-still be ongoing at such a boundary; the replayer shall apply 11.20 after
-seeding history and before events, and `current` shall then carry the
-resulting terminal or claimable state; see 9.12.
+n) when an MFEN is consumed as an independent position (not as an MSTATE
+`origin` or `current` field), an ongoing stable-boundary MFEN shall be a fixed
+point of every deterministic Clause 11 transition that can be evaluated from
+that MFEN and ruleset alone, excluding repetition.
 
-# 7 MFEN/0.3 — Instantaneous position
+Repetition is excluded from item (n) because an independent MFEN carries no
+repetition history. If deterministic processing would make the state
+terminal, reject it as `automatic-terminal-ongoing`. If deterministic
+processing would instead clear tokens, create an obligation, change side or
+otherwise leave a different ongoing state, reject it as
+`unstabilized-boundary`.
+
+An MSTATE `origin` may be ongoing before such processing. The replayer shall
+apply 11.20 after seeding history and before events, and `current` shall then
+carry the resulting terminal, pending or claimable state; see 9.12.
+
+# 7 MFEN/0.4 — Instantaneous position
 
 ## 7.1 Purpose
 
-MFEN/0.3 shall represent the exact instantaneous rules state defined by
+MFEN/0.4 shall represent the exact instantaneous rules state defined by
 `mill24-state-v1`. It can represent stable positions and copyable
 mid-obligation positions.
 
@@ -615,12 +621,12 @@ history or provenance. Those belong in MSTATE.
 ## 7.2 Syntax
 
 The normative ABNF is in Annex C and in the machine-readable
-`conformance/mif-0.3.abnf` file.
+`conformance/mif-0.4.abnf` file.
 
 The field order is:
 
 ```text
-MFEN/0.3 <state-profile> <ruleset> <board> <side> <phase> <action>
+MFEN/0.4 <state-profile> <ruleset> <board> <side> <phase> <action>
 <hands> <obligations> <no-progress> <primary-ply> <outcome>
 [<extension> ...]
 ```
@@ -631,7 +637,7 @@ The display wraps only for readability. An MFEN record is one logical line.
 
 A producer shall:
 
-- use the exact signature `MFEN/0.3`;
+- use the exact signature `MFEN/0.4`;
 - use the Annex A board order;
 - use lowercase hexadecimal;
 - use the shortest permitted unsigned decimal integer;
@@ -658,7 +664,7 @@ Because the ruleset IDs begin `x-`, `rh` is mandatory.
 ### 7.4.1 Initial position
 
 ```text
-MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519
+MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913
 ```
 
 ### 7.4.2 Pending board removal
@@ -667,7 +673,7 @@ White has completed a primary placement. The board target set contains two
 Black pieces, and Black is the next primary player after resolution.
 
 ```text
-MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 WWW...B./......B./........ w p r 6,7 w:mill:b:b:1:004040:b 0 5 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519
+MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 WWW...B./......B./........ w p r 6,7 w:mill:b:b:1:004040:b 0 5 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913
 ```
 
 This state shall not be silently converted to the post-removal state.
@@ -678,7 +684,7 @@ The hand count still shows Black's token because the supplementary hand
 removal has not yet occurred.
 
 ```text
-MFEN/0.3 mill24-state-v1 x-mif-fixture-dooz@1 WWW...../B......B/........ w p r 9,10 w:mill:h:b:1:-:b 0 5 - rh=sha256:6a0892cd9553c72e02722ee8a1b6d6b946ef9c85107b3cfc24695b74d649ad15
+MFEN/0.4 mill24-state-v1 x-mif-fixture-dooz@2 WWW...../B......B/........ w p r 9,10 w:mill:h:b:1:-:b 0 5 - rh=sha256:8abe001b123ddee3ff88e4da8ef6970f2f847ace68bbb695927ab4a0d68872b6
 ```
 
 After the explicit removal, Black's hand is 9. The state does not claim that
@@ -689,13 +695,13 @@ Black placed three tokens; historical placements are not inferable.
 The lower-case `b` is inactive, owner-preserving and blocked:
 
 ```text
-MFEN/0.3 mill24-state-v1 x-mif-fixture-delay@1 WWW...../b......B/........ b p p 9,10 - 0 5 - rh=sha256:aee63a15c98e1f579e89fa360c7af9aa56448cc3c63ca0205c59eaffc9941973
+MFEN/0.4 mill24-state-v1 x-mif-fixture-delay@2 WWW...../b......B/........ b p p 9,10 - 0 5 - rh=sha256:59f08e0ec2317973f8ff7bf56a9ab6f699cd550ef8f065be7356dedfc88f5c3e
 ```
 
 ### 7.4.5 Choice branches and sequence-dependent fields
 
 ```text
-MFEN/0.3 mill24-state-v1 x-mif-fixture-stateful@1 BWBW.WB./.W.W..B./.W...... w p r 3,5 w:intervention:b:b:2:000005:b|w:custodian:b:b:1:000040:b|w:mill:b:b:1:004000:b 7 20 - lm=-,-;-,- rh=sha256:d2fd93a3b1bbc0139a2f95507309057cd8fb79c68c8191ac6f978cb4263d99e8 ul=0000,0000
+MFEN/0.4 mill24-state-v1 x-mif-fixture-stateful@2 BWBW.WB./.W.W..B./.W...... w p r 3,5 w:intervention:b:b:2:000005:b|w:custodian:b:b:1:000040:b|w:mill:b:b:1:004000:b 7 20 - lm=-,-;-,- rh=sha256:ff9ddf44f2d0335b34021f161ccc2550f6b5bf820df59445ffe9049c13bf14c6 ul=0000,0000
 ```
 
 The first selected target commits to exactly one of the three branches.
@@ -721,11 +727,11 @@ is `manifest-digest-mismatch`.
 MSTATE is the standard self-contained envelope for carrying a private
 manifest with positions.
 
-# 8 MPK/0.3 — Stable structural analysis key
+# 8 MPK/0.4 — Stable structural analysis key
 
 ## 8.1 Purpose and limits
 
-MPK/0.3 provides a stable textual key for structural analysis under an
+MPK/0.4 provides a stable textual key for structural analysis under an
 explicit key profile.
 
 MPK deliberately omits:
@@ -770,7 +776,7 @@ automatically to obtain a key.
 The normative ABNF is in Annex C.
 
 ```text
-MPK/0.3 <state-profile> <ruleset> <key-profile> <board24>
+MPK/0.4 <state-profile> <ruleset> <key-profile> <board24>
 <side> <phase> <hands> [<key-extension> ...]
 ```
 
@@ -863,24 +869,24 @@ A single White piece at source coordinate `d7` has source board:
 Under `structural-d4-v1`, the least board places it at `a4`:
 
 ```text
-MPK/0.3 mill24-state-v1 x-mif-fixture-nmm@1 structural-d4-v1 .......W................ b p 8,9 rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519
+MPK/0.4 mill24-state-v1 x-mif-fixture-nmm@2 structural-d4-v1 .......W................ b p 8,9 rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913
 ```
 
 Under `structural-aut16-v1`, the ring exchange extends the orbit and the least
 board places it at `c4`:
 
 ```text
-MPK/0.3 mill24-state-v1 x-mif-fixture-nmm@1 structural-aut16-v1 .......................W b p 8,9 rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519
+MPK/0.4 mill24-state-v1 x-mif-fixture-nmm@2 structural-aut16-v1 .......................W b p 8,9 rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913
 ```
 
 These are intentionally different keys. A database shall identify which key
 profile it uses.
 
-# 9 MSTATE/0.3 — Resumable game state
+# 9 MSTATE/0.4 — Resumable game state
 
 ## 9.1 Purpose
 
-MSTATE/0.3 represents:
+MSTATE/0.4 represents:
 
 - an exact origin MFEN;
 - an ordered sequence of user or adjudication events;
@@ -924,14 +930,15 @@ permitted `x-` members.
 
 | Member | Type | Meaning |
 |---|---|---|
-| `format` | string | `MSTATE/0.3` |
-| `positionFormat` | string | format of `origin` and `current`; `MFEN/0.3` in this edition |
+| `format` | string | `MSTATE/0.4` |
+| `positionFormat` | string | format of `origin` and `current`; `MFEN/0.4` in this edition |
 | `stateProfile` | string | state profile used by embedded positions |
 | `ruleset` | object | ruleset identity, digest and optional or required manifest |
 | `origin` | string | canonical starting MFEN |
 | `events` | array | ordered event sequence |
 | `current` | string | canonical replay checkpoint |
 | `repetitionHistory` | array | ordered active repetition window |
+| `preOriginClaims` | array | claim-audit seed at the origin boundary |
 | `claims` | array | ordered offer and claim audit records |
 
 `positionFormat` makes MSTATE versioning explicit. A future MSTATE edition can
@@ -956,7 +963,7 @@ ruleset it may be omitted when the local resolver returns the exact
 
 When `manifest` is present:
 
-- it shall conform to MRS/0.3;
+- it shall conform to MRS/0.4;
 - its `id` and `version` shall match the containing members;
 - its JCS SHA-256 shall match `digest`; and
 - it shall be used for replay only after successful validation.
@@ -1119,10 +1126,9 @@ An offer shall close as `expired` at the boundary selected by
 `on-opponent-primary-action` expires it immediately before that opponent's
 successful place or move is applied.
 
-Any still-open offer shall also close as `expired` immediately before the
-MFEN becomes terminal for any of: resignation, adjudication, automatic
-repetition, automatic no-progress, minimum material, board-full or
-stalemate. Agreement acceptance records status `accepted` instead.
+Every terminal transition other than `accept-draw` shall close every
+still-open offer as `expired` immediately before terminal normalization.
+Agreement acceptance records status `accepted` instead.
 
 At most one offer shall be open. A new `offer-draw` while an offer is open is
 invalid. An accept, decline or withdrawal shall reference that exact open
@@ -1194,28 +1200,40 @@ shall not substitute an undocumented hash for the object in MSTATE.
 For `stable-moving-v1`:
 
 1. seed the window with leading `pre-origin` records;
-2. if origin is ongoing, phase `m`, action `m` and obligations `-`, append an
-   origin observation;
-3. when a listed reset event or deterministic trigger occurs, clear the
+2. when a listed reset event or deterministic trigger occurs, clear the
    active window before any subsequent observation;
-4. do not observe a primary action while its obligation queue is non-empty;
-5. when a primary sequence first becomes stable in phase `m`, after phase and
-   non-draw terminal transitions, append one observation and identify the
-   event that closed the sequence;
-6. if the occurrence count reaches the configured value, apply automatic or
+3. do not observe a primary action while its obligation queue is non-empty;
+4. finish every non-repetition deterministic transition through the stalemate
+   step of 11.20;
+5. if the resulting origin is ongoing, phase `m`, action `m` and obligations
+   `-`, append one `origin` observation;
+6. when a primary sequence first reaches such a final stable moving state,
+   append one `event` observation and identify the event that closed the
+   sequence;
+7. if the occurrence count reaches the configured value, apply automatic or
    claim semantics; and
-7. do not append another observation for the terminal mutation caused by the
+8. do not append another observation for the terminal mutation caused by the
    repetition decision.
 
 An imported pending origin is not observed until its obligation closes and a
 stable moving boundary is reached.
 
-## 9.11 Claims array
+## 9.11 Pre-origin claim seed and claims array
 
 `claims` is an audit projection of draw offers and accepted draw claims. It
 shall be reconstructed during replay and compared to the supplied array.
 
-Each record shall contain:
+`preOriginClaims` is a separate replay seed. Each seed record shall contain:
+
+- `actor`;
+- `kind`, equal to `draw-offer`;
+- `status`, using the offer statuses below; and
+- no `source`, `eventSeq` or `resolvedEventSeq`.
+
+Its array order is chronological. At most one seed offer may have status
+`open`.
+
+Each `claims` record shall contain:
 
 - `source`, equal to `pre-origin` or `event` (omitted `source` means `event`);
 - `actor`;
@@ -1227,12 +1245,18 @@ Each record shall contain:
 Offer status shall be one of `open`, `accepted`, `declined`, `withdrawn` or
 `expired`. A valid draw claim has status `accepted`.
 
-Leading `pre-origin` claim records seed an imported live audit, in the same
-way leading `pre-origin` repetition entries seed history. They shall occur
-before any `event` claim record. At most one `pre-origin` offer may have
-status `open`. A `pre-origin` open offer is referenced by later
-`accept-draw`, `decline-draw` or `withdraw-draw` events through a reserved
-`offerEventSeq` of `0`.
+Replay shall copy every `preOriginClaims` seed record into the initial audit
+in the same order and add `source=pre-origin`. The supplied `claims` array
+shall begin with exactly one final projection for each seed record, followed
+by event-sourced records. Seed values are origin-time state; `claims` values
+are post-replay audit state.
+
+A seed offer that is open at origin is referenced by a later `accept-draw`,
+`decline-draw` or `withdraw-draw` event through reserved `offerEventSeq=0`.
+When an event resolves it, the final projection shall contain that event's
+`resolvedEventSeq`. When deterministic origin processing expires it before
+event 1, the final projection has status `expired` and no
+`resolvedEventSeq`.
 
 Event-sourced records shall be in strictly increasing `eventSeq` order.
 `eventSeq` is unique among event-sourced records. Multiple records of the
@@ -1247,14 +1271,13 @@ A replayer shall:
 
 1. validate I-JSON without discarding duplicate names;
 2. resolve and verify the manifest;
-3. parse and validate origin under 6.7 except item (m), which applies only to
-   independent MFEN interchange;
+3. parse and validate origin under 6.7 except items (m) and (n), which
+   apply only to independent MFEN interchange;
 4. take only leading `pre-origin` repetition entries as initial history;
-5. initialize the claim audit from leading `pre-origin` claim records, or
-   from an empty audit when none are present;
-6. run the stable-boundary pipeline of 11.20 on origin after seeding
-   repetition history, so automatic repetition, automatic no-progress,
-   board-full or stalemate may terminate origin before any event;
+5. initialize the claim audit from `preOriginClaims`;
+6. when origin is ongoing and obligations is `-`, run the stable-boundary
+   pipeline of 11.20 after seeding repetition history and claim audit,
+   regardless of whether origin is a repetition-observation boundary;
 7. apply each event and all deterministic transitions;
 8. canonicalize the resulting MFEN;
 9. compare it byte-for-byte with `current`;
@@ -1262,17 +1285,22 @@ A replayer shall:
     `repetitionHistory`; and
 11. compare the generated claim audit semantically with `claims`.
 
+An ongoing pending origin is not passed through 11.20 until its selected
+obligation branch becomes empty. When an arbitrary origin directly enters the
+global placing boundary and `turn.placingEndActivePlayer=retain`, retain means
+the origin's current `side`.
+
 A mismatch shall not be repaired. It shall be reported as
 `checkpoint-mismatch`, `repetition-history-mismatch` or `claims-mismatch`.
 
 The conformance corpus includes a self-contained private-manifest envelope
 whose replay ends at a pending removal.
 
-# 10 MRS/0.3 — Finite ruleset manifest
+# 10 MRS/0.4 — Finite ruleset manifest
 
 ## 10.1 Design boundary
 
-MRS/0.3 follows the finite-mechanism approach.
+MRS/0.4 follows the finite-mechanism approach.
 
 An MRS manifest is not a general rule language and is not a bag of
 implementation switches. It selects only mechanisms whose complete
@@ -1281,7 +1309,7 @@ Clause 11.
 
 A private game with semantics outside those mechanisms requires a separately
 identified semantics profile and specification. Merely adding an unknown
-member to `mif-finite-rules-v1` does not make that game replayable by a
+member to `mif-finite-rules-v2` does not make that game replayable by a
 conforming implementation.
 
 ## 10.2 Required members
@@ -1292,12 +1320,12 @@ An MRS manifest shall be an I-JSON object containing the members in Table 5.
 
 | Member | Type | Meaning |
 |---|---|---|
-| `format` | string | `MRS/0.3` |
+| `format` | string | `MRS/0.4` |
 | `id` | string | ruleset identifier without `@version` |
 | `version` | positive integer | gameplay semantics version |
 | `title` | string | human-readable English title |
 | `status` | string | `fixture`, `experimental`, `registered` or `deprecated` |
-| `semanticsProfile` | string | `mif-finite-rules-v1` |
+| `semanticsProfile` | string | `mif-finite-rules-v2` |
 | `topology` | string | registered topology |
 | `pieces` | object | initial material and loss threshold |
 | `turn` | object | initial and placing-end control |
@@ -1328,8 +1356,8 @@ JCS preserves array order. Every MRS array is therefore classified in Table
 | draw `resetEvents` | set | unique, ascending US-ASCII |
 | `semanticState` | set | unique, ascending US-ASCII |
 
-An MRS/0.3 manifest has no order-sensitive mechanism array. Trigger and
-terminal priorities are fixed by `mif-finite-rules-v1`, not supplied as an
+An MRS/0.4 manifest has no order-sensitive mechanism array. Trigger and
+terminal priorities are fixed by `mif-finite-rules-v2`, not supplied as an
 underspecified arbitrary array.
 
 ## 10.4 Topology, pieces and turn
@@ -1402,7 +1430,7 @@ The exact boundary is specified in 11.12.
 | `mark-opponent-board-until-moving` | board removal changes the target to a blocked lower-case token |
 | `remove-by-current-mill-count-at-placing-end` | defer the special current-mill-count removal calculation to the global placing boundary |
 
-`movingEffect` shall be `remove-opponent-board` in MRS/0.3.
+`movingEffect` shall be `remove-opponent-board` in MRS/0.4.
 
 `removalMultiplicity` shall be:
 
@@ -1533,7 +1561,7 @@ Intervention line selection is primary-event context, not persistent position
 state. A non-default selection is carried by `interventionLine` in the
 causing `place` or `move` event and is fully consumed during that event.
 
-No MRS/0.3 mechanism uses a point-union substitute for `used-lines`.
+No MRS/0.4 mechanism uses a point-union substitute for `used-lines`.
 
 ## 10.11 Manifest consistency constraints
 
@@ -1563,7 +1591,7 @@ h) manifest set arrays shall satisfy Table 6 before JCS hashing; and
 i) every enabled capture mechanism shall select at least one non-empty line
 family for the chosen topology.
 
-# 11 `mif-finite-rules-v1` transition semantics
+# 11 `mif-finite-rules-v2` transition semantics
 
 ## 11.1 Initial state
 
@@ -1580,7 +1608,7 @@ normal initial state shall have:
 - primary-ply zero;
 - outcome `-`;
 - required line and placement counters zero;
-- `lm=-,-;-,-`; and
+- `lm=-,-;-,-`.
 
 ## 11.2 Primary-event validation
 
@@ -1621,7 +1649,9 @@ This is a detection order. Branch construction and overlapping-target
 resolution are specified in 11.8.
 
 If leap has at least one legal target, leap is exclusive for that primary
-action: mill, intervention and custodian branches are not generated.
+action: mill, intervention and custodian branches are not generated. Detection
+of a usable mill remains a semantic occurrence: 11.4 still updates `lm` and
+`ul`, and `mill-formation` still resets no-progress when configured.
 
 ## 11.4 Mill lines formed by an action
 
@@ -1756,11 +1786,17 @@ from alternative capture contexts as if all alternatives were sequential.
 
 ## 11.9 Placing mill effects
 
-Let `R` be the mill removal multiplicity. For every board-removal obligation
-created by this subclause or by 11.10, remaining shall equal
-`min(R, number of legal board targets)` after applying 11.6 and any
-mechanism-specific target filter. A zero-count board obligation shall not be
-created.
+Let `R` be the mill removal multiplicity. For an ordinary mill board-removal
+sequence created by this subclause or by 11.10, remaining shall equal
+`min(R, number of live board tokens owned by the target owner)`. The current
+head target set is still calculated under 11.6 and is recomputed after every
+removal. A target set that expands after protection is recomputed therefore
+remains available to the same sequence. A zero-count board obligation shall
+not be created.
+
+Mechanism-specific capture branches retain their own finite capacities:
+intervention uses its surviving endpoints, and custodian and leap use their
+selected target sets.
 
 ### 11.9.1 `remove-opponent-board`
 
@@ -1821,17 +1857,22 @@ After a remove target selects a branch:
 4. reset no-progress when the event is in `resetEvents`;
 5. apply the immediate minimum-material test in 11.17;
 6. if remaining is non-zero, recompute that mechanism's authoritative target
-   set and keep action `r`;
+   set; if it is non-empty, keep action `r`, otherwise apply that constructor's
+   zero-target fallback;
 7. if the obligation is complete and another obligation follows in the
    selected branch, remove the completed item, set side to the next item's
-   actor, materialize its board targets when they are `~`, and keep action
-   `r`; otherwise
-8. empty obligations, set side to the final `after` player and continue the
-   stable-boundary pipeline.
+   actor, materialize its board targets when they are `~`, and either keep
+   action `r` when the set is non-empty or apply its zero-target fallback;
+   otherwise
+8. empty obligations, set side to the final `after` player, synchronize phase
+   with that player under 11.12, and restart the stable-boundary pipeline at
+   step 1.
 
 For intervention with two removals, step 6 leaves only the paired endpoint.
 For ordinary multiple mill removal, step 6 recomputes protection against the
-new board.
+new board. A `mill-count` or `board-full` obligation with no target is omitted
+and deterministic processing continues. A `stalemate` obligation with no
+target immediately makes its actor lose with reason `no-legal-move`.
 
 If the material test ends the game, all remaining obligations are discarded
 and the terminal state rules apply.
@@ -1846,11 +1887,13 @@ When branch construction produces no branch:
 - early stop is evaluated as specified below; and
 - the stable-boundary pipeline continues.
 
-While the global placing regime continues:
+Phase synchronization with an active player means:
 
-- an actor with a hand token is in phase `p`;
-- an actor with no hand token is in phase `m`, even if the opponent still has
-  hand tokens; and
+- after the global placing boundary, phase is `m`;
+- while the global placing regime continues, an actor with a hand token is in
+  phase `p`;
+- while that regime continues, an actor with no hand token is in phase `m`,
+  even if the opponent still has hand tokens; and
 - `movementAllowed=true` additionally permits movement as a primary event
   while action is `p`.
 
@@ -1872,9 +1915,9 @@ At the boundary:
 1. phase becomes `m`;
 2. every `w` and `b` delayed token is changed to `.`;
 3. side is set from `turn.placingEndActivePlayer`, with `retain` preserving
-   the player selected by the preceding sequence;
-4. the deferred mill-count mechanism in 11.14 is applied if selected; and
-5. if no obligation results, action becomes `m`.
+   the player selected by the preceding sequence; and
+4. deterministic processing continues with the deferred mill-count step of
+   11.20. Action is not finalized until that pipeline reaches its last step.
 
 The lower-case clear is deterministic and produces no MSTATE event.
 
@@ -1894,23 +1937,25 @@ The sequential removal quantities are:
 | `Wm>Bm>0` | `Bm+1` | `Bm` | opponent |
 | `Bm>Wm>0` | `Wm` | `Wm+1` | opponent |
 
-Build one branch containing the non-zero White obligation followed by the
-non-zero Black obligation. Its cause is `mill-count`. The first uses
-`after=q` when the second exists. The final next player is
-`turn.placingEndActivePlayer`, resolving `retain` to the player selected before
-the boundary. A second board obligation uses targets `~` until promoted.
+Cap each quantity by the current number of live board tokens owned by its
+target owner, then omit every zero-count obligation. Build one branch from the
+remaining White obligation followed by the remaining Black obligation. Its
+cause is `mill-count`. The first uses `after=q` when the second exists. The
+final next player is `turn.placingEndActivePlayer`, resolving `retain` to the
+player selected before the boundary. A later board obligation uses targets
+`~` until promoted.
 
 Ordinary mill protection applies when removing an opponent. It does not apply
-when removing one's own token.
+when removing one's own token. If no obligation survives the caps, continue
+the pipeline without pausing.
 
 ## 11.15 Full-board transition
 
-Full-board evaluation occurs only:
-
-- after the global placing boundary;
-- in phase `m`;
-- when obligations are empty; and
-- when no point is `.`.
+Full-board evaluation occurs at every ongoing stable boundary, in either
+active phase, when obligations are empty and no point is `.`. It is not
+restricted to the global placing boundary; this makes manifests whose total
+initial material exceeds 24 deterministic instead of leaving a phase-`p`
+player with no legal placement.
 
 Actions are:
 
@@ -1924,7 +1969,10 @@ Actions are:
   then the opponent is active.
 
 Board-full removal ignores stalemate adjacency filtering and uses ordinary
-mill protection.
+mill protection. Each requested removal is capped at one current live target.
+A zero-target board-full obligation is omitted; if every requested obligation
+is omitted, continue to the simultaneous minimum-material step. A later
+zero-target obligation is omitted when promoted under 11.11.
 
 ## 11.16 Stalemate transition
 
@@ -1936,8 +1984,10 @@ When the active player has no legal movement:
 - `loss`: the opponent wins with reason `no-legal-move`;
 - `draw`: draw with reason `no-legal-move`;
 - `change-player`: side changes to the opponent at most once for the current
-  stable-boundary evaluation; if the newly active player also has no legal
-  movement, the game ends immediately as draw with reason `no-legal-move`;
+  stable-boundary evaluation, phase is synchronized with the new actor, and
+  the pipeline restarts at step 1; if the stalemate step is reached again in
+  phase `m` and the newly active player also has no legal movement, the game
+  ends immediately as draw with reason `no-legal-move`;
 - `remove-and-retain`: the stalemated player removes one adjacent opponent
   live piece and then remains active;
 - `remove-and-change`: the stalemated player removes one adjacent opponent
@@ -1948,11 +1998,16 @@ When the active player has no legal movement:
 
 For these stalemate removals, a target is legal when it is an opponent live
 piece adjacent to at least one live piece of the remover. Mill protection is
-not applied.
+not applied. If the first target set is empty, the stalemated player loses
+immediately with reason `no-legal-move`. If a deferred later stalemate
+obligation materializes to an empty target set, that obligation's actor loses
+with the same reason.
 
-The one-change limit for `change-player` applies inside a single evaluation of
-the stable-boundary pipeline in 11.20. Implementations shall not loop side
-changes until a movable player appears.
+The one-change limit for `change-player` applies across restarts inside one
+evaluation of the stable-boundary pipeline in 11.20. Implementations shall not
+loop side changes until a movable player appears. If synchronization selects
+phase `p`, stalemate is no longer applicable and no movement test is made for
+that player.
 
 ## 11.17 Minimum material
 
@@ -1971,6 +2026,11 @@ moving. It does not wait for both hands to become zero.
 
 If a player is ordered to remove that player's own token and falls below the
 minimum, the other player wins.
+
+At the stable-boundary minimum-material step, evaluate both players from the
+same pre-step state. If exactly one player is below `minimumLive`, the other
+player wins. If both are below it, the game is a draw with reason
+`fewer-than-minimum`.
 
 ## 11.18 No-progress
 
@@ -2013,20 +2073,28 @@ first terminal result:
 1. enter the global placing boundary and clear delayed tokens, when due;
 2. generate deferred mill-count obligations, when due;
 3. evaluate full board;
-4. evaluate minimum material for both players;
-5. perform repetition observation and automatic repetition adjudication;
-6. evaluate automatic no-progress;
-7. evaluate stalemate, applying `change-player` at most once as in 11.16; and
+4. evaluate minimum material for both players simultaneously;
+5. evaluate stalemate, carrying the one-change guard across any pipeline
+   restart as in 11.16;
+6. perform repetition observation and automatic repetition adjudication;
+7. evaluate automatic no-progress; and
 8. set action from the resulting phase when still ongoing.
 
-The immediate post-removal minimum test in 11.17 occurs before this
-stable-boundary list.
+If step 2, 3 or 5 creates a non-empty obligation queue, side shall equal every
+branch-head actor, action shall become `r`, and the pipeline shall pause
+immediately. It resumes only after the selected branch becomes empty, and then
+restarts at step 1. Constructor-specific zero-target rules in 11.14 to 11.16
+are applied before a queue is exposed.
 
-An MSTATE replayer shall also run this pipeline after origin validation and
-after seeding leading `pre-origin` repetition history, before applying events,
-when origin itself reaches a stable observation boundary. That is how an
-ongoing origin can become terminal by automatic repetition or automatic
-no-progress without a gameplay event.
+The immediate post-removal minimum test in 11.17 occurs before this
+stable-boundary list. Stalemate precedes repetition so observations describe
+the final non-terminal stable state after every deterministic side change.
+
+An MSTATE replayer shall run this pipeline on every ongoing origin whose
+obligations field is `-`, after origin validation and after seeding leading
+`pre-origin` repetition history and `preOriginClaims`, before applying events.
+Repetition observation inside the pipeline remains conditional on the
+manifest's observation rule.
 
 This ordering, together with the trigger order in 11.3 and branch commitment
 in 11.8, is part of the rules semantics. An implementation shall not choose a
@@ -2116,7 +2184,8 @@ The machine-readable corpus defines stable example codes, including:
 - `checkpoint-mismatch`;
 - `repetition-history-mismatch`;
 - `claims-mismatch`;
-- `automatic-terminal-ongoing`; and
+- `automatic-terminal-ongoing`;
+- `unstabilized-boundary`; and
 - `private-nonsemantic-extension`.
 
 An implementation may add diagnostic detail but should retain the standard
@@ -2139,10 +2208,10 @@ JCS alone does not canonicalize sets represented as arrays. Clause 9 and Table
 The signatures in this edition are:
 
 ```text
-MFEN/0.3
-MPK/0.3
-MSTATE/0.3
-MRS/0.3
+MFEN/0.4
+MPK/0.4
+MSTATE/0.4
+MRS/0.4
 ```
 
 They are deliberately not the previously proposed `MFEN/2`, `MPK/1`,
@@ -2477,7 +2546,7 @@ branches as US-ASCII.
 
 | Reason | Permitted result |
 |---|---|
-| `fewer-than-minimum` | win |
+| `fewer-than-minimum` | win or draw |
 | `no-legal-move` | win or draw |
 | `board-full` | win or draw |
 | `no-progress` | draw |
@@ -2510,7 +2579,7 @@ widths are invalid.
 This edition registers:
 
 - state profile `mill24-state-v1`;
-- semantics profile `mif-finite-rules-v1`;
+- semantics profile `mif-finite-rules-v2`;
 - key profile `structural-d4-v1`; and
 - key profile `structural-aut16-v1`.
 
@@ -2529,13 +2598,13 @@ mfen = mfen-signature SP state-profile SP ruleset SP board SP side
        SP phase SP action SP hands SP obligations SP no-progress
        SP primary-ply SP outcome *(SP extension)
 
-mfen-signature = %s"MFEN/0.3"
+mfen-signature = %s"MFEN/0.4"
 
 mpk = mpk-signature SP state-profile SP ruleset SP key-profile
       SP mpk-board SP player SP active-phase SP hands
       *(SP key-extension)
 
-mpk-signature = %s"MPK/0.3"
+mpk-signature = %s"MPK/0.4"
 
 state-profile = identifier
 key-profile = identifier
@@ -2588,6 +2657,7 @@ extension-key = standard-extension-key / private-identifier
 standard-extension-key = %s"lm" / %s"pc" / %s"rh" / %s"ul"
 value-character = %x21-3C / %x3E-7E
 
+; Registered extension-value subgrammars.
 lm-value = coord-or-dash %s"," coord-or-dash %s";"
            coord-or-dash %s"," coord-or-dash
 pc-value = uint %s"," uint
@@ -2611,7 +2681,7 @@ lc-hex = DIGIT / %x61-66
 lc-alpha = %x61-7A
 ```
 
-The standalone `conformance/mif-0.3.abnf` file is the machine-readable copy.
+The standalone `conformance/mif-0.4.abnf` file is the machine-readable copy.
 If a publication defect causes the two copies to differ, the working group
 shall correct both before advancing the draft; neither difference may be
 silently chosen by an implementation.
@@ -2634,17 +2704,17 @@ category and code, or a documented equivalent code mapped to them.
 conformance/
   README.md
   index.json
-  mif-0.3.abnf
+  mif-0.4.abnf
   examples/
     mstate-pending-board.json
   manifests/
-    x-mif-fixture-delay@1.json
-    x-mif-fixture-dooz@1.json
-    x-mif-fixture-mill-multi@1.json
-    x-mif-fixture-nmm@1.json
-    x-mif-fixture-nmm-claim@1.json
-    x-mif-fixture-stalemate-change@1.json
-    x-mif-fixture-stateful@1.json
+    x-mif-fixture-delay@2.json
+    x-mif-fixture-dooz@2.json
+    x-mif-fixture-mill-multi@2.json
+    x-mif-fixture-nmm@2.json
+    x-mif-fixture-nmm-claim@2.json
+    x-mif-fixture-stalemate-change@2.json
+    x-mif-fixture-stateful@2.json
   vectors/
     implementation-mappings.json
     json-jcs.json
@@ -2660,13 +2730,13 @@ conformance/
 
 | Ruleset | SHA-256 of JCS manifest |
 |---|---|
-| `x-mif-fixture-nmm@1` | `5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519` |
-| `x-mif-fixture-dooz@1` | `6a0892cd9553c72e02722ee8a1b6d6b946ef9c85107b3cfc24695b74d649ad15` |
-| `x-mif-fixture-delay@1` | `aee63a15c98e1f579e89fa360c7af9aa56448cc3c63ca0205c59eaffc9941973` |
-| `x-mif-fixture-stateful@1` | `d2fd93a3b1bbc0139a2f95507309057cd8fb79c68c8191ac6f978cb4263d99e8` |
-| `x-mif-fixture-nmm-claim@1` | `ae44bbffdbeb3b637da5ea5cf3d88289172f77a1925decf35ce6f88d58d6424b` |
-| `x-mif-fixture-stalemate-change@1` | `c0e351f857ce86bb16176aafa9113f41474ce37b245573195f00d4781c4d2cef` |
-| `x-mif-fixture-mill-multi@1` | `9ca0fe34528d62ce66caccba21bfe621f4554d66a7d89afa50c789aedeaeab84` |
+| `x-mif-fixture-nmm@2` | `eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913` |
+| `x-mif-fixture-dooz@2` | `8abe001b123ddee3ff88e4da8ef6970f2f847ace68bbb695927ab4a0d68872b6` |
+| `x-mif-fixture-delay@2` | `59f08e0ec2317973f8ff7bf56a9ab6f699cd550ef8f065be7356dedfc88f5c3e` |
+| `x-mif-fixture-stateful@2` | `ff9ddf44f2d0335b34021f161ccc2550f6b5bf820df59445ffe9049c13bf14c6` |
+| `x-mif-fixture-nmm-claim@2` | `e56e246b150a046ba605701b0459f1de5aa8913aaf329dba7719bfedf1f8b3a0` |
+| `x-mif-fixture-stalemate-change@2` | `70cbff2f7140dbb66718ce01f0fedc5d43f475b3cff8f58f97b15834175386ae` |
+| `x-mif-fixture-mill-multi@2` | `244157e6946614090259133893fe2519f0330917d3dc7bcef6c705a3d160ae88` |
 
 These are conformance fixtures, not proposed registrations for the common
 game names in their titles.
@@ -2685,9 +2755,14 @@ The corpus covers:
 - D4 and 16-transform point and line permutations;
 - different MPK results under different key profiles;
 - origin plus events to current replay;
+- independent pre-origin claim seeds and deterministic origin expiry;
 - structured board and hand remove events;
+- phase synchronization after pending removals and arbitrary-origin stabilization;
+- dynamic multi-removal sequence capacity;
+- leap-exclusive branches that retain mill semantic state;
+- simultaneous minimum-material adjudication;
 - draw-offer lifecycle and accepted claim audit;
-- automatic repetition at the origin observation boundary;
+- stalemate-before-repetition and automatic repetition at origin boundaries;
 - repetition checkpoint mismatch;
 - duplicate JSON names after unescaping;
 - I-JSON integer boundaries and invalid Unicode;
@@ -2712,7 +2787,7 @@ The normative mapping data is in
 is:
 
 ```text
-9cf383fa4976d30ac8a0a1a5220094ad80c5b755691514adbefd01e8863e7acc
+5e6b902e71bb0e255a339016a068699f5a9784a91dcaa4cdceafabaf460104ce
 ```
 
 ### E.2 NMM_LLM
@@ -2936,7 +3011,29 @@ This edition:
 MRS document digests continue to cover title and status in this edition;
 splitting semantic and document digests is deferred.
 
-### F.4 Why phase and action remain
+### F.4 Breaking changes from Community Working Draft 0.3
+
+This edition:
+
+- changes experimental signatures to `0.4` and finite semantics to
+  `mif-finite-rules-v2`;
+- separates `preOriginClaims` replay seed from the final `claims` audit;
+- synchronizes phase after every actor-changing transition;
+- pauses and restarts the stable-boundary pipeline around generated
+  obligations and defines every zero-target fallback;
+- evaluates stalemate before repetition so observations describe the final
+  stable actor;
+- uses sequence capacity for ordinary multiple mill removal;
+- evaluates full board during placing as well as moving;
+- defines simultaneous minimum-material results and independent-MFEN fixed
+  points; and
+- expires open offers on every non-acceptance terminal transition.
+
+Fixture rulesets advance to version 2 because these changes can alter legal
+actions, replay checkpoints or outcomes. WD 0.3 remains the immutable
+`3f1ffc30ab8c838eaeae54102c37e20bdaa00c7a` baseline.
+
+### F.5 Why phase and action remain
 
 Phase describes the rules regime; action describes the next input. The final
 placement can leave phase `p`, hand zero and action `r`. Asymmetric hand
@@ -2944,26 +3041,26 @@ removal can also make one player move while the other still places. Removing
 either field would make some intermediate states ambiguous or force hidden
 inference.
 
-### F.5 Why hand is direct
+### F.6 Why hand is direct
 
 The state must answer how many tokens are available now. Placement count is
 history and can diverge from material after hand removal. Direct hands are
 therefore core; optional `pc` is separate.
 
-### F.6 Why obligations remain in MFEN
+### F.7 Why obligations remain in MFEN
 
 A user can pause during capture selection. An analysis or UI tool can also
 need to inspect that exact choice. Turning it into an already-completed stable
 position changes legal state and is not lossless.
 
-### F.7 Why two structural key profiles exist
+### F.8 Why two structural key profiles exist
 
 D4 matches visual board symmetries and deployed NMM_LLM normalization. The
 outer/inner exchange is an additional topology automorphism. Both are useful;
 neither should be hidden in a ruleset version or silently substituted in an
 existing database.
 
-### F.8 Conditions before a stable candidate
+### F.9 Conditions before a stable candidate
 
 The working group should not freeze stable signatures until:
 

@@ -1,5 +1,5 @@
 {
-  "format": "MIF-CONFORMANCE/0.3",
+  "format": "MIF-CONFORMANCE/0.4",
   "kind": "transform-vectors",
   "pointOrder": [
     "a7",

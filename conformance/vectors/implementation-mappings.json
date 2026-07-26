@@ -1,5 +1,5 @@
 {
-  "format": "MIF-CONFORMANCE/0.3",
+  "format": "MIF-CONFORMANCE/0.4",
   "kind": "implementation-mappings",
   "canonicalPointOrder": [
     "a7",

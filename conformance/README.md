@@ -1,7 +1,7 @@
-# MIF Community Working Draft 0.3 conformance corpus
+# MIF Community Working Draft 0.4 conformance corpus
 
 This directory is the normative machine-readable corpus for
-`MIF Community Working Draft 0.3`. It does not register the provisional
+`MIF Community Working Draft 0.4`. It does not register the provisional
 ruleset names used by its fixtures.
 
 ## Runner contract
@@ -24,9 +24,13 @@ A mutation path uses `.` between object member names and `[n]` for an array
 element. Applying a mutation replaces the value at the complete path; it
 does not merge objects.
 
+For every positive MSTATE replay vector, `preOriginClaims` is the claim-audit
+seed at the origin boundary and `claims` is the expected final audit. A runner
+shall not derive one from the other.
+
 ## Files
 
-- `mif-0.3.abnf` is the standalone RFC 5234/RFC 7405 grammar.
+- `mif-0.4.abnf` is the standalone RFC 5234/RFC 7405 grammar.
 - `manifests/` contains self-contained private MRS fixtures, including
   claim-mode, stalemate `change-player` and `one-per-new-line` cases.
 - `examples/` contains a complete MSTATE envelope.
@@ -34,8 +38,10 @@ does not merge objects.
   including independent automatic-terminal inconsistency.
 - `vectors/mpk.json` covers eligibility, key-profile normalization and the
   ban on non-semantic private MPK extensions.
-- `vectors/mstate.json` covers replay, pending removals, draw state, origin
-  automatic/claimable terminals and rejection.
+- `vectors/mstate.json` covers replay, independent `preOriginClaims` seeds,
+  pending removals, phase synchronization, dynamic removal capacity,
+  origin automatic/claimable terminals, simultaneous minimum material and
+  rejection.
 - `vectors/json-jcs.json` covers I-JSON, JCS and manifest hashing.
 - `vectors/transforms.json` gives all point and line permutations and
   MPK-associated line-ID transform examples.
@@ -64,3 +70,9 @@ missing fixture from a network.
 `index.json` lists every normative corpus file except itself, avoiding a
 circular digest. A distributor may sign an outer package or index digest;
 such a signature is outside this working draft.
+
+Run `python tools/verify_conformance.py` from the repository root to verify
+I-JSON parsing, the raw-file index, fixture JCS digests, ruleset references,
+the two ABNF copies, transform bijections/topology, required 0.4 replay cases
+and the Annex E mapping digest. Use `--update-index` only after intentional
+corpus edits.

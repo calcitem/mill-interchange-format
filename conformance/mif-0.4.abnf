@@ -1,4 +1,4 @@
-; MIF Community Working Draft 0.3
+; MIF Community Working Draft 0.4
 ; ABNF is interpreted according to RFC 5234 and RFC 7405.
 ; All quoted literals are case-sensitive.
 ; This is a closed lexical profile: new non-x- standard tokens require a
@@ -10,13 +10,13 @@ mfen = mfen-signature SP state-profile SP ruleset SP board SP side
        SP phase SP action SP hands SP obligations SP no-progress
        SP primary-ply SP outcome *(SP extension)
 
-mfen-signature = %s"MFEN/0.3"
+mfen-signature = %s"MFEN/0.4"
 
 mpk = mpk-signature SP state-profile SP ruleset SP key-profile
       SP mpk-board SP player SP active-phase SP hands
       *(SP key-extension)
 
-mpk-signature = %s"MPK/0.3"
+mpk-signature = %s"MPK/0.4"
 
 state-profile = identifier
 key-profile = identifier
