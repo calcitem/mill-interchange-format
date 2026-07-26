@@ -1,0 +1,74 @@
+{
+  "format": "MIF-CONFORMANCE-INDEX/0.2",
+  "draft": "MIF Community Working Draft 0.2",
+  "hashAlgorithm": "sha256",
+  "digestDomain": "raw-file-bytes",
+  "selfExcluded": true,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 2473,
+      "sha256": "b9764b20f8060ba42ce8bc6fad082ae32ade968c1baeae91a50620367ab511a1"
+    },
+    {
+      "path": "examples/mstate-pending-board.json",
+      "bytes": 4231,
+      "sha256": "00fa4215e1d46514bcc663da3a8ad7d4eb53a30d9cd8300222ed9b5a1ed8fb84"
+    },
+    {
+      "path": "manifests/x-mif-fixture-delay@1.json",
+      "bytes": 2609,
+      "sha256": "32e7c681e182a3470ec73978900c25ed425e97d2f802b6dc16114bde46789610"
+    },
+    {
+      "path": "manifests/x-mif-fixture-dooz@1.json",
+      "bytes": 2606,
+      "sha256": "576249a95e230981921ad9ae4826446506a3bdd3ca165ffc4b226619f166113e"
+    },
+    {
+      "path": "manifests/x-mif-fixture-nmm@1.json",
+      "bytes": 2600,
+      "sha256": "4e2b69fac3b9dcfbb950cdc6854fc01df00b84d7b394eb11f5831f13baae10df"
+    },
+    {
+      "path": "manifests/x-mif-fixture-stateful@1.json",
+      "bytes": 2633,
+      "sha256": "acb9942065b116c06f26cfaf2d5d1d353a5fb4bef4b2a991854ea4d7a5b337ce"
+    },
+    {
+      "path": "mif-0.2.abnf",
+      "bytes": 2902,
+      "sha256": "de62f789570e866f3f084967fe72f4aafb15ad228177edebf54e7b12b60bd0f6"
+    },
+    {
+      "path": "vectors/implementation-mappings.json",
+      "bytes": 1849,
+      "sha256": "9cf383fa4976d30ac8a0a1a5220094ad80c5b755691514adbefd01e8863e7acc"
+    },
+    {
+      "path": "vectors/json-jcs.json",
+      "bytes": 7272,
+      "sha256": "4ad2a04f77b9e7713c4f269384cfacdb9e6d322198562b55a4af9b0908dc28ff"
+    },
+    {
+      "path": "vectors/mfen.json",
+      "bytes": 12317,
+      "sha256": "c92a80a4a82f1010952986807f01fa577f84924c242612bcada986b222396798"
+    },
+    {
+      "path": "vectors/mpk.json",
+      "bytes": 5831,
+      "sha256": "b77036844ba9e077e3f61ec83aee4ea0d8b82f6ba468d994ed3923e472ec698f"
+    },
+    {
+      "path": "vectors/mstate.json",
+      "bytes": 12044,
+      "sha256": "dcea61764a9f01d8269d2c935a2b85d9f7b3880e49ece3bf804e7d1bb569e142"
+    },
+    {
+      "path": "vectors/transforms.json",
+      "bytes": 6271,
+      "sha256": "96f9b2e44a44e00f80c6e007b5a5af42df42cbb9d3564636fb04d2169d67f513"
+    }
+  ]
+}

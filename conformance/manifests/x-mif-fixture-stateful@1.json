@@ -1,0 +1,121 @@
+{
+  "format": "MRS/0.2",
+  "id": "x-mif-fixture-stateful",
+  "version": 1,
+  "title": "Conformance fixture: sequence-dependent mill and capture state",
+  "status": "fixture",
+  "semanticsProfile": "mif-finite-rules-v1",
+  "topology": "mill24-orthogonal-v1",
+  "pieces": {
+    "white": 9,
+    "black": 9,
+    "minimumLive": 3
+  },
+  "turn": {
+    "initial": "w",
+    "placingEndActivePlayer": "w"
+  },
+  "flying": {
+    "enabled": true,
+    "maximumLive": 3
+  },
+  "placing": {
+    "movementAllowed": false,
+    "earlyStop": {
+      "emptyPoints": 0,
+      "boundary": "after-unobligated-place-v1"
+    }
+  },
+  "mills": {
+    "placingEffect": "remove-opponent-board",
+    "movingEffect": "remove-opponent-board",
+    "removalMultiplicity": "one-per-new-line",
+    "targetProtection": "outside-mill-first",
+    "lineReuse": "once-per-player",
+    "reverseReformation": "prohibit-immediate",
+    "delayedClearBoundary": "on-enter-moving-v1"
+  },
+  "captures": {
+    "resolution": "target-commits-v1",
+    "custodian": {
+      "enabled": true,
+      "lines": {
+        "squareEdges": true,
+        "cross": true,
+        "diagonal": false
+      },
+      "phases": [
+        "moving",
+        "placing"
+      ],
+      "maximumOwnLivePieces": null
+    },
+    "intervention": {
+      "enabled": true,
+      "lines": {
+        "squareEdges": true,
+        "cross": true,
+        "diagonal": false
+      },
+      "phases": [
+        "moving",
+        "placing"
+      ],
+      "maximumOwnLivePieces": null
+    },
+    "leap": {
+      "enabled": true,
+      "lines": {
+        "squareEdges": true,
+        "cross": true,
+        "diagonal": false
+      },
+      "phases": [
+        "moving"
+      ],
+      "maximumOwnLivePieces": 3
+    }
+  },
+  "boardFull": {
+    "action": "first-player-loses"
+  },
+  "stalemate": {
+    "action": "both-remove",
+    "boardRemovalTargets": "adjacent-opponent"
+  },
+  "draw": {
+    "noProgress": {
+      "normalLimit": 100,
+      "endgameLimit": 50,
+      "endgamePredicate": "either-player-live-equals-3",
+      "mode": "claim",
+      "countedPrimaryActions": [
+        "move"
+      ],
+      "resetEvents": [
+        "board-remove",
+        "hand-remove",
+        "place"
+      ],
+      "evaluationBoundary": "stable-after-primary-sequence-v1"
+    },
+    "repetition": {
+      "count": 3,
+      "mode": "claim",
+      "observation": "stable-moving-v1",
+      "projection": "legal-state-v1",
+      "resetEvents": [
+        "board-remove",
+        "hand-remove",
+        "place"
+      ]
+    },
+    "offers": {
+      "expiry": "explicit-only"
+    }
+  },
+  "semanticState": [
+    "last-mill",
+    "used-lines"
+  ]
+}

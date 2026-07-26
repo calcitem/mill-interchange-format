@@ -1,0 +1,76 @@
+{
+  "format": "MIF-CONFORMANCE/0.2",
+  "kind": "implementation-mappings",
+  "canonicalPointOrder": [
+    "a7",
+    "d7",
+    "g7",
+    "g4",
+    "g1",
+    "d1",
+    "a1",
+    "a4",
+    "b6",
+    "d6",
+    "f6",
+    "f4",
+    "f2",
+    "d2",
+    "b2",
+    "b4",
+    "c5",
+    "d5",
+    "e5",
+    "e4",
+    "e3",
+    "d3",
+    "c3",
+    "c4"
+  ],
+  "nmmLlm": {
+    "repository": "https://github.com/benmarkbrandwood-blip/NMM_LLM",
+    "examinedCommit": "234f542c9d3e7c3ebddd97f4d80edbbdb5f00991",
+    "relevantFiles": [
+      "ai/board_symmetry.py",
+      "ai/trajectory_db.py",
+      "game/board.py",
+      "tools/build_fullgame_db.py"
+    ],
+    "canonicalToNativeIndex": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+    "pieceMap": {
+      ".": ".",
+      "B": "B",
+      "W": "W"
+    },
+    "normalizationProfile": "structural-d4-v1"
+  },
+  "sanmill": {
+    "repository": "https://github.com/calcitem/Sanmill",
+    "examinedCommit": "aa6b0c99ee3fca13b0d34e6f929257959ed51414",
+    "relevantFiles": [
+      "crates/tgf-mill/src/human_db_codec.rs",
+      "crates/tgf-mill/src/presets.rs",
+      "crates/tgf-mill/src/rules/captures.rs",
+      "crates/tgf-mill/src/rules/fen.rs",
+      "crates/tgf-mill/src/rules/legal_apply.rs",
+      "crates/tgf-mill/src/rules/lines.rs",
+      "crates/tgf-mill/src/rules/mod.rs",
+      "crates/tgf-mill/src/rules/rules_setup.rs",
+      "crates/tgf-mill/src/rules/transitions.rs",
+      "crates/tgf-mill/src/rules/types.rs",
+      "crates/tgf-mill/src/topology.rs"
+    ],
+    "canonicalToNativeIndex": [23, 16, 17, 18, 19, 20, 21, 22, 15, 8, 9, 10, 11, 12, 13, 14, 7, 0, 1, 2, 3, 4, 5, 6],
+    "pieceMap": {
+      "*": ".",
+      "@": "B",
+      "O": "W",
+      "X": "owner-required"
+    },
+    "legacyRingOrder": [
+      "inner",
+      "middle",
+      "outer"
+    ]
+  }
+}

@@ -1,0 +1,296 @@
+{
+  "format": "MIF-CONFORMANCE/0.2",
+  "kind": "mstate-replay-vectors",
+  "validReplay": [
+    {
+      "id": "MSTATE-REPLAY-0001",
+      "description": "A replay may end at an unresolved board-removal obligation",
+      "manifest": "../manifests/x-mif-fixture-nmm@1.json",
+      "origin": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+      "events": [
+        {"seq": 1, "actor": "w", "type": "place", "at": "a7"},
+        {"seq": 2, "actor": "b", "type": "place", "at": "b6"},
+        {"seq": 3, "actor": "w", "type": "place", "at": "d7"},
+        {"seq": 4, "actor": "b", "type": "place", "at": "b4"},
+        {"seq": 5, "actor": "w", "type": "place", "at": "g7"}
+      ],
+      "current": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 WWW...../B......B/........ w p r 6,7 w:mill:b:b:1:008100:b 0 5 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+      "repetitionHistory": [],
+      "claims": []
+    },
+    {
+      "id": "MSTATE-REPLAY-0002",
+      "description": "Board removal uses a structured board target",
+      "manifest": "../manifests/x-mif-fixture-nmm@1.json",
+      "origin": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+      "events": [
+        {"seq": 1, "actor": "w", "type": "place", "at": "a7"},
+        {"seq": 2, "actor": "b", "type": "place", "at": "b6"},
+        {"seq": 3, "actor": "w", "type": "place", "at": "d7"},
+        {"seq": 4, "actor": "b", "type": "place", "at": "b4"},
+        {"seq": 5, "actor": "w", "type": "place", "at": "g7"},
+        {"seq": 6, "actor": "w", "type": "remove", "target": {"zone": "board", "at": "b6"}}
+      ],
+      "current": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 WWW...../.......B/........ b p p 6,7 - 0 5 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+      "repetitionHistory": [],
+      "claims": []
+    },
+    {
+      "id": "MSTATE-REPLAY-0003",
+      "description": "Hand removal is an explicit supplementary event",
+      "manifest": "../manifests/x-mif-fixture-dooz@1.json",
+      "origin": "MFEN/0.2 mill24-state-v1 x-mif-fixture-dooz@1 ......../......../........ w p p 12,12 - 0 0 - rh=sha256:f37eb3bf82877d747000ea08951470f70cc61f4a861830c396ee62a0399f503d",
+      "events": [
+        {"seq": 1, "actor": "w", "type": "place", "at": "a7"},
+        {"seq": 2, "actor": "b", "type": "place", "at": "b6"},
+        {"seq": 3, "actor": "w", "type": "place", "at": "d7"},
+        {"seq": 4, "actor": "b", "type": "place", "at": "b4"},
+        {"seq": 5, "actor": "w", "type": "place", "at": "g7"},
+        {"seq": 6, "actor": "w", "type": "remove", "target": {"zone": "hand", "player": "b"}}
+      ],
+      "current": "MFEN/0.2 mill24-state-v1 x-mif-fixture-dooz@1 WWW...../B......B/........ b p p 9,9 - 0 5 - rh=sha256:f37eb3bf82877d747000ea08951470f70cc61f4a861830c396ee62a0399f503d",
+      "repetitionHistory": [],
+      "claims": []
+    },
+    {
+      "id": "MSTATE-REPLAY-0004",
+      "description": "A board remove under mark-and-delay changes B to b and emits no clear event",
+      "manifest": "../manifests/x-mif-fixture-delay@1.json",
+      "origin": "MFEN/0.2 mill24-state-v1 x-mif-fixture-delay@1 ......../......../........ w p p 12,12 - 0 0 - rh=sha256:3da403256d96a2da0a6a8cc579d3cc1555fa4a802dea1672fadf89a481b3d3d9",
+      "events": [
+        {"seq": 1, "actor": "w", "type": "place", "at": "a7"},
+        {"seq": 2, "actor": "b", "type": "place", "at": "b6"},
+        {"seq": 3, "actor": "w", "type": "place", "at": "d7"},
+        {"seq": 4, "actor": "b", "type": "place", "at": "b4"},
+        {"seq": 5, "actor": "w", "type": "place", "at": "g7"},
+        {"seq": 6, "actor": "w", "type": "remove", "target": {"zone": "board", "at": "b6"}}
+      ],
+      "current": "MFEN/0.2 mill24-state-v1 x-mif-fixture-delay@1 WWW...../b......B/........ b p p 9,10 - 0 5 - rh=sha256:3da403256d96a2da0a6a8cc579d3cc1555fa4a802dea1672fadf89a481b3d3d9",
+      "repetitionHistory": [],
+      "claims": []
+    },
+    {
+      "id": "MSTATE-REPLAY-0005",
+      "description": "Draw offer lifecycle is ordered by event sequence",
+      "manifest": "../manifests/x-mif-fixture-nmm@1.json",
+      "origin": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+      "events": [
+        {"seq": 1, "actor": "w", "type": "offer-draw"},
+        {"seq": 2, "actor": "b", "type": "decline-draw", "offerEventSeq": 1}
+      ],
+      "current": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+      "repetitionHistory": [
+        {
+          "source": "origin",
+          "key": {
+            "stateProfile": "mill24-state-v1",
+            "ruleset": "x-mif-fixture-nmm@1",
+            "board": "W.W.W.../B.B.B.../........",
+            "side": "w",
+            "phase": "m",
+            "action": "m",
+            "hands": [0, 0],
+            "semantic": {}
+          }
+        }
+      ],
+      "claims": [
+        {
+          "actor": "w",
+          "eventSeq": 1,
+          "kind": "draw-offer",
+          "status": "declined",
+          "resolvedEventSeq": 2
+        }
+      ]
+    },
+    {
+      "id": "MSTATE-REPLAY-0006",
+      "description": "A primary-event interventionLine selects one of two raw intervention lines",
+      "manifest": "../manifests/x-mif-fixture-stateful@1.json",
+      "origin": "MFEN/0.2 mill24-state-v1 x-mif-fixture-stateful@1 .B.W.W../B.BW..../.B....W. w p p 5,5 - 0 8 - lm=-,-;-,- rh=sha256:ce2bf7b8928a953c839d595ed141fb02523d71424ba4c256f902af2364713075 ul=0000,0000",
+      "events": [
+        {
+          "seq": 1,
+          "actor": "w",
+          "type": "place",
+          "at": "d6",
+          "interventionLine": 12
+        }
+      ],
+      "current": "MFEN/0.2 mill24-state-v1 x-mif-fixture-stateful@1 .B.W.W../BWBW..../.B....W. w p r 4,5 w:intervention:b:b:2:020002:b 0 9 - lm=-,-;-,- rh=sha256:ce2bf7b8928a953c839d595ed141fb02523d71424ba4c256f902af2364713075 ul=0000,0000",
+      "repetitionHistory": [],
+      "claims": []
+    },
+    {
+      "id": "MSTATE-REPLAY-0007",
+      "description": "A satisfied no-progress condition is terminated by an explicit claim in claim mode",
+      "manifest": "../manifests/x-mif-fixture-stateful@1.json",
+      "origin": "MFEN/0.2 mill24-state-v1 x-mif-fixture-stateful@1 W.W.W.../B.B.B.../........ w m m 0,0 - 50 18 - lm=-,-;-,- rh=sha256:ce2bf7b8928a953c839d595ed141fb02523d71424ba4c256f902af2364713075 ul=0000,0000",
+      "events": [
+        {
+          "seq": 1,
+          "actor": "w",
+          "type": "claim-draw",
+          "reason": "no-progress"
+        }
+      ],
+      "current": "MFEN/0.2 mill24-state-v1 x-mif-fixture-stateful@1 W.W.W.../B.B.B.../........ - o o 0,0 - 50 18 d:no-progress lm=-,-;-,- rh=sha256:ce2bf7b8928a953c839d595ed141fb02523d71424ba4c256f902af2364713075 ul=0000,0000",
+      "repetitionHistory": [
+        {
+          "source": "origin",
+          "key": {
+            "stateProfile": "mill24-state-v1",
+            "ruleset": "x-mif-fixture-stateful@1",
+            "board": "W.W.W.../B.B.B.../........",
+            "side": "w",
+            "phase": "m",
+            "action": "m",
+            "hands": [0, 0],
+            "semantic": {
+              "lm": "-,-;-,-",
+              "ul": "0000,0000"
+            }
+          }
+        }
+      ],
+      "claims": [
+        {
+          "actor": "w",
+          "eventSeq": 1,
+          "kind": "draw-claim",
+          "status": "accepted"
+        }
+      ]
+    },
+    {
+      "id": "MSTATE-REPLAY-0008",
+      "description": "The origin observation can complete an automatic threefold repetition",
+      "manifest": "../manifests/x-mif-fixture-nmm@1.json",
+      "origin": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+      "events": [],
+      "current": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 W.W.W.../B.B.B.../........ - o o 0,0 - 4 18 d:repetition rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+      "repetitionHistory": [
+        {
+          "source": "pre-origin",
+          "key": {
+            "stateProfile": "mill24-state-v1",
+            "ruleset": "x-mif-fixture-nmm@1",
+            "board": "W.W.W.../B.B.B.../........",
+            "side": "w",
+            "phase": "m",
+            "action": "m",
+            "hands": [0, 0],
+            "semantic": {}
+          }
+        },
+        {
+          "source": "pre-origin",
+          "key": {
+            "stateProfile": "mill24-state-v1",
+            "ruleset": "x-mif-fixture-nmm@1",
+            "board": "W.W.W.../B.B.B.../........",
+            "side": "w",
+            "phase": "m",
+            "action": "m",
+            "hands": [0, 0],
+            "semantic": {}
+          }
+        },
+        {
+          "source": "origin",
+          "key": {
+            "stateProfile": "mill24-state-v1",
+            "ruleset": "x-mif-fixture-nmm@1",
+            "board": "W.W.W.../B.B.B.../........",
+            "side": "w",
+            "phase": "m",
+            "action": "m",
+            "hands": [0, 0],
+            "semantic": {}
+          }
+        }
+      ],
+      "claims": []
+    }
+  ],
+  "invalidReplay": [
+    {
+      "id": "MSTATE-INVALID-0001",
+      "base": "MSTATE-REPLAY-0001",
+      "mutation": {"events[1].actor": "w"},
+      "expected": "reject",
+      "category": "replay",
+      "code": "event-actor"
+    },
+    {
+      "id": "MSTATE-INVALID-0002",
+      "base": "MSTATE-REPLAY-0002",
+      "mutation": {"events[5].target": {"zone": "board", "at": "d6"}},
+      "expected": "reject",
+      "category": "replay",
+      "code": "obligation-target-mismatch"
+    },
+    {
+      "id": "MSTATE-INVALID-0003",
+      "base": "MSTATE-REPLAY-0002",
+      "mutation": {"current": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 WWW...../B......B/........ b p p 6,7 - 0 5 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd"},
+      "expected": "reject",
+      "category": "replay",
+      "code": "checkpoint-mismatch"
+    },
+    {
+      "id": "MSTATE-INVALID-0004",
+      "base": "MSTATE-REPLAY-0005",
+      "mutation": {"repetitionHistory": []},
+      "expected": "reject",
+      "category": "replay",
+      "code": "repetition-history-mismatch"
+    },
+    {
+      "id": "MSTATE-INVALID-0005",
+      "base": "MSTATE-REPLAY-0005",
+      "mutation": {"claims": []},
+      "expected": "reject",
+      "category": "replay",
+      "code": "claims-mismatch"
+    },
+    {
+      "id": "MSTATE-INVALID-0006",
+      "event": {"seq": 1, "actor": "system", "type": "place", "at": "a7"},
+      "expected": "reject",
+      "category": "replay",
+      "code": "system-gameplay-event"
+    },
+    {
+      "id": "MSTATE-INVALID-0007",
+      "event": {"seq": 1, "actor": "w", "type": "x-teleport", "from": "a7", "to": "g1"},
+      "expected": "reject",
+      "category": "unsupported",
+      "code": "unsupported-semantic-event"
+    },
+    {
+      "id": "MSTATE-INVALID-0008",
+      "event": {"seq": 1, "actor": "w", "type": "remove", "at": "b6"},
+      "expected": "reject",
+      "category": "syntax",
+      "code": "legacy-remove-target-shape"
+    },
+    {
+      "id": "MSTATE-INVALID-0009",
+      "base": "MSTATE-REPLAY-0006",
+      "mutation": {"events[0].interventionLine": 0},
+      "expected": "reject",
+      "category": "replay",
+      "code": "intervention-line-not-candidate"
+    },
+    {
+      "id": "MSTATE-INVALID-0010",
+      "base": "MSTATE-REPLAY-0006",
+      "mutation": {"events[0].interventionLine": 4},
+      "expected": "reject",
+      "category": "canonical",
+      "code": "redundant-intervention-line"
+    }
+  ]
+}

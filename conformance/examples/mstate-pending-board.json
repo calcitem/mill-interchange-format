@@ -1,0 +1,165 @@
+{
+  "format": "MSTATE/0.2",
+  "positionFormat": "MFEN/0.2",
+  "stateProfile": "mill24-state-v1",
+  "ruleset": {
+    "id": "x-mif-fixture-nmm",
+    "version": 1,
+    "digest": "sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+    "manifest": {
+      "format": "MRS/0.2",
+      "id": "x-mif-fixture-nmm",
+      "version": 1,
+      "title": "Conformance fixture: standard-form Nine Men's Morris",
+      "status": "fixture",
+      "semanticsProfile": "mif-finite-rules-v1",
+      "topology": "mill24-orthogonal-v1",
+      "pieces": {
+        "white": 9,
+        "black": 9,
+        "minimumLive": 3
+      },
+      "turn": {
+        "initial": "w",
+        "placingEndActivePlayer": "w"
+      },
+      "flying": {
+        "enabled": true,
+        "maximumLive": 3
+      },
+      "placing": {
+        "movementAllowed": false,
+        "earlyStop": {
+          "emptyPoints": 0,
+          "boundary": "after-unobligated-place-v1"
+        }
+      },
+      "mills": {
+        "placingEffect": "remove-opponent-board",
+        "movingEffect": "remove-opponent-board",
+        "removalMultiplicity": "one-per-primary",
+        "targetProtection": "outside-mill-first",
+        "lineReuse": "unlimited",
+        "reverseReformation": "allowed",
+        "delayedClearBoundary": "on-enter-moving-v1"
+      },
+      "captures": {
+        "resolution": "target-commits-v1",
+        "custodian": {
+          "enabled": false,
+          "lines": {
+            "squareEdges": true,
+            "cross": true,
+            "diagonal": true
+          },
+          "phases": [
+            "moving",
+            "placing"
+          ],
+          "maximumOwnLivePieces": null
+        },
+        "intervention": {
+          "enabled": false,
+          "lines": {
+            "squareEdges": true,
+            "cross": true,
+            "diagonal": true
+          },
+          "phases": [
+            "moving",
+            "placing"
+          ],
+          "maximumOwnLivePieces": null
+        },
+        "leap": {
+          "enabled": false,
+          "lines": {
+            "squareEdges": true,
+            "cross": true,
+            "diagonal": true
+          },
+          "phases": [
+            "moving",
+            "placing"
+          ],
+          "maximumOwnLivePieces": null
+        }
+      },
+      "boardFull": {
+        "action": "first-player-loses"
+      },
+      "stalemate": {
+        "action": "loss",
+        "boardRemovalTargets": "adjacent-opponent"
+      },
+      "draw": {
+        "noProgress": {
+          "normalLimit": 100,
+          "endgameLimit": 100,
+          "endgamePredicate": "either-player-live-equals-3",
+          "mode": "automatic",
+          "countedPrimaryActions": [
+            "move"
+          ],
+          "resetEvents": [
+            "board-remove",
+            "hand-remove",
+            "place"
+          ],
+          "evaluationBoundary": "stable-after-primary-sequence-v1"
+        },
+        "repetition": {
+          "count": 3,
+          "mode": "automatic",
+          "observation": "stable-moving-v1",
+          "projection": "legal-state-v1",
+          "resetEvents": [
+            "board-remove",
+            "hand-remove",
+            "place"
+          ]
+        },
+        "offers": {
+          "expiry": "on-opponent-primary-action"
+        }
+      },
+      "semanticState": []
+    }
+  },
+  "origin": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+  "events": [
+    {
+      "seq": 1,
+      "actor": "w",
+      "type": "place",
+      "at": "a7"
+    },
+    {
+      "seq": 2,
+      "actor": "b",
+      "type": "place",
+      "at": "b6"
+    },
+    {
+      "seq": 3,
+      "actor": "w",
+      "type": "place",
+      "at": "d7"
+    },
+    {
+      "seq": 4,
+      "actor": "b",
+      "type": "place",
+      "at": "b4"
+    },
+    {
+      "seq": 5,
+      "actor": "w",
+      "type": "place",
+      "at": "g7"
+    }
+  ],
+  "current": "MFEN/0.2 mill24-state-v1 x-mif-fixture-nmm@1 WWW...../B......B/........ w p r 6,7 w:mill:b:b:1:008100:b 0 5 - rh=sha256:2816857af70daf493797292a795bafb933a7294a0c7d97a8f99fde63974bf8cd",
+  "repetitionHistory": [],
+  "claims": []
+}
