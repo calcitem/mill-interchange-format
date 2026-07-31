@@ -23,10 +23,11 @@ The immutable baselines are WD 0.2 at `4346b24` and WD 0.3 at
 | [`mif-0.4.md`](mif-0.4.md) | English normative working draft |
 | [`conformance/`](conformance/) | Normative machine-readable corpus |
 | [`conformance/mif-0.4.abnf`](conformance/mif-0.4.abnf) | Standalone ABNF |
+| [`docs/zh-CN/mif-0.4.md`](docs/zh-CN/mif-0.4.md) | Complete Chinese translation (informative) |
 | [`docs/zh-CN/mif-0.4-guide.md`](docs/zh-CN/mif-0.4-guide.md) | Chinese reader’s guide (informative) |
 
-If the English draft and the Chinese guide disagree, the English draft and
-the conformance corpus prevail.
+If the English draft and either Chinese document disagree, the English draft
+and the conformance corpus prevail.
 
 ## How to cite
 
