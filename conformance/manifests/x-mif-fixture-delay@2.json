@@ -1,22 +1,22 @@
 {
-  "format": "MRS/0.3",
-  "id": "x-mif-fixture-nmm",
-  "version": 1,
-  "title": "Conformance fixture: standard-form Nine Men's Morris",
+  "format": "MRS/0.4",
+  "id": "x-mif-fixture-delay",
+  "version": 2,
+  "title": "Conformance fixture: marked and delayed board removal",
   "status": "fixture",
-  "semanticsProfile": "mif-finite-rules-v1",
-  "topology": "mill24-orthogonal-v1",
+  "semanticsProfile": "mif-finite-rules-v2",
+  "topology": "mill24-diagonal-v1",
   "pieces": {
-    "white": 9,
-    "black": 9,
+    "white": 12,
+    "black": 12,
     "minimumLive": 3
   },
   "turn": {
     "initial": "w",
-    "placingEndActivePlayer": "w"
+    "placingEndActivePlayer": "b"
   },
   "flying": {
-    "enabled": true,
+    "enabled": false,
     "maximumLive": 3
   },
   "placing": {
@@ -27,10 +27,10 @@
     }
   },
   "mills": {
-    "placingEffect": "remove-opponent-board",
+    "placingEffect": "mark-opponent-board-until-moving",
     "movingEffect": "remove-opponent-board",
     "removalMultiplicity": "one-per-primary",
-    "targetProtection": "outside-mill-first",
+    "targetProtection": "all-opponent",
     "lineReuse": "unlimited",
     "reverseReformation": "allowed",
     "delayedClearBoundary": "on-enter-moving-v1"

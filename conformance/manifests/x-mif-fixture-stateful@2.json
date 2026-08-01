@@ -1,10 +1,10 @@
 {
-  "format": "MRS/0.3",
+  "format": "MRS/0.4",
   "id": "x-mif-fixture-stateful",
-  "version": 1,
+  "version": 2,
   "title": "Conformance fixture: sequence-dependent mill and capture state",
   "status": "fixture",
-  "semanticsProfile": "mif-finite-rules-v1",
+  "semanticsProfile": "mif-finite-rules-v2",
   "topology": "mill24-orthogonal-v1",
   "pieces": {
     "white": 9,
@@ -95,6 +95,7 @@
       "resetEvents": [
         "board-remove",
         "hand-remove",
+        "mill-formation",
         "place"
       ],
       "evaluationBoundary": "stable-after-primary-sequence-v1"

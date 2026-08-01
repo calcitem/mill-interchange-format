@@ -1,39 +1,43 @@
-# MIF Community Working Draft 0.3 中文导读与讨论提要
+# MIF Community Working Draft 0.4 中文导读与讨论提要
 
 **2026 年 7 月 26 日**
 
 > 本文是英文规范的中文导读，不是独立的规范性文本。发生歧义时，以
-> 仓库根目录 `mif-0.3.md` 的英文条文和 `conformance/`
+> 仓库根目录 `mif-0.4.md` 的英文条文和 `conformance/`
 > 机器可读语料为准。
 
 ## 1. 文档定位
 
-0.3 在已公开的 0.2 基线（`4346b24`）上闭合若干会让两个独立实现产生不同
-结果的协议冲突。签名仍是实验性的：
+0.4 在不可变的 0.3 基线
+（`3f1ffc30ab8c838eaeae54102c37e20bdaa00c7a`）之后闭合状态机、replay
+seed 和规范性语料冲突。签名仍是实验性的：
 
 ```text
-MFEN/0.3
-MPK/0.3
-MSTATE/0.3
-MRS/0.3
+MFEN/0.4
+MPK/0.4
+MSTATE/0.4
+MRS/0.4
 ```
 
 它是独立社区工作稿，不是 ISO、IEC、CEN、WMD 或任何赛事组织发布、
 批准或认证的标准。
 
-相对 0.2，0.3 的要点包括：
+相对 0.3，0.4 的要点包括：
 
-- 缩窄 MSTATE actor 通用条款，使和棋协商可与当前 `side` 不一致；
-- 独立 MFEN 不得把已可判定的 automatic 终局仍标成 ongoing（repetition 除外）；
-- `change-player` 在一次 stable-boundary 中至多换边一次，双方仍无着则判和；
-- board-removal 的 `remaining` 不得超过合法盘面目标数；
-- MPK 禁止非语义私有扩展；未成磨的 primary action 清除 `lm`；
-- 允许 `pre-origin` claims，并在非协议终局时关闭 open offer；
-- 与 MPK 关联的 line ID（含 `interventionLine`）须随 line permutation 变换。
+- 增加独立 `preOriginClaims`，不再用最终 `claims` 反向充当 replay seed；
+- obligation 完成和 `change-player` 后统一同步新 actor 的 phase；
+- pipeline 生成 obligation 时立即暂停，完成后从第 1 步重新执行；
+- 为 mill-count、full-board、stalemate 的零目标定义封闭结果；
+- stalemate 先于 repetition，重复观察只提交最终稳定状态；
+- 普通 multiple removal 使用整个序列容量，而不是初始 target 快照；
+- full-board 在 placing 阶段也可确定性处理；
+- 双方同时低于 minimum 时判和；
+- 独立 MFEN 必须是 deterministic fixed point；
+- 任意非 accept-draw 的终局都会关闭 open offer。
 
 ## 2. 总体架构
 
-0.3 继续保留 0.1/0.2 最重要的成果：不再用一种“Mill FEN”承担所有用途。
+0.4 继续保留 0.1/0.2/0.3 最重要的成果：不再用一种“Mill FEN”承担所有用途。
 
 | 层次 | 解决的问题 | 不承担的职责 |
 |---|---|---|
@@ -54,10 +58,10 @@ key-profile   = MPK 投影和对称归一化
 因此，将 D4 改成完整 16 个拓扑自同构，不需要把游戏规则从
 `nmm@1` 升成 `nmm@2`。
 
-## 3. MFEN/0.3 的核心形式
+## 3. MFEN/0.4 的核心形式
 
 ```text
-MFEN/0.3 <state-profile> <ruleset> <board> <side> <phase> <action>
+MFEN/0.4 <state-profile> <ruleset> <board> <side> <phase> <action>
 <hands> <obligations> <no-progress> <primary-ply> <outcome>
 [<extension> ...]
 ```
@@ -142,7 +146,7 @@ Sanmill 可以继续使用适合其 Rust/TGF 热路径的 inner/middle/outer
 - 保留原所有者；
 - 只在规则定义的确定边界清除。
 
-`mif-finite-rules-v1` 将清除边界固定为：
+`mif-finite-rules-v2` 将清除边界固定为：
 
 ```text
 on-enter-moving-v1
@@ -473,7 +477,7 @@ claim 或 resign。
 MSTATE 顶层增加：
 
 ```json
-"positionFormat": "MFEN/0.3"
+"positionFormat": "MFEN/0.4"
 ```
 
 不再一边声称版本独立，一边把 MFEN 版本隐式写死。
@@ -485,7 +489,7 @@ MSTATE 顶层增加：
 ```json
 {
   "id": "x-...",
-  "version": 1,
+  "version": 2,
   "digest": "sha256:...",
   "manifest": { }
 }
@@ -520,16 +524,16 @@ manifest-digest-mismatch
 
 `stable-moving-v1` 规定：
 
-1. origin 若已是稳定 moving 状态，自动观察一次；
+1. 先完成 through-stalemate 的非 repetition 确定性转换；
 2. pending removal 中间状态不观察；
-3. obligation 完成并第一次回到稳定 moving 边界时观察；
+3. 只有最终仍 ongoing 的稳定 moving 状态才观察；
 4. reset event 先清除当前窗口；
 5. repetition 自动终局或允许 claim 由 manifest 明确选择；
 6. repetition 导致的终局不再追加第二次观察。
 
-`claims` 是按 `eventSeq` 严格递增的审计数组，记录 draw offer 或已接受
-draw claim。offer 的 accepted、declined、withdrawn、expired 都有明确
-状态和 resolved event。
+`preOriginClaims` 保存 origin 时的 seed；`claims` 只保存 replay 后的最终
+审计。两者一一对应，因此 pre-origin open offer 可以在事件中被处理，也可以
+在 origin automatic terminal 中过期，而无需从最终状态倒推 seed。
 
 ## 13. MRS 选择有限机制，不再假装是任意规则语言
 
@@ -539,7 +543,7 @@ draw claim。offer 的 accepted、declined、withdrawn、expired 都有明确
 
 它不允许两个实现仅凭一组 Boolean 各自猜测状态转移。
 
-`mif-finite-rules-v1` 明确规定：
+`mif-finite-rules-v2` 明确规定：
 
 - primary action 前置条件；
 - mill、leap、intervention、custodian 检测顺序；
@@ -562,10 +566,10 @@ draw claim。offer 的 accepted、declined、withdrawn、expired 都有明确
 进入 moving 并清除 delayed token
 -> 生成按当前磨坊数的 deferred obligation
 -> full board
--> minimum material
+-> simultaneous minimum material
+-> stalemate
 -> repetition
 -> no-progress
--> stalemate
 -> 同步下一 action
 ```
 
@@ -604,7 +608,7 @@ JCS 不会排序数组，所以规范逐项说明：
 
 ```text
 英文规范 Annex C
-conformance/mif-0.3.abnf
+conformance/mif-0.4.abnf
 ```
 
 它定义了此前缺失的：
@@ -627,12 +631,12 @@ conformance/mif-0.3.abnf
 `conformance/` 现在包含：
 
 ```text
-mif-0.3.abnf
-四份 provisional manifest
+mif-0.4.abnf
+七份 provisional manifest
 MFEN 正反向量
 MPK D4/Aut16 向量
-MSTATE replay 和错误向量
-I-JSON/JCS/SHA-256 向量
+MSTATE replay、phase 同步、动态移除与 leap 语义向量
+I-JSON/JCS/SHA-256 向量与自动完整性校验
 全部 16 个 transform 的点和线置换
 Sanmill/NMM_LLM 固定版本映射
 ```
@@ -641,10 +645,13 @@ Sanmill/NMM_LLM 固定版本映射
 
 | Fixture | SHA-256 |
 |---|---|
-| `x-mif-fixture-nmm@1` | `5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519` |
-| `x-mif-fixture-dooz@1` | `6a0892cd9553c72e02722ee8a1b6d6b946ef9c85107b3cfc24695b74d649ad15` |
-| `x-mif-fixture-delay@1` | `aee63a15c98e1f579e89fa360c7af9aa56448cc3c63ca0205c59eaffc9941973` |
-| `x-mif-fixture-stateful@1` | `d2fd93a3b1bbc0139a2f95507309057cd8fb79c68c8191ac6f978cb4263d99e8` |
+| `x-mif-fixture-nmm@2` | `eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913` |
+| `x-mif-fixture-dooz@2` | `8abe001b123ddee3ff88e4da8ef6970f2f847ace68bbb695927ab4a0d68872b6` |
+| `x-mif-fixture-delay@2` | `59f08e0ec2317973f8ff7bf56a9ab6f699cd550ef8f065be7356dedfc88f5c3e` |
+| `x-mif-fixture-stateful@2` | `ff9ddf44f2d0335b34021f161ccc2550f6b5bf820df59445ffe9049c13bf14c6` |
+| `x-mif-fixture-nmm-claim@2` | `e56e246b150a046ba605701b0459f1de5aa8913aaf329dba7719bfedf1f8b3a0` |
+| `x-mif-fixture-stalemate-change@2` | `70cbff2f7140dbb66718ce01f0fedc5d43f475b3cff8f58f97b15834175386ae` |
+| `x-mif-fixture-mill-multi@2` | `244157e6946614090259133893fe2519f0330917d3dc7bcef6c705a3d160ae88` |
 
 fixture 全部使用 `x-`，不会提前占用未来正式的 `nmm@1` 或 `dooz@1`。
 
@@ -697,7 +704,7 @@ commit:     aa6b0c99ee3fca13b0d34e6f929257959ed51414
 
 ## 19. 仍不应冻结稳定版的原因
 
-0.2 已经把线格式层面的主要歧义关掉，但仍应先完成：
+0.4 已经把已知状态机和线格式歧义关掉，但仍应先完成：
 
 - 两个独立实现通过同一语料；
 - 至少两种复杂规则集的跨语言 replay；

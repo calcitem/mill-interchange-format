@@ -1,12 +1,12 @@
 {
-  "format": "MIF-CONFORMANCE/0.3",
+  "format": "MIF-CONFORMANCE/0.4",
   "kind": "mstate-replay-vectors",
   "validReplay": [
     {
       "id": "MSTATE-REPLAY-0001",
       "description": "A replay may end at an unresolved board-removal obligation",
-      "manifest": "../manifests/x-mif-fixture-nmm@1.json",
-      "origin": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+      "manifest": "../manifests/x-mif-fixture-nmm@2.json",
+      "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
       "events": [
         {
           "seq": 1,
@@ -39,15 +39,16 @@
           "at": "g7"
         }
       ],
-      "current": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 WWW...../B......B/........ w p r 6,7 w:mill:b:b:1:008100:b 0 5 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+      "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 WWW...../B......B/........ w p r 6,7 w:mill:b:b:1:008100:b 0 5 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
       "repetitionHistory": [],
-      "claims": []
+      "claims": [],
+      "preOriginClaims": []
     },
     {
       "id": "MSTATE-REPLAY-0002",
       "description": "Board removal uses a structured board target",
-      "manifest": "../manifests/x-mif-fixture-nmm@1.json",
-      "origin": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+      "manifest": "../manifests/x-mif-fixture-nmm@2.json",
+      "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
       "events": [
         {
           "seq": 1,
@@ -89,15 +90,16 @@
           }
         }
       ],
-      "current": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 WWW...../.......B/........ b p p 6,7 - 0 5 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+      "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 WWW...../.......B/........ b p p 6,7 - 0 5 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
       "repetitionHistory": [],
-      "claims": []
+      "claims": [],
+      "preOriginClaims": []
     },
     {
       "id": "MSTATE-REPLAY-0003",
       "description": "Hand removal is an explicit supplementary event",
-      "manifest": "../manifests/x-mif-fixture-dooz@1.json",
-      "origin": "MFEN/0.3 mill24-state-v1 x-mif-fixture-dooz@1 ......../......../........ w p p 12,12 - 0 0 - rh=sha256:6a0892cd9553c72e02722ee8a1b6d6b946ef9c85107b3cfc24695b74d649ad15",
+      "manifest": "../manifests/x-mif-fixture-dooz@2.json",
+      "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-dooz@2 ......../......../........ w p p 12,12 - 0 0 - rh=sha256:8abe001b123ddee3ff88e4da8ef6970f2f847ace68bbb695927ab4a0d68872b6",
       "events": [
         {
           "seq": 1,
@@ -139,15 +141,16 @@
           }
         }
       ],
-      "current": "MFEN/0.3 mill24-state-v1 x-mif-fixture-dooz@1 WWW...../B......B/........ b p p 9,9 - 0 5 - rh=sha256:6a0892cd9553c72e02722ee8a1b6d6b946ef9c85107b3cfc24695b74d649ad15",
+      "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-dooz@2 WWW...../B......B/........ b p p 9,9 - 0 5 - rh=sha256:8abe001b123ddee3ff88e4da8ef6970f2f847ace68bbb695927ab4a0d68872b6",
       "repetitionHistory": [],
-      "claims": []
+      "claims": [],
+      "preOriginClaims": []
     },
     {
       "id": "MSTATE-REPLAY-0004",
       "description": "A board remove under mark-and-delay changes B to b and emits no clear event",
-      "manifest": "../manifests/x-mif-fixture-delay@1.json",
-      "origin": "MFEN/0.3 mill24-state-v1 x-mif-fixture-delay@1 ......../......../........ w p p 12,12 - 0 0 - rh=sha256:aee63a15c98e1f579e89fa360c7af9aa56448cc3c63ca0205c59eaffc9941973",
+      "manifest": "../manifests/x-mif-fixture-delay@2.json",
+      "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-delay@2 ......../......../........ w p p 12,12 - 0 0 - rh=sha256:59f08e0ec2317973f8ff7bf56a9ab6f699cd550ef8f065be7356dedfc88f5c3e",
       "events": [
         {
           "seq": 1,
@@ -189,15 +192,16 @@
           }
         }
       ],
-      "current": "MFEN/0.3 mill24-state-v1 x-mif-fixture-delay@1 WWW...../b......B/........ b p p 9,10 - 0 5 - rh=sha256:aee63a15c98e1f579e89fa360c7af9aa56448cc3c63ca0205c59eaffc9941973",
+      "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-delay@2 WWW...../b......B/........ b p p 9,10 - 0 5 - rh=sha256:59f08e0ec2317973f8ff7bf56a9ab6f699cd550ef8f065be7356dedfc88f5c3e",
       "repetitionHistory": [],
-      "claims": []
+      "claims": [],
+      "preOriginClaims": []
     },
     {
       "id": "MSTATE-REPLAY-0005",
       "description": "Draw offer lifecycle allows decline by non-side player",
-      "manifest": "../manifests/x-mif-fixture-nmm@1.json",
-      "origin": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+      "manifest": "../manifests/x-mif-fixture-nmm@2.json",
+      "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
       "events": [
         {
           "seq": 1,
@@ -211,13 +215,13 @@
           "offerEventSeq": 1
         }
       ],
-      "current": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+      "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
       "repetitionHistory": [
         {
           "source": "origin",
           "key": {
             "stateProfile": "mill24-state-v1",
-            "ruleset": "x-mif-fixture-nmm@1",
+            "ruleset": "x-mif-fixture-nmm@2",
             "board": "W.W.W.../B.B.B.../........",
             "side": "w",
             "phase": "m",
@@ -238,13 +242,14 @@
           "status": "declined",
           "resolvedEventSeq": 2
         }
-      ]
+      ],
+      "preOriginClaims": []
     },
     {
       "id": "MSTATE-REPLAY-0006",
       "description": "A primary-event interventionLine selects one of two raw intervention lines",
-      "manifest": "../manifests/x-mif-fixture-stateful@1.json",
-      "origin": "MFEN/0.3 mill24-state-v1 x-mif-fixture-stateful@1 .B.W.W../B.BW..../.B....W. w p p 5,5 - 0 8 - lm=-,-;-,- rh=sha256:d2fd93a3b1bbc0139a2f95507309057cd8fb79c68c8191ac6f978cb4263d99e8 ul=0000,0000",
+      "manifest": "../manifests/x-mif-fixture-stateful@2.json",
+      "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-stateful@2 .B.W.W../B.BW..../.B....W. w p p 5,5 - 0 8 - lm=-,-;-,- rh=sha256:ff9ddf44f2d0335b34021f161ccc2550f6b5bf820df59445ffe9049c13bf14c6 ul=0000,0000",
       "events": [
         {
           "seq": 1,
@@ -254,15 +259,16 @@
           "interventionLine": 12
         }
       ],
-      "current": "MFEN/0.3 mill24-state-v1 x-mif-fixture-stateful@1 .B.W.W../BWBW..../.B....W. w p r 4,5 w:intervention:b:b:2:020002:b 0 9 - lm=-,-;-,- rh=sha256:d2fd93a3b1bbc0139a2f95507309057cd8fb79c68c8191ac6f978cb4263d99e8 ul=0000,0000",
+      "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-stateful@2 .B.W.W../BWBW..../.B....W. w p r 4,5 w:intervention:b:b:2:020002:b 0 9 - lm=-,-;-,- rh=sha256:ff9ddf44f2d0335b34021f161ccc2550f6b5bf820df59445ffe9049c13bf14c6 ul=0000,0000",
       "repetitionHistory": [],
-      "claims": []
+      "claims": [],
+      "preOriginClaims": []
     },
     {
       "id": "MSTATE-REPLAY-0007",
       "description": "A satisfied no-progress condition is terminated by an explicit claim in claim mode",
-      "manifest": "../manifests/x-mif-fixture-stateful@1.json",
-      "origin": "MFEN/0.3 mill24-state-v1 x-mif-fixture-stateful@1 W.W.W.../B.B.B.../........ w m m 0,0 - 50 18 - lm=-,-;-,- rh=sha256:d2fd93a3b1bbc0139a2f95507309057cd8fb79c68c8191ac6f978cb4263d99e8 ul=0000,0000",
+      "manifest": "../manifests/x-mif-fixture-stateful@2.json",
+      "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-stateful@2 W.W.W.../B.B.B.../........ w m m 0,0 - 50 18 - lm=-,-;-,- rh=sha256:ff9ddf44f2d0335b34021f161ccc2550f6b5bf820df59445ffe9049c13bf14c6 ul=0000,0000",
       "events": [
         {
           "seq": 1,
@@ -271,13 +277,13 @@
           "reason": "no-progress"
         }
       ],
-      "current": "MFEN/0.3 mill24-state-v1 x-mif-fixture-stateful@1 W.W.W.../B.B.B.../........ - o o 0,0 - 50 18 d:no-progress lm=-,-;-,- rh=sha256:d2fd93a3b1bbc0139a2f95507309057cd8fb79c68c8191ac6f978cb4263d99e8 ul=0000,0000",
+      "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-stateful@2 W.W.W.../B.B.B.../........ - o o 0,0 - 50 18 d:no-progress lm=-,-;-,- rh=sha256:ff9ddf44f2d0335b34021f161ccc2550f6b5bf820df59445ffe9049c13bf14c6 ul=0000,0000",
       "repetitionHistory": [
         {
           "source": "origin",
           "key": {
             "stateProfile": "mill24-state-v1",
-            "ruleset": "x-mif-fixture-stateful@1",
+            "ruleset": "x-mif-fixture-stateful@2",
             "board": "W.W.W.../B.B.B.../........",
             "side": "w",
             "phase": "m",
@@ -300,21 +306,22 @@
           "kind": "draw-claim",
           "status": "accepted"
         }
-      ]
+      ],
+      "preOriginClaims": []
     },
     {
       "id": "MSTATE-REPLAY-0008",
       "description": "The origin observation can complete an automatic threefold repetition",
-      "manifest": "../manifests/x-mif-fixture-nmm@1.json",
-      "origin": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+      "manifest": "../manifests/x-mif-fixture-nmm@2.json",
+      "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
       "events": [],
-      "current": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 W.W.W.../B.B.B.../........ - o o 0,0 - 4 18 d:repetition rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+      "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 W.W.W.../B.B.B.../........ - o o 0,0 - 4 18 d:repetition rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
       "repetitionHistory": [
         {
           "source": "pre-origin",
           "key": {
             "stateProfile": "mill24-state-v1",
-            "ruleset": "x-mif-fixture-nmm@1",
+            "ruleset": "x-mif-fixture-nmm@2",
             "board": "W.W.W.../B.B.B.../........",
             "side": "w",
             "phase": "m",
@@ -330,7 +337,7 @@
           "source": "pre-origin",
           "key": {
             "stateProfile": "mill24-state-v1",
-            "ruleset": "x-mif-fixture-nmm@1",
+            "ruleset": "x-mif-fixture-nmm@2",
             "board": "W.W.W.../B.B.B.../........",
             "side": "w",
             "phase": "m",
@@ -346,7 +353,7 @@
           "source": "origin",
           "key": {
             "stateProfile": "mill24-state-v1",
-            "ruleset": "x-mif-fixture-nmm@1",
+            "ruleset": "x-mif-fixture-nmm@2",
             "board": "W.W.W.../B.B.B.../........",
             "side": "w",
             "phase": "m",
@@ -359,21 +366,22 @@
           }
         }
       ],
-      "claims": []
+      "claims": [],
+      "preOriginClaims": []
     },
     {
       "id": "MSTATE-ORIGIN-AUTOMATIC-NO-PROGRESS",
       "description": "Origin stable-boundary applies automatic no-progress before events",
-      "manifest": "../manifests/x-mif-fixture-nmm@1.json",
-      "origin": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 W.W.W.../B.B.B.../........ w m m 0,0 - 100 18 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+      "manifest": "../manifests/x-mif-fixture-nmm@2.json",
+      "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 W.W.W.../B.B.B.../........ w m m 0,0 - 100 18 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
       "events": [],
-      "current": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 W.W.W.../B.B.B.../........ - o o 0,0 - 100 18 d:no-progress rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+      "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 W.W.W.../B.B.B.../........ - o o 0,0 - 100 18 d:no-progress rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
       "repetitionHistory": [
         {
           "source": "origin",
           "key": {
             "stateProfile": "mill24-state-v1",
-            "ruleset": "x-mif-fixture-nmm@1",
+            "ruleset": "x-mif-fixture-nmm@2",
             "board": "W.W.W.../B.B.B.../........",
             "side": "w",
             "phase": "m",
@@ -386,21 +394,22 @@
           }
         }
       ],
-      "claims": []
+      "claims": [],
+      "preOriginClaims": []
     },
     {
       "id": "MSTATE-ORIGIN-CLAIMABLE-NO-PROGRESS",
       "description": "Claim-mode no-progress leaves origin ongoing and claimable",
-      "manifest": "../manifests/x-mif-fixture-nmm-claim@1.json",
-      "origin": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm-claim@1 W.W.W.../B.B.B.../........ w m m 0,0 - 100 18 - rh=sha256:ae44bbffdbeb3b637da5ea5cf3d88289172f77a1925decf35ce6f88d58d6424b",
+      "manifest": "../manifests/x-mif-fixture-nmm-claim@2.json",
+      "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm-claim@2 W.W.W.../B.B.B.../........ w m m 0,0 - 100 18 - rh=sha256:e56e246b150a046ba605701b0459f1de5aa8913aaf329dba7719bfedf1f8b3a0",
       "events": [],
-      "current": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm-claim@1 W.W.W.../B.B.B.../........ w m m 0,0 - 100 18 - rh=sha256:ae44bbffdbeb3b637da5ea5cf3d88289172f77a1925decf35ce6f88d58d6424b",
+      "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm-claim@2 W.W.W.../B.B.B.../........ w m m 0,0 - 100 18 - rh=sha256:e56e246b150a046ba605701b0459f1de5aa8913aaf329dba7719bfedf1f8b3a0",
       "repetitionHistory": [
         {
           "source": "origin",
           "key": {
             "stateProfile": "mill24-state-v1",
-            "ruleset": "x-mif-fixture-nmm-claim@1",
+            "ruleset": "x-mif-fixture-nmm-claim@2",
             "board": "W.W.W.../B.B.B.../........",
             "side": "w",
             "phase": "m",
@@ -417,13 +426,14 @@
       "claimable": {
         "actor": "w",
         "reason": "no-progress"
-      }
+      },
+      "preOriginClaims": []
     },
     {
       "id": "MSTATE-REPLAY-PREORIGIN-OFFER",
       "description": "Leading pre-origin open offer can be declined by non-side player",
-      "manifest": "../manifests/x-mif-fixture-nmm@1.json",
-      "origin": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+      "manifest": "../manifests/x-mif-fixture-nmm@2.json",
+      "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
       "events": [
         {
           "seq": 1,
@@ -432,13 +442,13 @@
           "offerEventSeq": 0
         }
       ],
-      "current": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+      "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
       "repetitionHistory": [
         {
           "source": "origin",
           "key": {
             "stateProfile": "mill24-state-v1",
-            "ruleset": "x-mif-fixture-nmm@1",
+            "ruleset": "x-mif-fixture-nmm@2",
             "board": "W.W.W.../B.B.B.../........",
             "side": "w",
             "phase": "m",
@@ -459,13 +469,20 @@
           "status": "declined",
           "resolvedEventSeq": 1
         }
+      ],
+      "preOriginClaims": [
+        {
+          "actor": "w",
+          "kind": "draw-offer",
+          "status": "open"
+        }
       ]
     },
     {
       "id": "MSTATE-REPLAY-OFFER-EXPIRE-ON-RESIGN",
       "description": "Open offer expires when resignation ends the game",
-      "manifest": "../manifests/x-mif-fixture-nmm@1.json",
-      "origin": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+      "manifest": "../manifests/x-mif-fixture-nmm@2.json",
+      "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
       "events": [
         {
           "seq": 1,
@@ -478,13 +495,13 @@
           "type": "resign"
         }
       ],
-      "current": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 W.W.W.../B.B.B.../........ - o o 0,0 - 4 18 w:resignation rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+      "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 W.W.W.../B.B.B.../........ - o o 0,0 - 4 18 w:resignation rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
       "repetitionHistory": [
         {
           "source": "origin",
           "key": {
             "stateProfile": "mill24-state-v1",
-            "ruleset": "x-mif-fixture-nmm@1",
+            "ruleset": "x-mif-fixture-nmm@2",
             "board": "W.W.W.../B.B.B.../........",
             "side": "w",
             "phase": "m",
@@ -505,24 +522,26 @@
           "status": "expired",
           "resolvedEventSeq": 2
         }
-      ]
+      ],
+      "preOriginClaims": []
     },
     {
       "id": "MSTATE-REPLAY-STALEMATE-CHANGE-BILATERAL",
       "description": "change-player applies once then bilateral immobility draws",
-      "manifest": "../manifests/x-mif-fixture-stalemate-change@1.json",
-      "origin": "MFEN/0.3 mill24-state-v1 x-mif-fixture-stalemate-change@1 WBWBWBWB/BWBWBWBW/WBWBWBWB w m m 0,0 - 4 24 - rh=sha256:c0e351f857ce86bb16176aafa9113f41474ce37b245573195f00d4781c4d2cef",
+      "manifest": "../manifests/x-mif-fixture-stalemate-change@2.json",
+      "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-stalemate-change@2 WBWBWBWB/BWBWBWBW/WBWBWBWB w m m 0,0 - 4 24 - rh=sha256:70cbff2f7140dbb66718ce01f0fedc5d43f475b3cff8f58f97b15834175386ae",
       "events": [],
-      "current": "MFEN/0.3 mill24-state-v1 x-mif-fixture-stalemate-change@1 WBWBWBWB/BWBWBWBW/WBWBWBWB - o o 0,0 - 4 24 d:no-legal-move rh=sha256:c0e351f857ce86bb16176aafa9113f41474ce37b245573195f00d4781c4d2cef",
+      "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-stalemate-change@2 WBWBWBWB/BWBWBWBW/WBWBWBWB - o o 0,0 - 4 24 d:no-legal-move rh=sha256:70cbff2f7140dbb66718ce01f0fedc5d43f475b3cff8f58f97b15834175386ae",
       "repetitionHistory": [],
       "claims": [],
-      "notes": "Full board of White live pieces: boardFull disabled; both players have no legal move after one change-player"
+      "notes": "Full alternating board: boardFull disabled; both players have no legal move after one change-player; stalemate precedes repetition observation.",
+      "preOriginClaims": []
     },
     {
       "id": "MSTATE-REPLAY-REMOVAL-CAP",
       "description": "one-per-new-line remaining is capped to legal board targets",
-      "manifest": "../manifests/x-mif-fixture-mill-multi@1.json",
-      "origin": "MFEN/0.3 mill24-state-v1 x-mif-fixture-mill-multi@1 .W....B./.W....../W.W..... w p p 5,5 - 0 8 - rh=sha256:9ca0fe34528d62ce66caccba21bfe621f4554d66a7d89afa50c789aedeaeab84",
+      "manifest": "../manifests/x-mif-fixture-mill-multi@2.json",
+      "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-mill-multi@2 .W....B./.W....../W.W..... w p p 5,5 - 0 8 - rh=sha256:244157e6946614090259133893fe2519f0330917d3dc7bcef6c705a3d160ae88",
       "events": [
         {
           "seq": 1,
@@ -531,10 +550,210 @@
           "at": "d5"
         }
       ],
-      "current": "MFEN/0.3 mill24-state-v1 x-mif-fixture-mill-multi@1 .W....B./.W....../W.WW.... w p r 4,5 w:mill:b:b:1:000040:b 0 9 - rh=sha256:9ca0fe34528d62ce66caccba21bfe621f4554d66a7d89afa50c789aedeaeab84",
+      "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-mill-multi@2 .W....B./.W....../W.WW.... w p r 4,5 w:mill:b:b:1:000040:b 0 9 - rh=sha256:244157e6946614090259133893fe2519f0330917d3dc7bcef6c705a3d160ae88",
       "repetitionHistory": [],
       "claims": [],
-      "notes": "Placing on d5 forms two usable mills (d7-d6-d5 and c5-d5-e5) so declared multiplicity is 2, but only one Black board target exists at a1; remaining shall be capped to 1 (000040). Black still has hand tokens."
+      "notes": "Placing on d5 forms two usable mills (d7-d6-d5 and c5-d5-e5) so declared multiplicity is 2, but only one Black board target exists at a1; remaining shall be capped to 1 (000040). Black still has hand tokens.",
+      "preOriginClaims": []
+    },
+    {
+      "id": "MSTATE-ORIGIN-PREORIGIN-OFFER-AUTO-EXPIRE",
+      "description": "An automatic origin terminal expires a seeded draw offer without an event resolution sequence",
+      "manifest": "../manifests/x-mif-fixture-nmm@2.json",
+      "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 W.W.W.../B.B.B.../........ w m m 0,0 - 100 18 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
+      "events": [],
+      "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 W.W.W.../B.B.B.../........ - o o 0,0 - 100 18 d:no-progress rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
+      "repetitionHistory": [
+        {
+          "source": "origin",
+          "key": {
+            "stateProfile": "mill24-state-v1",
+            "ruleset": "x-mif-fixture-nmm@2",
+            "board": "W.W.W.../B.B.B.../........",
+            "side": "w",
+            "phase": "m",
+            "action": "m",
+            "hands": [
+              0,
+              0
+            ],
+            "semantic": {}
+          }
+        }
+      ],
+      "claims": [
+        {
+          "source": "pre-origin",
+          "actor": "w",
+          "kind": "draw-offer",
+          "status": "expired"
+        }
+      ],
+      "preOriginClaims": [
+        {
+          "actor": "w",
+          "kind": "draw-offer",
+          "status": "open"
+        }
+      ]
+    },
+    {
+      "id": "MSTATE-REPLAY-PHASE-SYNC-M-TO-P",
+      "description": "Completing a moving-phase removal synchronizes the next actor to placing while that actor still has hand material",
+      "manifest": "../manifests/x-mif-fixture-nmm@2.json",
+      "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 WWW.BBB./......../........ w m r 0,1 w:mill:b:b:1:000070:b 0 17 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
+      "events": [
+        {
+          "seq": 1,
+          "actor": "w",
+          "type": "remove",
+          "target": {
+            "zone": "board",
+            "at": "g1"
+          }
+        }
+      ],
+      "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 WWW..BB./......../........ b p p 0,1 - 0 17 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
+      "repetitionHistory": [],
+      "claims": [],
+      "preOriginClaims": []
+    },
+    {
+      "id": "MSTATE-REPLAY-PHASE-SYNC-P-TO-M",
+      "description": "Completing a final placing-phase removal synchronizes the next actor to moving at the global placing boundary",
+      "manifest": "../manifests/x-mif-fixture-nmm@2.json",
+      "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 WWW.BBBB/......../........ w p r 0,0 w:mill:b:b:1:000080:b 0 18 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
+      "events": [
+        {
+          "seq": 1,
+          "actor": "w",
+          "type": "remove",
+          "target": {
+            "zone": "board",
+            "at": "a4"
+          }
+        }
+      ],
+      "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 WWW.BBB./......../........ b m m 0,0 - 0 18 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
+      "repetitionHistory": [
+        {
+          "source": "event",
+          "eventSeq": 1,
+          "key": {
+            "stateProfile": "mill24-state-v1",
+            "ruleset": "x-mif-fixture-nmm@2",
+            "board": "WWW.BBB./......../........",
+            "side": "b",
+            "phase": "m",
+            "action": "m",
+            "hands": [
+              0,
+              0
+            ],
+            "semantic": {}
+          }
+        }
+      ],
+      "claims": [],
+      "preOriginClaims": []
+    },
+    {
+      "id": "MSTATE-REPLAY-REMOVAL-DYNAMIC-CAPACITY",
+      "description": "A two-mill placement retains sequence capacity when the first legal target is outside a protected mill",
+      "manifest": "../manifests/x-mif-fixture-mill-multi@2.json",
+      "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-mill-multi@2 .W..BBB./BW....../W.W..... w p p 5,5 - 0 8 - rh=sha256:244157e6946614090259133893fe2519f0330917d3dc7bcef6c705a3d160ae88",
+      "events": [
+        {
+          "seq": 1,
+          "actor": "w",
+          "type": "place",
+          "at": "d5"
+        }
+      ],
+      "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-mill-multi@2 .W..BBB./BW....../WWW..... w p r 4,5 w:mill:b:b:2:000100:b 0 9 - rh=sha256:244157e6946614090259133893fe2519f0330917d3dc7bcef6c705a3d160ae88",
+      "repetitionHistory": [],
+      "claims": [],
+      "preOriginClaims": [],
+      "notes": "The first target set contains only b6. After b6 is removed, the formerly protected g1-d1-a1 mill becomes the recomputed target set for the second removal."
+    },
+    {
+      "id": "MSTATE-ORIGIN-SIMULTANEOUS-MINIMUM",
+      "description": "If both players are below minimum material at the same pipeline step the result is a draw",
+      "manifest": "../manifests/x-mif-fixture-nmm@2.json",
+      "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 WW..BB../......../........ w m m 0,0 - 4 18 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
+      "events": [],
+      "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 WW..BB../......../........ - o o 0,0 - 4 18 d:fewer-than-minimum rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
+      "repetitionHistory": [],
+      "claims": [],
+      "preOriginClaims": []
+    },
+    {
+      "id": "MSTATE-REPLAY-LEAP-MILL-SEMANTICS",
+      "description": "An exclusive leap branch still records the usable destination mill and resets no-progress",
+      "manifest": "../manifests/x-mif-fixture-stateful@2.json",
+      "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-stateful@2 WB.WW.../B.B...../........ w m m 0,0 - 7 18 - lm=-,-;-,- rh=sha256:ff9ddf44f2d0335b34021f161ccc2550f6b5bf820df59445ffe9049c13bf14c6 ul=0000,0000",
+      "events": [
+        {
+          "seq": 1,
+          "actor": "w",
+          "type": "move",
+          "from": "a7",
+          "to": "g7"
+        }
+      ],
+      "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-stateful@2 .BWWW.../B.B...../........ w m r 0,0 w:leap:b:b:1:000002:b 0 19 - lm=a7,g7;-,- rh=sha256:ff9ddf44f2d0335b34021f161ccc2550f6b5bf820df59445ffe9049c13bf14c6 ul=0002,0000",
+      "repetitionHistory": [
+        {
+          "source": "origin",
+          "key": {
+            "stateProfile": "mill24-state-v1",
+            "ruleset": "x-mif-fixture-stateful@2",
+            "board": "WB.WW.../B.B...../........",
+            "side": "w",
+            "phase": "m",
+            "action": "m",
+            "hands": [
+              0,
+              0
+            ],
+            "semantic": {
+              "lm": "-,-;-,-",
+              "ul": "0000,0000"
+            }
+          }
+        }
+      ],
+      "claims": [],
+      "preOriginClaims": [],
+      "notes": "The move a7-g7 leaps over d7 and forms g7-g4-g1 (line 1). Leap is the only branch, while lm, ul bit 1 and the mill-formation no-progress reset still apply."
+    },
+    {
+      "id": "MSTATE-ORIGIN-PLACING-STABILIZATION",
+      "description": "Every ongoing obligation-free origin runs the pipeline even when it is not initially a repetition-observation boundary",
+      "manifest": "../manifests/x-mif-fixture-nmm@2.json",
+      "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 W.W.W.../B.B.B.../........ w p p 0,0 - 4 18 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
+      "events": [],
+      "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
+      "repetitionHistory": [
+        {
+          "source": "origin",
+          "key": {
+            "stateProfile": "mill24-state-v1",
+            "ruleset": "x-mif-fixture-nmm@2",
+            "board": "W.W.W.../B.B.B.../........",
+            "side": "w",
+            "phase": "m",
+            "action": "m",
+            "hands": [
+              0,
+              0
+            ],
+            "semantic": {}
+          }
+        }
+      ],
+      "claims": [],
+      "preOriginClaims": []
     }
   ],
   "invalidReplay": [
@@ -565,7 +784,7 @@
       "id": "MSTATE-INVALID-0003",
       "base": "MSTATE-REPLAY-0002",
       "mutation": {
-        "current": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 WWW...../B......B/........ b p p 6,7 - 0 5 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519"
+        "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 WWW...../B......B/........ b p p 6,7 - 0 5 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913"
       },
       "expected": "reject",
       "category": "replay",

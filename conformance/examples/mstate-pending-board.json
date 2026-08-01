@@ -1,18 +1,18 @@
 {
-  "format": "MSTATE/0.3",
-  "positionFormat": "MFEN/0.3",
+  "format": "MSTATE/0.4",
+  "positionFormat": "MFEN/0.4",
   "stateProfile": "mill24-state-v1",
   "ruleset": {
     "id": "x-mif-fixture-nmm",
-    "version": 1,
-    "digest": "sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+    "version": 2,
+    "digest": "sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
     "manifest": {
-      "format": "MRS/0.3",
+      "format": "MRS/0.4",
       "id": "x-mif-fixture-nmm",
-      "version": 1,
+      "version": 2,
       "title": "Conformance fixture: standard-form Nine Men's Morris",
       "status": "fixture",
-      "semanticsProfile": "mif-finite-rules-v1",
+      "semanticsProfile": "mif-finite-rules-v2",
       "topology": "mill24-orthogonal-v1",
       "pieces": {
         "white": 9,
@@ -126,7 +126,7 @@
       "semanticState": []
     }
   },
-  "origin": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+  "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
   "events": [
     {
       "seq": 1,
@@ -159,7 +159,8 @@
       "at": "g7"
     }
   ],
-  "current": "MFEN/0.3 mill24-state-v1 x-mif-fixture-nmm@1 WWW...../B......B/........ w p r 6,7 w:mill:b:b:1:008100:b 0 5 - rh=sha256:5efe3ee3c5e1672739f4ff9f68088019443324487ec9b0ba9722deffba1ea519",
+  "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 WWW...../B......B/........ w p r 6,7 w:mill:b:b:1:008100:b 0 5 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
   "repetitionHistory": [],
+  "preOriginClaims": [],
   "claims": []
 }

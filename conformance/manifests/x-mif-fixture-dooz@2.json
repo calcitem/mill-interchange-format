@@ -1,10 +1,10 @@
 {
-  "format": "MRS/0.3",
-  "id": "x-mif-fixture-delay",
-  "version": 1,
-  "title": "Conformance fixture: marked and delayed board removal",
+  "format": "MRS/0.4",
+  "id": "x-mif-fixture-dooz",
+  "version": 2,
+  "title": "Conformance fixture: hand-removal placing rule",
   "status": "fixture",
-  "semanticsProfile": "mif-finite-rules-v1",
+  "semanticsProfile": "mif-finite-rules-v2",
   "topology": "mill24-diagonal-v1",
   "pieces": {
     "white": 12,
@@ -13,10 +13,10 @@
   },
   "turn": {
     "initial": "w",
-    "placingEndActivePlayer": "b"
+    "placingEndActivePlayer": "retain"
   },
   "flying": {
-    "enabled": false,
+    "enabled": true,
     "maximumLive": 3
   },
   "placing": {
@@ -27,10 +27,10 @@
     }
   },
   "mills": {
-    "placingEffect": "mark-opponent-board-until-moving",
+    "placingEffect": "remove-opponent-hand-change",
     "movingEffect": "remove-opponent-board",
     "removalMultiplicity": "one-per-primary",
-    "targetProtection": "all-opponent",
+    "targetProtection": "outside-mill-first",
     "lineReuse": "unlimited",
     "reverseReformation": "allowed",
     "delayedClearBoundary": "on-enter-moving-v1"
