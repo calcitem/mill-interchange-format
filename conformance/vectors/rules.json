@@ -1,0 +1,136 @@
+{
+  "format": "MIF-RULE-VECTORS/0.4",
+  "cases": [
+    {
+      "id": "RULES-DOUBLE-MILL-ONE-PER-PRIMARY",
+      "description": "Placing at d7 completes orthogonal lines 0 and 12 but one-per-primary creates one ordinary mill removal",
+      "manifest": "../manifests/x-mif-fixture-nmm@2.json",
+      "input": {
+        "boardBefore": "W.W...../.W....../.W......",
+        "event": {
+          "type": "place",
+          "to": "d7"
+        },
+        "newLineIds": [
+          0,
+          12
+        ]
+      },
+      "expected": {
+        "valid": true,
+        "ordinaryMillRemaining": 1
+      }
+    },
+    {
+      "id": "RULES-DOUBLE-MILL-ONE-PER-NEW-LINE",
+      "description": "The same placement creates two removals under one-per-new-line",
+      "manifest": "../manifests/x-mif-fixture-mill-multi@2.json",
+      "input": {
+        "boardBefore": "W.W...../.W....../.W......",
+        "event": {
+          "type": "place",
+          "to": "d7"
+        },
+        "newLineIds": [
+          0,
+          12
+        ]
+      },
+      "expected": {
+        "valid": true,
+        "ordinaryMillRemaining": 2
+      }
+    },
+    {
+      "id": "RULES-ALL-IN-MILLS-FALLBACK",
+      "description": "outside-mill-first falls back to all live targets when every opponent token is in a complete mill",
+      "input": {
+        "opponentBoard": "BBB...../......../........",
+        "targetProtection": "outside-mill-first"
+      },
+      "expected": {
+        "valid": true,
+        "targetBits": "000007"
+      }
+    },
+    {
+      "id": "RULES-FLYING-THREE",
+      "description": "Three live pieces satisfy maximumLive 3 and permit a non-adjacent move",
+      "input": {
+        "phase": "m",
+        "livePieces": 3,
+        "maximumLive": 3,
+        "adjacent": false
+      },
+      "expected": {
+        "moveAllowed": true
+      }
+    },
+    {
+      "id": "RULES-FLYING-FOUR",
+      "description": "Four live pieces exceed maximumLive 3 and do not permit a non-adjacent move by flying",
+      "input": {
+        "phase": "m",
+        "livePieces": 4,
+        "maximumLive": 3,
+        "adjacent": false
+      },
+      "expected": {
+        "moveAllowed": false
+      }
+    },
+    {
+      "id": "RULES-DELAYED-CLEAR-BOUNDARY",
+      "description": "Owner-preserving delayed markers clear deterministically on entering moving",
+      "input": {
+        "boardBefore": "WWW...../b......B/........",
+        "hands": [
+          0,
+          0
+        ],
+        "boundary": "on-enter-moving-v1"
+      },
+      "expected": {
+        "boardAfter": "WWW...../.......B/........",
+        "emitsRemoveEvent": false
+      }
+    },
+    {
+      "id": "RULES-PHASE-M-WITH-OPPONENT-HAND",
+      "description": "During the global placing regime an active player with no reserve moves while the opponent still places",
+      "input": {
+        "globalPlacingRegime": true,
+        "activeHand": 0,
+        "opponentHand": 1
+      },
+      "expected": {
+        "phase": "m",
+        "action": "m"
+      }
+    },
+    {
+      "id": "RULES-DEFERRED-MILL-COUNT-WITH-PLACING-CAPTURE",
+      "description": "Deferred placing-end mill count is compatible with placing capture mechanisms because their obligations occur at different boundaries",
+      "input": {
+        "placingEffect": "remove-by-current-mill-count-at-placing-end",
+        "placingCaptureEnabled": true
+      },
+      "expected": {
+        "valid": true
+      }
+    },
+    {
+      "id": "RULES-OPPONENT-REMOVE-OWN-WITH-PLACING-CAPTURE",
+      "description": "Opponent self-removal and a placing capture would create branch heads with different actors",
+      "input": {
+        "placingEffect": "opponent-remove-own-board",
+        "placingCaptureEnabled": true
+      },
+      "expected": {
+        "valid": false,
+        "category": "inconsistent",
+        "code": "mixed-obligation-actors"
+      }
+    }
+  ]
+}

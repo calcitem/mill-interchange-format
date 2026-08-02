@@ -126,7 +126,7 @@
       "semanticState": []
     }
   },
-  "origin": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
+  "origin": "MFEN/0.4 mill24-state-v1 ......../......../........ w p p 9,9 - 0 0 -",
   "events": [
     {
       "seq": 1,
@@ -159,7 +159,7 @@
       "at": "g7"
     }
   ],
-  "current": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 WWW...../B......B/........ w p r 6,7 w:mill:b:b:1:008100:b 0 5 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
+  "current": "MFEN/0.4 mill24-state-v1 WWW...../B......B/........ w p r 6,7 w:mill:b:b:1:008100:b 0 5 -",
   "repetitionHistory": [],
   "preOriginClaims": [],
   "claims": []

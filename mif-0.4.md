@@ -34,8 +34,8 @@ game. Those objects do not have the same equivalence relation.
 
 This draft therefore separates:
 
-- **MFEN**, an exact instantaneous rules state, including an unresolved
-  removal;
+- **MFEN**, an exact instantaneous state under a caller-supplied ruleset
+  context, including an unresolved removal;
 - **MPK**, a profile-declared, symmetry-normalized structural analysis key;
 - **MSTATE**, a resumable JSON game state with events, repetition observations
   and draw-claim history; and
@@ -45,6 +45,11 @@ This draft therefore separates:
 This separation is intentional. An MPK is not a lossless save file. An MFEN
 does not invent missing history. An MSTATE does not hide a supplementary
 removal inside a primary action.
+
+MFEN deliberately keeps ruleset identity outside its compact position line.
+Semantic use of an MFEN therefore requires a caller to supply the complete,
+versioned ruleset identity and resolve its manifest; informal names or single
+letter labels are not ruleset identities.
 
 The public point order is also separated from an engine's internal node
 numbering. A conforming engine may retain any packed board or bitboard layout
@@ -57,7 +62,8 @@ This document specifies:
 a) a public coordinate, point, line and transformation model for 24-point Mill
 boards;
 
-b) MFEN/0.4, a canonical textual representation of an instantaneous state;
+b) MFEN/0.4, a canonical textual representation of an instantaneous state
+under a caller-supplied ruleset context;
 
 c) MPK/0.4, a canonical textual key for structural analysis under an explicit
 key profile;
@@ -70,8 +76,15 @@ mechanisms defined in this edition; and
 
 f) parsing, validation, canonicalization, error and conformance requirements.
 
-This edition covers games played on the 24 points in Annex A with either the
-orthogonal 16-line topology or the orthogonal-plus-diagonal 20-line topology.
+This edition covers games played on the 24 points in Annex A with either:
+
+- the standard Nine Men's Morris topology, which has the 16 orthogonal mill
+  lines; or
+- the diagonal variant topology, which adds four diagonal mill lines for a
+  total of 20.
+
+The quick diagram in A.2 makes the distinction visible; the registered
+topology identifiers remain authoritative.
 
 This document does not:
 
@@ -143,13 +156,22 @@ piece that occupies a point for movement, mill, capture and material rules
 
 ## 3.10 logical turn
 
-primary action and every consequent obligation that shall be resolved before
-the next primary action
+primary action together with zero, one or more consequent supplementary
+removals that shall be resolved before the next primary action
+
+Note 1 to entry: A logical turn can cross serialized states. If its primary
+action creates an obligation, that obligation is authoritative pending state
+until every selected removal has been resolved and the deterministic
+stable-boundary processing in 11.20 has completed.
 
 ## 3.11 obligation
 
 authoritative requirement for a named actor to remove one or more targets
 from a stated zone for a stated cause
+
+Note 1 to entry: In ordinary Nine Men's Morris, forming a mill creates a
+compulsory capture/removal obligation. An obligation is the pending
+requirement; a removal is the state-changing action that resolves it.
 
 ## 3.12 primary action
 
@@ -169,8 +191,12 @@ versioned definition of a position data model and its textual encodings
 
 ## 3.16 supplementary action
 
-removal performed to resolve an obligation and not counted as a primary
-action
+removal performed to resolve a capture/removal obligation and not counted as
+a primary action
+
+Note 1 to entry: This document uses *capture* for the rule mechanism or
+entitlement and *removal* for the operation that changes board or hand state.
+It does not replace either term globally.
 
 # 4 Conformance
 
@@ -185,11 +211,15 @@ An implementation may claim one or more of the following classes:
 - MSTATE producer;
 - MSTATE replayer;
 - MRS producer;
-- MRS resolver; and
+- MRS resolver;
+- MIF converter; and
 - transformation-profile implementation.
 
 A conformance claim shall list every supported format signature, state
 profile, semantics profile, topology and key profile.
+
+A `MIF converter` claim shall additionally list each supported source mapping,
+target format and conversion status under 12.4.
 
 ## 4.2 Producers
 
@@ -211,8 +241,8 @@ A conforming consumer or replayer shall:
 
 a) validate syntax before semantic processing;
 
-b) resolve and verify the state profile, ruleset manifest and, when
-applicable, key profile;
+b) resolve and verify the state profile, the caller-supplied or enclosing
+ruleset manifest and, when applicable, key profile;
 
 c) reject inconsistent authoritative fields rather than silently repairing
 them;
@@ -317,6 +347,10 @@ The digest input shall be the RFC 8785 JCS UTF-8 octets of the manifest object
 itself. A containing `digest` member shall not be inserted into that manifest
 object.
 
+Manifest digests are envelope or transport metadata. MPK identifies a ruleset
+by `id@version`; MFEN receives ruleset identity and manifest from its caller
+or containing envelope. Neither text record repeats a manifest digest.
+
 ## 5.8 Authoritative and derived state
 
 The following values are authoritative when applicable:
@@ -365,6 +399,10 @@ rules.
 `mill24-state-v1` is the state profile specified by this edition. It applies
 to the 24 public points in Annex A.
 
+The profile boundary includes the serialized board characters and their
+behaviour below. Implementations may use different internal representations,
+but shall preserve these distinctions at interchange boundaries.
+
 Its ordered fields are:
 
 1. board;
@@ -402,18 +440,22 @@ The characters shall have the meanings in Table 1.
 | `w` | blocked delayed-removal token originally owned by White |
 | `b` | blocked delayed-removal token originally owned by Black |
 
-A lower-case token:
+Table 1a summarizes the behaviour that shall be preserved by the profile.
 
-- shall not be live;
-- shall not move or form a mill;
-- shall not be a removal target;
-- shall preserve the removed token's owner;
-- shall keep its point unavailable for placement or movement; and
-- shall clear only at the boundary selected by the ruleset.
+**Table 1a — Derived board-character behaviour**
+
+| Character | Occupies point | Available as destination | Can move | Forms mills | Removal target | Counts as live material |
+|---|---:|---:|---:|---:|---:|---:|
+| `W`, `B` | yes | no | yes, subject to rules | yes | yes, subject to rules and mill-capture protection | yes |
+| `w`, `b` | yes | no | no | no | no | no |
+| `.` | no | yes | no | no | no | no |
+
+A lower-case token shall preserve the removed token's owner and shall clear
+only at the boundary selected by the ruleset.
 
 An ownerless legacy marker such as `X` has no direct representation. A
-converter shall obtain its owner from authoritative data or report a lossy
-conversion.
+converter shall obtain its owner from authoritative data or report
+`unrepresentable-under-profile` without emitting an apparently valid target.
 
 ## 6.3 Side, phase and action
 
@@ -452,10 +494,31 @@ Examples of non-trivial valid combinations include:
   boundary; and
 - phase `p` in a ruleset that permits movement while placing.
 
+The ordinary logical-turn flow is:
+
+```text
+primary action
+    |
+    +-- no obligation ----------------------+
+    |                                      |
+    +-- obligation pending -> removal --+   |
+                             -> removal -+   |
+                                         v   v
+                          deterministic stable-boundary processing
+                                         |
+                                  next primary action
+```
+
+The pending states in that diagram have action `r`. A ruleset can produce
+zero, one or multiple supplementary removals. The next primary action is not
+available until the selected branch is exhausted and the stable-boundary
+pipeline has run.
+
 ## 6.4 Hands, counters and outcome
 
-`hands` shall contain the current White and Black unplaced-token counts. They
-are direct state and shall not be reconstructed from placement history.
+`hands` shall contain the current White and Black **unplaced reserve** counts
+(traditionally called pieces “in hand”). They are direct state and shall not
+be reconstructed from placement history.
 
 `no-progress` shall contain the current ruleset counter. A pending removal can
 therefore preserve the counter value reached immediately after its causing
@@ -542,7 +605,6 @@ The standard semantic extensions are listed in Table 3.
 | `lm` | `last-mill` | White `from,to`; Black `from,to`, using `-` for none |
 | `pc` | `placement-count` | White and Black historical successful placements |
 | `ul` | `used-lines` | per-player mill-line bit sets |
-| `rh` | private ruleset resolution | manifest SHA-256 digest |
 
 If `semanticState` declares a feature, its mapped extension shall occur even
 when its value is zero or `-`.
@@ -586,7 +648,9 @@ j) extension keys are in ascending US-ASCII order;
 k) values in authoritative fields are not changed to agree with derived
 caches;
 
-l) the ruleset digest and locally resolved manifest agree;
+l) the caller-supplied ruleset context and locally resolved manifest agree on
+ID and version, and any expected digest supplied by an envelope or caller
+agrees with that manifest;
 
 m) when an MFEN is consumed as an independent position, phase at an ongoing
 stable boundary shall be synchronized with the active player under 11.12; and
@@ -594,7 +658,7 @@ stable boundary shall be synchronized with the active player under 11.12; and
 n) when an MFEN is consumed as an independent position (not as an MSTATE
 `origin` or `current` field), an ongoing stable-boundary MFEN shall be a fixed
 point of every deterministic Clause 11 transition that can be evaluated from
-that MFEN and ruleset alone, excluding repetition.
+that MFEN and its supplied ruleset context alone, excluding repetition.
 
 Repetition is excluded from item (n) because an independent MFEN carries no
 repetition history. If deterministic processing would make the state
@@ -611,12 +675,19 @@ carry the resulting terminal, pending or claimable state; see 9.12.
 
 ## 7.1 Purpose
 
-MFEN/0.4 shall represent the exact instantaneous rules state defined by
-`mill24-state-v1`. It can represent stable positions and copyable
-mid-obligation positions.
+MFEN/0.4 shall represent the exact instantaneous state defined by
+`mill24-state-v1`. Its rules semantics come from a caller-supplied context. It
+can represent stable positions and copyable mid-obligation positions.
 
-MFEN does not include event history, repetition observations, draw-offer
-history or provenance. Those belong in MSTATE.
+MFEN does not include ruleset identity or version, a manifest digest, event
+history, repetition observations, draw-offer history or provenance. Those
+belong in the caller context or MSTATE. A context-free MFEN can be parsed
+structurally but cannot be validated semantically.
+
+Copying or storing an MFEN for later semantic use therefore requires its
+complete `ruleset-id@version` context to be copied or stored alongside it.
+Labels such as `g`, `r`, “German”, “Russian” or “English” are not substitutes
+for a registered, versioned identity.
 
 ## 7.2 Syntax
 
@@ -626,7 +697,7 @@ The normative ABNF is in Annex C and in the machine-readable
 The field order is:
 
 ```text
-MFEN/0.4 <state-profile> <ruleset> <board> <side> <phase> <action>
+MFEN/0.4 <state-profile> <board> <side> <phase> <action>
 <hands> <obligations> <no-progress> <primary-ply> <outcome>
 [<extension> ...]
 ```
@@ -658,13 +729,17 @@ Whether such a value is meaningful is defined by its private specification.
 
 ## 7.4 Examples
 
-The examples use provisional fixture manifests from the conformance corpus.
-Because the ruleset IDs begin `x-`, `rh` is mandatory.
+The examples use caller-supplied provisional fixture manifests from the
+conformance corpus. The contexts for 7.4.1 through 7.4.6 are, respectively,
+`x-mif-fixture-nmm@2`, `x-mif-fixture-nmm@2`,
+`x-mif-fixture-dooz@2`, `x-mif-fixture-delay@2` and
+`x-mif-fixture-stateful@2`, and `x-mif-fixture-nmm@2`. These identities are
+deliberately not repeated inside the MFEN records.
 
 ### 7.4.1 Initial position
 
 ```text
-MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913
+MFEN/0.4 mill24-state-v1 ......../......../........ w p p 9,9 - 0 0 -
 ```
 
 ### 7.4.2 Pending board removal
@@ -673,7 +748,7 @@ White has completed a primary placement. The board target set contains two
 Black pieces, and Black is the next primary player after resolution.
 
 ```text
-MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 WWW...B./......B./........ w p r 6,7 w:mill:b:b:1:004040:b 0 5 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913
+MFEN/0.4 mill24-state-v1 WWW...B./......B./........ w p r 6,7 w:mill:b:b:1:004040:b 0 5 -
 ```
 
 This state shall not be silently converted to the post-removal state.
@@ -681,10 +756,12 @@ This state shall not be silently converted to the post-removal state.
 ### 7.4.3 Pending hand removal
 
 The hand count still shows Black's token because the supplementary hand
-removal has not yet occurred.
+removal has not yet occurred. Removing an opponent reserve token after a mill
+is a ruleset variant, not standard Nine Men's Morris; that is why this example
+uses the diagonal `x-mif-fixture-dooz@2` fixture.
 
 ```text
-MFEN/0.4 mill24-state-v1 x-mif-fixture-dooz@2 WWW...../B......B/........ w p r 9,10 w:mill:h:b:1:-:b 0 5 - rh=sha256:8abe001b123ddee3ff88e4da8ef6970f2f847ace68bbb695927ab4a0d68872b6
+MFEN/0.4 mill24-state-v1 WWW...../B......B/........ w p r 9,10 w:mill:h:b:1:-:b 0 5 -
 ```
 
 After the explicit removal, Black's hand is 9. The state does not claim that
@@ -695,37 +772,56 @@ Black placed three tokens; historical placements are not inferable.
 The lower-case `b` is inactive, owner-preserving and blocked:
 
 ```text
-MFEN/0.4 mill24-state-v1 x-mif-fixture-delay@2 WWW...../b......B/........ b p p 9,10 - 0 5 - rh=sha256:59f08e0ec2317973f8ff7bf56a9ab6f699cd550ef8f065be7356dedfc88f5c3e
+MFEN/0.4 mill24-state-v1 WWW...../b......B/........ b p p 9,10 - 0 5 -
 ```
 
 ### 7.4.5 Choice branches and sequence-dependent fields
 
 ```text
-MFEN/0.4 mill24-state-v1 x-mif-fixture-stateful@2 BWBW.WB./.W.W..B./.W...... w p r 3,5 w:intervention:b:b:2:000005:b|w:custodian:b:b:1:000040:b|w:mill:b:b:1:004000:b 7 20 - lm=-,-;-,- rh=sha256:ff9ddf44f2d0335b34021f161ccc2550f6b5bf820df59445ffe9049c13bf14c6 ul=0000,0000
+MFEN/0.4 mill24-state-v1 BWBW.WB./.W.W..B./.W...... w p r 3,5 w:intervention:b:b:2:000005:b|w:custodian:b:b:1:000040:b|w:mill:b:b:1:004000:b 7 20 - lm=-,-;-,- ul=0000,0000
 ```
 
 The first selected target commits to exactly one of the three branches.
 
-## 7.5 Private manifest resolution
+### 7.4.6 Moving while the opponent still has reserve
 
-A standalone MFEN using an `x-` ruleset shall carry `rh`.
-
-Before semantic validation, a consumer shall query a caller-supplied local
-manifest resolver using:
+White has no unplaced reserve and is therefore in phase `m`; Black still has
+one reserve token and will be in phase `p` when Black becomes active. Phase is
+synchronized with the active player, not inferred from the opponent's hand.
 
 ```text
-(ruleset id, ruleset version, SHA-256 digest)
+MFEN/0.4 mill24-state-v1 WWW.BBB./......../........ w m m 0,1 - 0 17 -
 ```
 
-The consumer shall not access a network automatically.
+## 7.5 Ruleset context and integrity metadata
 
-Failure to locate a manifest is `manifest-missing`. A locally known manifest
-with the same ID and version but a different digest is
-`manifest-conflict`. A supplied manifest whose JCS digest differs from `rh`
-is `manifest-digest-mismatch`.
+MFEN carries neither ruleset identity nor manifest digest. Before semantic
+validation, the caller shall supply:
+
+```text
+(ruleset id, ruleset version)
+```
+
+Both components are required. A bare regional, language or community label,
+an unversioned ID, or a single-letter application code is insufficient.
+
+The consumer shall query a caller-supplied local manifest resolver using that
+identity. The consumer shall not access a network automatically. An
+application may define a documented UI default, but that default is not part
+of MFEN and shall not be inferred by a context-free interchange validator.
+Such a UI shall expose the resolved full identity rather than presenting the
+default as a fact encoded by MFEN.
+
+An absent ruleset context or failure to locate its manifest is
+`manifest-missing`. Multiple distinct local manifests claiming the same ID
+and version are `manifest-conflict`. When an envelope or caller supplies an
+expected digest, a supplied manifest whose JCS digest differs from it is
+`manifest-digest-mismatch`.
 
 MSTATE is the standard self-contained envelope for carrying a private
-manifest with positions.
+manifest and its digest with positions. Another transport may supply
+equivalent integrity metadata, but that metadata is outside MFEN and does not
+alter canonical MFEN serialization.
 
 # 8 MPK/0.4 — Stable structural analysis key
 
@@ -768,6 +864,9 @@ under the key profile; and
 g) the application does not treat omitted adjudication state as part of its
 equivalence relation.
 
+For `structural-aut16-v1`, the application shall additionally possess the
+external ring-exchange-invariance declaration required by 8.4.2.
+
 An unresolved removal is not eligible. A producer shall not complete it
 automatically to obtain a key.
 
@@ -792,8 +891,13 @@ The projection shall contain:
 - phase;
 - direct hands;
 - every extension mapped from `semanticState`;
-- `rh` for a private ruleset; and
 - any understood private semantic extension required by the key profile.
+
+Unlike MFEN, MPK identifies a ruleset by ID and version so keys from different
+rulesets do not collide. An MPK producer projecting an MFEN shall copy that
+identity from the MFEN's caller-supplied context. MPK carries no manifest
+digest; a dataset or containing envelope may bind its identity to a digest
+outside the key.
 
 MPK shall contain exactly the extensions selected by the key profile and by
 the ruleset's semantic-state mapping for that key. A private non-semantic
@@ -818,6 +922,18 @@ composed with the outer/inner ring exchange in A.6.
 
 The ring exchange preserves adjacency and all registered mill lines for both
 topologies in this edition.
+
+Graph preservation alone does not prove game-state equivalence. This profile
+shall be used for a ruleset only when an external, versioned declaration
+states that outer/inner ring exchange preserves every rule-relevant feature
+of that resolved ruleset and dataset. The declaration is configuration or
+dataset metadata, is bound to the complete ruleset identity and is not an MRS
+field. A producer shall not infer it from topology alone.
+
+A database using this profile shall record the profile ID and the identity or
+version of that declaration in its metadata. This profile is not a
+general-purpose transposition-table key unless the table's equality relation
+has the same declared invariance.
 
 ## 8.5 Canonicalization algorithm
 
@@ -869,18 +985,37 @@ A single White piece at source coordinate `d7` has source board:
 Under `structural-d4-v1`, the least board places it at `a4`:
 
 ```text
-MPK/0.4 mill24-state-v1 x-mif-fixture-nmm@2 structural-d4-v1 .......W................ b p 8,9 rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913
+MPK/0.4 mill24-state-v1 x-mif-fixture-nmm@2 structural-d4-v1 .......W................ b p 8,9
 ```
 
 Under `structural-aut16-v1`, the ring exchange extends the orbit and the least
 board places it at `c4`:
 
 ```text
-MPK/0.4 mill24-state-v1 x-mif-fixture-nmm@2 structural-aut16-v1 .......................W b p 8,9 rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913
+MPK/0.4 mill24-state-v1 x-mif-fixture-nmm@2 structural-aut16-v1 .......................W b p 8,9
 ```
 
-These are intentionally different keys. A database shall identify which key
-profile it uses.
+The Aut16 example assumes the versioned external fixture declaration recorded
+by `MPK-VALID-0003`. These are intentionally different keys. A database
+shall identify which key profile it uses.
+
+Semantic state participates in the comparison. For the
+`x-mif-fixture-stateful@2` source used by `MPK-VALID-0004`:
+
+```text
+MFEN/0.4 mill24-state-v1 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - lm=d1,d7;-,- ul=0003,0000
+```
+
+the `r90cw` and `mirror-h` candidates have the same least board string, but
+their transformed state differs:
+
+| Transform | Board | `lm` | `ul` |
+|---|---|---|---|
+| `r90cw` | `..W.W.W...B.B.B.........` | `a4,g4;-,-` | `0006,0000` |
+| `mirror-h` | `..W.W.W...B.B.B.........` | `d7,d1;-,-` | `0006,0000` |
+
+Full-candidate comparison selects `r90cw`; comparing the board in isolation
+would discard authoritative information.
 
 # 9 MSTATE/0.4 — Resumable game state
 
@@ -945,8 +1080,9 @@ permitted `x-` members.
 support another position format without pretending that MSTATE and MFEN
 versions are independent while silently hard-coding one another.
 
-The state profile and ruleset in `origin` and `current` shall match the
-top-level members.
+The state profile in `origin` and `current` shall match the top-level
+`stateProfile` member. The top-level `ruleset` object supplies the ruleset
+context for both positions; that identity is not repeated inside either MFEN.
 
 ## 9.4 Ruleset member and manifest envelope
 
@@ -1307,6 +1443,10 @@ implementation switches. It selects only mechanisms whose complete
 transitions, target sets, ordering and adjudication boundaries are defined in
 Clause 11.
 
+MRS selects mechanisms; it does not independently select their trigger or
+terminal priority. Those priorities belong to the identified semantics
+profile.
+
 A private game with semantics outside those mechanisms requires a separately
 identified semantics profile and specification. Merely adding an unknown
 member to `mif-finite-rules-v2` does not make that game replayable by a
@@ -1356,9 +1496,11 @@ JCS preserves array order. Every MRS array is therefore classified in Table
 | draw `resetEvents` | set | unique, ascending US-ASCII |
 | `semanticState` | set | unique, ascending US-ASCII |
 
-An MRS/0.4 manifest has no order-sensitive mechanism array. Trigger and
-terminal priorities are fixed by `mif-finite-rules-v2`, not supplied as an
-underspecified arbitrary array.
+An MRS/0.4 manifest has no order-sensitive mechanism array. Within
+`mif-finite-rules-v2`, trigger and terminal priorities are profile policy,
+not manifest choices and not a universal rule for every possible semantics
+profile. A different priority requires a different identified semantics
+profile; it shall not be encoded as an underspecified arbitrary MRS array.
 
 ## 10.4 Topology, pieces and turn
 
@@ -1384,6 +1526,11 @@ sequence remains active when the global placing boundary is crossed.
 
 ## 10.5 Flying and placing
 
+The *placing regime* is the global interval before both unplaced reserves
+reach zero (or early stop sets them to zero). During that interval, the active
+player's phase is synchronized under 11.12; it can therefore be `m` when that
+player's reserve is empty while the opponent still has reserve pieces.
+
 `flying` shall contain:
 
 - `enabled`, Boolean; and
@@ -1392,6 +1539,10 @@ sequence remains active when the global placing boundary is crossed.
 When enabled, a player in phase `m` with no more than `maximumLive` live
 pieces may move a live piece to any `.` point. Delayed-token points are not
 destinations.
+
+For example, with `maximumLive=3`, an active player with three live pieces
+may move to any empty point, while the same player with four live pieces
+remains restricted to adjacency unless another mechanism applies.
 
 `placing` shall contain:
 
@@ -1442,9 +1593,17 @@ The exact boundary is specified in 11.12.
 - `outside-mill-first`; or
 - `all-opponent`.
 
+`targetProtection` is the retained wire identifier for **mill-capture
+protection**: whether an opponent token inside a complete mill is protected
+while an outside token exists.
+
 `lineReuse` shall be `unlimited` or `once-per-player`.
 
 `reverseReformation` shall be `allowed` or `prohibit-immediate`.
+
+`reverseReformation` is the retained wire identifier for **immediate
+reversal reformation**, the move-away-and-immediately-back pattern specified
+in 11.5.
 
 `delayedClearBoundary` shall be `on-enter-moving-v1`. It shall remain present
 even when the placing effect does not create delayed tokens.
@@ -1572,9 +1731,10 @@ and `minimumLive` shall not exceed either initial token count;
 
 b) enabled flying shall have `maximumLive` not less than `minimumLive`;
 
-c) `remove-by-current-mill-count-at-placing-end` and
-`opponent-remove-own-board` shall not be combined with a capture mechanism
-enabled in phase `p`;
+c) `opponent-remove-own-board` shall not be combined with a capture
+mechanism enabled in phase `p`, because its mill branch is headed by the
+opponent while a placing capture branch is headed by the primary actor,
+violating the single branch-head actor invariant in 11.8;
 
 d) `mark-opponent-board-until-moving` requires
 `delayedClearBoundary=on-enter-moving-v1`;
@@ -1590,6 +1750,11 @@ h) manifest set arrays shall satisfy Table 6 before JCS hashing; and
 
 i) every enabled capture mechanism shall select at least one non-empty line
 family for the chosen topology.
+
+`remove-by-current-mill-count-at-placing-end` may be combined with capture
+mechanisms enabled in phase `p`. Placing capture branches resolve during the
+causing primary sequence; the deferred mill-count obligations are generated
+later at the global placing boundary under 11.14.
 
 # 11 `mif-finite-rules-v2` transition semantics
 
@@ -1652,6 +1817,8 @@ If leap has at least one legal target, leap is exclusive for that primary
 action: mill, intervention and custodian branches are not generated. Detection
 of a usable mill remains a semantic occurrence: 11.4 still updates `lm` and
 `ul`, and `mill-formation` still resets no-progress when configured.
+Leap exclusivity therefore suppresses competing removal branches, not the
+mill occurrence or its configured no-progress reset.
 
 ## 11.4 Mill lines formed by an action
 
@@ -1666,6 +1833,12 @@ is not usable. The other player's bit for the same line is independent.
 
 `one-per-primary` yields one mill removal obligation when at least one usable
 line exists. `one-per-new-line` yields one removal for each usable line.
+
+For example, placing at `d7` on
+`W.W...../.W....../.W......` forms both line 0
+(`a7,d7,g7`) and line 12 (`d7,d6,d5`). With `one-per-primary` the
+ordinary mill branch has remaining 1; with `one-per-new-line` it has
+remaining 2, capped by available target material as in 11.9.
 
 When usable lines trigger:
 
@@ -1702,6 +1875,10 @@ For `outside-mill-first`:
 2. if any opponent live piece lies outside that union, only outside pieces
    are targets; otherwise
 3. every opponent live piece is a target.
+
+Thus the protection is a preference, not immunity. If all opponent live
+pieces are in complete mills—for example exactly `a7,d7,g7`—all three are
+legal targets under step 3.
 
 Delayed tokens and hand tokens are not board targets.
 
@@ -1921,6 +2098,11 @@ At the boundary:
 
 The lower-case clear is deterministic and produces no MSTATE event.
 
+For example, at the boundary the board fragment
+`WWW...../b......B/........` becomes
+`WWW...../.......B/........`: the delayed Black marker clears to an empty
+point before later stable-boundary tests, without an additional remove event.
+
 ## 11.14 Removal by current mill count
 
 At the global placing boundary, count the current complete live mill lines
@@ -2097,8 +2279,12 @@ Repetition observation inside the pipeline remains conditional on the
 manifest's observation rule.
 
 This ordering, together with the trigger order in 11.3 and branch commitment
-in 11.8, is part of the rules semantics. An implementation shall not choose a
-different priority while claiming the same manifest digest.
+in 11.8, is policy of `mif-finite-rules-v2` and is part of that profile's
+rules semantics. MRS selects the mechanisms to which the policy applies; it
+does not encode a priority list. An implementation shall not choose a
+different priority while claiming this semantics profile and the same
+manifest digest. Another semantics profile can specify another order without
+making that order a universal MIF policy.
 
 ## 11.21 Outcome normalization
 
@@ -2174,9 +2360,11 @@ The machine-readable corpus defines stable example codes, including:
 - `manifest-missing`;
 - `manifest-conflict`;
 - `manifest-digest-mismatch`;
+- `ring-exchange-invariance-undeclared`;
 - `required-semantic-state-missing`;
 - `remove-without-obligation`;
 - `side-obligation-actor-mismatch`;
+- `mixed-obligation-actors`;
 - `obligation-target-mismatch`;
 - `intervention-line-not-candidate`;
 - `redundant-intervention-line`;
@@ -2191,11 +2379,57 @@ The machine-readable corpus defines stable example codes, including:
 An implementation may add diagnostic detail but should retain the standard
 category and applicable code.
 
+## 12.4 Conversion status contract
+
+A conforming `MIF converter` shall report exactly one of the statuses in
+Table 7 for each requested conversion.
+
+**Table 7 — Conversion statuses**
+
+| Status | Meaning |
+|---|---|
+| `lossless` | every authoritative source value required for the target semantics is preserved |
+| `lossy-history` | the instantaneous gameplay state is preserved, but event, repetition, claim, offer or provenance history is omitted |
+| `lossy-semantic-state` | known sequence-dependent gameplay state cannot be preserved in the target |
+| `requires-ruleset-resolution` | a complete versioned ruleset context must be resolved before representability can be decided |
+| `unrepresentable-under-profile` | the selected target format or profile cannot represent required known state |
+
+The report envelope and API are implementation-defined. The status names and
+the behaviour below are normative; this edition does not add another wire
+format.
+
+The converter shall select the status in this order:
+
+1. `requires-ruleset-resolution` when required ruleset identity or semantics
+   are unresolved;
+2. `unrepresentable-under-profile` when the resolved target cannot encode
+   required known state;
+3. `lossy-semantic-state` when conversion can emit a useful target only by
+   omitting known sequence-dependent gameplay state;
+4. `lossy-history` when only non-instantaneous history is omitted; otherwise
+5. `lossless`.
+
+For `requires-ruleset-resolution` and
+`unrepresentable-under-profile`, the converter shall not emit an apparently
+valid target record. For either lossy status, it shall identify the omitted
+information and shall emit target output only after explicit caller
+acceptance. It shall not label repaired, guessed or defaulted state as
+`lossless`.
+
+The normative conversion vectors cover an NMM_LLM atomic move-plus-capture,
+a Sanmill ownerless delayed marker, absent `ul` history and absent ruleset
+context.
+
 # 13 Canonicalization, versioning, extensions and registration
 
 ## 13.1 Canonical equality
 
-Canonical MFEN and MPK equality is byte equality of their US-ASCII records.
+Canonical MFEN textual equality is byte equality of its US-ASCII records.
+Because MFEN is not self-describing, semantic position equality additionally
+requires the same caller-supplied ruleset ID and version.
+
+Canonical MPK equality is byte equality of its US-ASCII records; MPK carries
+its ruleset ID and version.
 
 Canonical MSTATE and MRS equality is byte equality of their RFC 8785 JCS
 UTF-8 octets after all semantic array-order requirements have been enforced.
@@ -2281,6 +2515,12 @@ f) settled repetition, no-progress and outcome semantics; and
 g) no unresolved wire or key-profile question.
 
 A fixture or experiment shall use `x-` until these conditions are met.
+
+The provenance in item (b) shall identify a source or rule authority and a
+source edition, date or version. Bare labels such as “German”, “Hungarian” or
+“English” shall not be registered as authoritative ruleset identities because
+they do not identify one fixed global rule. Such words may occur in a title
+only when qualified by the actual authority and version.
 
 State and key profiles shall be registered independently of rulesets.
 
@@ -2382,6 +2622,31 @@ For geometric transforms, the centre is `(0,0)`. Files map as
 `1=-3`, `2=-2`, `3=-1`, `4=0`, `5=1`, `6=2`, `7=3`.
 
 ### A.2 Public point order
+
+The standard 16-line topology is the familiar orthogonal board:
+
+```text
+a7-----------d7-----------g7
+|             |             |
+|   b6-------d6-------f6    |
+|   |         |         |   |
+|   |   c5---d5---e5    |   |
+a4--b4--c4         e4--f4--g4
+|   |   c3---d3---e3    |   |
+|   |         |         |   |
+|   b2-------d2-------f2    |
+|             |             |
+a1-----------d1-----------g1
+```
+
+The 20-line diagonal variant adds these four corner-to-inner chains:
+
+```text
+a7-b6-c5    g7-f6-e5    g1-f2-e3    a1-b2-c3
+```
+
+These diagrams are explanatory; the ordered tables below define coordinates,
+adjacency and line IDs.
 
 **Table A.1 — Point and bit order**
 
@@ -2564,7 +2829,6 @@ The standard values are:
 ```text
 lm=<W-from>,<W-to>;<B-from>,<B-to>
 pc=<White-placements>,<Black-placements>
-rh=sha256:<64-lowercase-hex>
 ul=<White-line-bits>,<Black-line-bits>
 ```
 
@@ -2594,7 +2858,7 @@ syntactically; Clause 8 forbids non-semantic private extensions in
 conforming MPK output.
 
 ```abnf
-mfen = mfen-signature SP state-profile SP ruleset SP board SP side
+mfen = mfen-signature SP state-profile SP board SP side
        SP phase SP action SP hands SP obligations SP no-progress
        SP primary-ply SP outcome *(SP extension)
 
@@ -2654,14 +2918,13 @@ standard-reason = %s"fewer-than-minimum" / %s"no-legal-move" /
 extension = extension-key %s"=" *value-character
 key-extension = extension
 extension-key = standard-extension-key / private-identifier
-standard-extension-key = %s"lm" / %s"pc" / %s"rh" / %s"ul"
+standard-extension-key = %s"lm" / %s"pc" / %s"ul"
 value-character = %x21-3C / %x3E-7E
 
 ; Registered extension-value subgrammars.
 lm-value = coord-or-dash %s"," coord-or-dash %s";"
            coord-or-dash %s"," coord-or-dash
 pc-value = uint %s"," uint
-rh-value = %s"sha256:" 64lc-hex
 ul-value = line-bitset %s"," line-bitset
 line-bitset = 4lc-hex / 5lc-hex
 
@@ -2716,11 +2979,13 @@ conformance/
     x-mif-fixture-stalemate-change@2.json
     x-mif-fixture-stateful@2.json
   vectors/
+    conversion.json
     implementation-mappings.json
     json-jcs.json
     mfen.json
     mpk.json
     mstate.json
+    rules.json
     transforms.json
 ```
 
@@ -2758,7 +3023,12 @@ The corpus covers:
 - independent pre-origin claim seeds and deterministic origin expiry;
 - structured board and hand remove events;
 - phase synchronization after pending removals and arbitrary-origin stabilization;
+- active-player moving phase while the opponent still has reserve;
 - dynamic multi-removal sequence capacity;
+- double-mill multiplicity, all-in-mills fallback, three-versus-four flying
+  and delayed-marker clearing;
+- acceptance of deferred mill-count removal with placing captures, and
+  rejection of mixed-actor opponent-self-removal with placing captures;
 - leap-exclusive branches that retain mill semantic state;
 - simultaneous minimum-material adjudication;
 - draw-offer lifecycle and accepted claim audit;
@@ -2767,6 +3037,8 @@ The corpus covers:
 - duplicate JSON names after unescaping;
 - I-JSON integer boundaries and invalid Unicode;
 - manifest JCS bytes and SHA-256; and
+- all five conversion statuses, including NMM_LLM atomic capture, Sanmill
+  ownerless markers, missing `ul` and unresolved rulesets; and
 - fixed implementation mappings.
 
 Advancement beyond Community Working Draft should add independently generated
@@ -2846,6 +3118,12 @@ capture atomically. Such stable states map well to MPK. The representation
 does not losslessly encode every MFEN pending state or the separate remove
 event required by MSTATE.
 
+When the atomic record supplies the exact move and capture target and the
+resolved ruleset makes that capture legal, a converter can emit a primary
+MSTATE event followed by its remove event with status `lossless`. A snapshot
+without that atomic history can still convert to an eligible instantaneous
+state but cannot claim the same MSTATE event history.
+
 ### E.3 Sanmill
 
 Repository:
@@ -2899,6 +3177,10 @@ Symbol mapping is:
 | `*` | `.` |
 | `X` | `w` or `b` only when owner is independently known |
 
+Without authoritative owner data, a Sanmill `X` conversion to
+`mill24-state-v1` is `unrepresentable-under-profile`; the converter shall not
+guess `w` or `b`.
+
 The examined state maps as follows:
 
 | Sanmill category | MIF disposition |
@@ -2918,8 +3200,9 @@ The examined state maps as follows:
 Sanmill's examined per-player formed-mill value is a point union, and its
 examined `used_mill_lines` value is a global union. Neither value alone can
 always reconstruct the per-player line-ID sets required by `ul`. A converter
-shall use additional history or report that conversion as lossy; it shall not
-guess which line produced the same point union.
+shall use additional history or report `lossy-semantic-state` and require
+caller acceptance before emitting reduced output; it shall not guess which
+line produced the same point union.
 
 The examined preferred-removal value is an application hint consumed while
 applying the primary action that creates an intervention context. It is not
@@ -3017,6 +3300,8 @@ This edition:
 
 - changes experimental signatures to `0.4` and finite semantics to
   `mif-finite-rules-v2`;
+- removes ruleset identity and version from MFEN and requires the caller or
+  MSTATE envelope to supply that context;
 - separates `preOriginClaims` replay seed from the final `claims` audit;
 - synchronizes phase after every actor-changing transition;
 - pauses and restarts the stable-boundary pipeline around generated

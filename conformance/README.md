@@ -42,6 +42,11 @@ shall not derive one from the other.
   pending removals, phase synchronization, dynamic removal capacity,
   origin automatic/claimable terminals, simultaneous minimum material and
   rejection.
+- `vectors/rules.json` covers the focused rule examples added after review:
+  double mills, all-in-mills fallback, flying, delayed clearing, asymmetric
+  reserve phase and placing-mechanism compatibility.
+- `vectors/conversion.json` covers the five normative converter statuses and
+  the NMM_LLM/Sanmill boundary cases.
 - `vectors/json-jcs.json` covers I-JSON, JCS and manifest hashing.
 - `vectors/transforms.json` gives all point and line permutations and
   MPK-associated line-ID transform examples.
@@ -49,9 +54,10 @@ shall not derive one from the other.
   implementation mappings.
 - `index.json` identifies the exact raw bytes of the delivered corpus.
 
-The SHA-256 values for ruleset references are hashes of RFC 8785 JCS manifest
-bytes. The SHA-256 values in `index.json` are hashes of the raw delivered file
-bytes. These digest domains are intentionally different.
+The SHA-256 values in manifest envelopes and the fixture table are hashes of
+RFC 8785 JCS manifest bytes. The SHA-256 values in `index.json` are hashes of
+the raw delivered file bytes. These digest domains are intentionally
+different.
 
 ## Fixture resolution
 
@@ -61,8 +67,11 @@ The fixture ID and version select a file name of the form:
 <id>@<version>.json
 ```
 
-The runner shall compute the manifest's JCS SHA-256 and compare it with every
-`rh` or envelope digest before semantic validation. It shall not retrieve a
+MFEN vectors supply ruleset context through a sibling `manifest` member; the
+MFEN record itself carries no ruleset identity. MPK records continue to carry
+fixture ID and version. Neither text record carries an inline manifest digest.
+When an envelope supplies a digest, the runner shall compare it with the
+manifest's JCS SHA-256 before semantic validation. It shall not retrieve a
 missing fixture from a network.
 
 ## Corpus integrity
@@ -72,7 +81,7 @@ circular digest. A distributor may sign an outer package or index digest;
 such a signature is outside this working draft.
 
 Run `python tools/verify_conformance.py` from the repository root to verify
-I-JSON parsing, the raw-file index, fixture JCS digests, ruleset references,
+I-JSON parsing, the raw-file index, fixture JCS digests, ruleset contexts,
 the two ABNF copies, transform bijections/topology, required 0.4 replay cases
-and the Annex E mapping digest. Use `--update-index` only after intentional
-corpus edits.
+and review vectors, and the Annex E mapping digest. Use `--update-index`
+only after intentional corpus edits.

@@ -175,25 +175,57 @@ def strings(node: Any):
             yield from strings(value)
 
 
-def verify_ruleset_references(mf: dict[str, tuple[Path, str, Any]]) -> None:
-    pattern = re.compile(
-        r"(?:MFEN|MPK)/0\.4 [^\"\r\n]*?\b"
+def verify_ruleset_contexts(mf: dict[str, tuple[Path, str, Any]]) -> None:
+    mpk_pattern = re.compile(
+        r"MPK/0\.4 [^\"\r\n]*?\b"
         r"(?P<ruleset>[a-z0-9][a-z0-9.-]*@[1-9][0-9]*)\b"
-        r"[^\"\r\n]*?\brh=sha256:(?P<digest>[0-9a-f]{64})"
     )
-    count = 0
+    mpk_count = 0
     for path in sorted(CONF.rglob("*.json")):
         value = load_json(path)
         for text in strings(value):
-            for match in pattern.finditer(text):
-                count += 1
+            if re.search(r"(?:^| )rh=", text):
+                fail(f"inline ruleset digest in {path.relative_to(ROOT)}")
+            if text.startswith(("MFEN/0.4 ", "mfen/0.4 ")):
+                fields = text.split(" ")
+                if len(fields) > 2 and "@" in fields[2]:
+                    fail(f"ruleset identity embedded in MFEN in {path.relative_to(ROOT)}")
+            for match in mpk_pattern.finditer(text):
+                mpk_count += 1
                 identity = match.group("ruleset")
                 if identity not in mf:
                     fail(f"unresolved fixture {identity} in {path.relative_to(ROOT)}")
-                if match.group("digest") != mf[identity][1]:
-                    fail(f"ruleset digest mismatch for {identity} in {path.relative_to(ROOT)}")
-    if count == 0:
-        fail("no MFEN/MPK ruleset references were checked")
+    if mpk_count == 0:
+        fail("no MPK ruleset references were checked")
+
+    manifest_root = (CONF / "manifests").resolve()
+    for vector_name in ("mfen.json", "mpk.json"):
+        path = CONF / "vectors" / vector_name
+        vectors = load_json(path)
+        for group in ("valid", "invalid"):
+            for vector in vectors[group]:
+                has_mfen = any(
+                    isinstance(value, str)
+                    and value.startswith(("MFEN/0.4 ", "mfen/0.4 "))
+                    for value in vector.values()
+                )
+                if not has_mfen:
+                    continue
+                reference = vector.get("manifest")
+                if not isinstance(reference, str):
+                    fail(f"missing MFEN manifest context: {vector['id']}")
+                manifest_path = (path.parent / reference).resolve()
+                if manifest_path.parent != manifest_root:
+                    fail(f"MFEN manifest context escapes fixture directory: {vector['id']}")
+                manifest = load_json(manifest_path)
+                identity = f"{manifest['id']}@{manifest['version']}"
+                if identity not in mf or mf[identity][0].resolve() != manifest_path:
+                    fail(f"unresolved MFEN manifest context: {vector['id']}")
+                canonical = vector.get("canonical")
+                if isinstance(canonical, str) and canonical.startswith("MPK/0.4 "):
+                    match = mpk_pattern.match(canonical)
+                    if match is None or match.group("ruleset") != identity:
+                        fail(f"MPK ruleset differs from MFEN context: {vector['id']}")
 
     example = load_json(CONF / "examples" / "mstate-pending-board.json")
     ruleset = example["ruleset"]
@@ -306,6 +338,163 @@ def verify_mstate_contract() -> None:
         fail(f"missing required 0.4 MSTATE vectors: {sorted(required - ids)}")
 
 
+def verify_review_vectors(mf: dict[str, tuple[Path, str, Any]]) -> None:
+    manifest_root = (CONF / "manifests").resolve()
+
+    def verify_manifest_reference(vector: dict[str, Any], source: Path) -> None:
+        reference = vector.get("manifest")
+        if reference is None:
+            return
+        if not isinstance(reference, str):
+            fail(f"invalid manifest reference: {vector['id']}")
+        manifest_path = (source.parent / reference).resolve()
+        if manifest_path.parent != manifest_root:
+            fail(f"manifest reference escapes fixture directory: {vector['id']}")
+        manifest = load_json(manifest_path)
+        identity = f"{manifest['id']}@{manifest['version']}"
+        if identity not in mf or mf[identity][0].resolve() != manifest_path:
+            fail(f"unresolved manifest reference: {vector['id']}")
+
+    conversion_path = CONF / "vectors" / "conversion.json"
+    conversion = load_json(conversion_path)
+    if conversion.get("format") != "MIF-CONVERSION-VECTORS/0.4":
+        fail("conversion vector format is not 0.4")
+    statuses = [
+        "lossless",
+        "lossy-history",
+        "lossy-semantic-state",
+        "requires-ruleset-resolution",
+        "unrepresentable-under-profile",
+    ]
+    if conversion.get("statuses") != statuses:
+        fail("conversion status registry mismatch")
+    conversion_cases = conversion.get("cases")
+    if not isinstance(conversion_cases, list):
+        fail("conversion cases is not an array")
+    conversion_ids: set[str] = set()
+    seen_statuses: set[str] = set()
+    expected_policy = {
+        "lossless": "emit",
+        "lossy-history": "caller-acceptance",
+        "lossy-semantic-state": "caller-acceptance",
+        "requires-ruleset-resolution": "none",
+        "unrepresentable-under-profile": "none",
+    }
+    for vector in conversion_cases:
+        identity = vector["id"]
+        if identity in conversion_ids:
+            fail(f"duplicate conversion vector id: {identity}")
+        conversion_ids.add(identity)
+        verify_manifest_reference(vector, conversion_path)
+        expected = vector["expected"]
+        status = expected["status"]
+        if status not in expected_policy:
+            fail(f"unknown conversion status: {identity}")
+        seen_statuses.add(status)
+        if expected.get("outputPolicy") != expected_policy[status]:
+            fail(f"conversion output policy mismatch: {identity}")
+        if status.startswith("lossy-") and not expected.get("omitted"):
+            fail(f"lossy conversion does not identify omitted state: {identity}")
+    if seen_statuses != set(statuses):
+        fail(f"conversion vectors do not cover statuses: {sorted(set(statuses) - seen_statuses)}")
+    required_conversion_ids = {
+        "CONVERSION-NMM-LLM-ATOMIC-CAPTURE",
+        "CONVERSION-MSTATE-TO-MFEN-HISTORY",
+        "CONVERSION-SANMILL-MISSING-UL",
+        "CONVERSION-MFEN-MISSING-RULESET",
+        "CONVERSION-SANMILL-OWNERLESS-X",
+    }
+    if not required_conversion_ids.issubset(conversion_ids):
+        fail(
+            "missing required conversion vectors: "
+            f"{sorted(required_conversion_ids - conversion_ids)}"
+        )
+
+    rules_path = CONF / "vectors" / "rules.json"
+    rules = load_json(rules_path)
+    if rules.get("format") != "MIF-RULE-VECTORS/0.4":
+        fail("rule vector format is not 0.4")
+    rule_cases = rules.get("cases")
+    if not isinstance(rule_cases, list):
+        fail("rule cases is not an array")
+    by_id: dict[str, Any] = {}
+    for vector in rule_cases:
+        identity = vector["id"]
+        if identity in by_id:
+            fail(f"duplicate rule vector id: {identity}")
+        by_id[identity] = vector
+        verify_manifest_reference(vector, rules_path)
+    required_rule_ids = {
+        "RULES-DOUBLE-MILL-ONE-PER-PRIMARY",
+        "RULES-DOUBLE-MILL-ONE-PER-NEW-LINE",
+        "RULES-ALL-IN-MILLS-FALLBACK",
+        "RULES-FLYING-THREE",
+        "RULES-FLYING-FOUR",
+        "RULES-DELAYED-CLEAR-BOUNDARY",
+        "RULES-PHASE-M-WITH-OPPONENT-HAND",
+        "RULES-DEFERRED-MILL-COUNT-WITH-PLACING-CAPTURE",
+        "RULES-OPPONENT-REMOVE-OWN-WITH-PLACING-CAPTURE",
+    }
+    if not required_rule_ids.issubset(by_id):
+        fail(f"missing required rule vectors: {sorted(required_rule_ids - set(by_id))}")
+    if by_id["RULES-DOUBLE-MILL-ONE-PER-PRIMARY"]["expected"].get(
+        "ordinaryMillRemaining"
+    ) != 1:
+        fail("one-per-primary double-mill expectation mismatch")
+    if by_id["RULES-DOUBLE-MILL-ONE-PER-NEW-LINE"]["expected"].get(
+        "ordinaryMillRemaining"
+    ) != 2:
+        fail("one-per-new-line double-mill expectation mismatch")
+    if by_id["RULES-ALL-IN-MILLS-FALLBACK"]["expected"].get("targetBits") != "000007":
+        fail("all-in-mills fallback target mismatch")
+    if by_id["RULES-FLYING-THREE"]["expected"].get("moveAllowed") is not True:
+        fail("three-piece flying expectation mismatch")
+    if by_id["RULES-FLYING-FOUR"]["expected"].get("moveAllowed") is not False:
+        fail("four-piece flying expectation mismatch")
+    delayed = by_id["RULES-DELAYED-CLEAR-BOUNDARY"]["expected"]
+    if delayed.get("boardAfter") != "WWW...../.......B/........" or delayed.get(
+        "emitsRemoveEvent"
+    ) is not False:
+        fail("delayed-clear expectation mismatch")
+    if by_id["RULES-PHASE-M-WITH-OPPONENT-HAND"]["expected"].get("phase") != "m":
+        fail("asymmetric-hand phase expectation mismatch")
+    if by_id["RULES-DEFERRED-MILL-COUNT-WITH-PLACING-CAPTURE"]["expected"].get(
+        "valid"
+    ) is not True:
+        fail("deferred mill-count combination expectation mismatch")
+    mixed_actor = by_id[
+        "RULES-OPPONENT-REMOVE-OWN-WITH-PLACING-CAPTURE"
+    ]["expected"]
+    if mixed_actor.get("valid") is not False or mixed_actor.get("code") != (
+        "mixed-obligation-actors"
+    ):
+        fail("mixed-actor manifest rejection expectation mismatch")
+
+    mpk = load_json(CONF / "vectors" / "mpk.json")
+    mpk_valid = {vector["id"]: vector for vector in mpk["valid"]}
+    aut16 = mpk_valid.get("MPK-VALID-0003")
+    if not isinstance(aut16, dict):
+        fail("missing Aut16 positive declaration vector")
+    declaration = aut16.get("ringExchangeInvariance")
+    if not isinstance(declaration, dict) or declaration.get("ruleset") != (
+        "x-mif-fixture-nmm@2"
+    ) or not isinstance(declaration.get("declarationVersion"), int):
+        fail("Aut16 positive vector lacks a versioned ruleset-bound declaration")
+    mpk_invalid = {vector["id"]: vector for vector in mpk["invalid"]}
+    undeclared = mpk_invalid.get("MPK-INVALID-0005")
+    if not isinstance(undeclared, dict) or undeclared.get(
+        "ringExchangeInvariance"
+    ) is not None or undeclared.get("code") != (
+        "ring-exchange-invariance-undeclared"
+    ):
+        fail("missing Aut16 undeclared-invariance rejection vector")
+
+    mfen = load_json(CONF / "vectors" / "mfen.json")
+    mfen_ids = {vector["id"] for vector in mfen["valid"]}
+    if "MFEN-VALID-0013" not in mfen_ids:
+        fail("missing active-player moving/opponent-reserve MFEN vector")
+
+
 def verify_mapping_digest() -> None:
     path = CONF / "vectors" / "implementation-mappings.json"
     digest = sha256(path.read_bytes())
@@ -318,11 +507,12 @@ def verify_all() -> None:
         load_json(path)
     mf = manifests()
     verify_index()
-    verify_ruleset_references(mf)
+    verify_ruleset_contexts(mf)
     verify_jcs_vectors()
     verify_abnf()
     verify_transforms()
     verify_mstate_contract()
+    verify_review_vectors(mf)
     verify_mapping_digest()
 
 

@@ -1,0 +1,109 @@
+{
+  "format": "MIF-CONVERSION-VECTORS/0.4",
+  "statuses": [
+    "lossless",
+    "lossy-history",
+    "lossy-semantic-state",
+    "requires-ruleset-resolution",
+    "unrepresentable-under-profile"
+  ],
+  "cases": [
+    {
+      "id": "CONVERSION-NMM-LLM-ATOMIC-CAPTURE",
+      "description": "An exact NMM_LLM moving action with its capture target decomposes into one MSTATE move event and one remove event",
+      "sourceFormat": "NMM_LLM examined atomic action",
+      "targetFormat": "MSTATE/0.4",
+      "manifest": "../manifests/x-mif-fixture-nmm@2.json",
+      "source": {
+        "boardBefore": "W.W....W/BBBB..../........",
+        "side": "w",
+        "hands": [
+          0,
+          0
+        ],
+        "move": {
+          "from": "a4",
+          "to": "d7",
+          "capture": "b6"
+        }
+      },
+      "expected": {
+        "status": "lossless",
+        "outputPolicy": "emit",
+        "eventTypes": [
+          "move",
+          "remove"
+        ]
+      }
+    },
+    {
+      "id": "CONVERSION-MSTATE-TO-MFEN-HISTORY",
+      "description": "Projecting an auditable MSTATE to its instantaneous MFEN omits event, repetition, claim and offer history",
+      "sourceFormat": "MSTATE/0.4",
+      "targetFormat": "MFEN/0.4",
+      "manifest": "../manifests/x-mif-fixture-nmm-claim@2.json",
+      "source": {
+        "instantaneousStateComplete": true,
+        "hasEventHistory": true,
+        "hasRepetitionHistory": true,
+        "hasClaimAudit": true
+      },
+      "expected": {
+        "status": "lossy-history",
+        "outputPolicy": "caller-acceptance",
+        "omitted": [
+          "events",
+          "repetitionHistory",
+          "claims"
+        ]
+      }
+    },
+    {
+      "id": "CONVERSION-SANMILL-MISSING-UL",
+      "description": "A point union and global used-line union cannot reconstruct per-player ul history",
+      "sourceFormat": "Sanmill examined state",
+      "targetFormat": "MFEN/0.4 mill24-state-v1",
+      "manifest": "../manifests/x-mif-fixture-stateful@2.json",
+      "source": {
+        "formedMillPointUnion": "000007",
+        "usedMillLinesGlobal": "0001",
+        "perPlayerLineIds": null
+      },
+      "expected": {
+        "status": "lossy-semantic-state",
+        "outputPolicy": "caller-acceptance",
+        "omitted": [
+          "per-player line-ID history (ul)"
+        ]
+      }
+    },
+    {
+      "id": "CONVERSION-MFEN-MISSING-RULESET",
+      "description": "A context-free MFEN cannot be converted semantically",
+      "sourceFormat": "MFEN/0.4",
+      "targetFormat": "MSTATE/0.4",
+      "source": {
+        "record": "MFEN/0.4 mill24-state-v1 ......../......../........ w p p 9,9 - 0 0 -",
+        "rulesetContext": null
+      },
+      "expected": {
+        "status": "requires-ruleset-resolution",
+        "outputPolicy": "none"
+      }
+    },
+    {
+      "id": "CONVERSION-SANMILL-OWNERLESS-X",
+      "description": "An ownerless delayed marker cannot select the owner-preserving w or b target character",
+      "sourceFormat": "Sanmill examined FEN",
+      "targetFormat": "MFEN/0.4 mill24-state-v1",
+      "source": {
+        "marker": "X",
+        "authoritativeOwner": null
+      },
+      "expected": {
+        "status": "unrepresentable-under-profile",
+        "outputPolicy": "none"
+      }
+    }
+  ]
+}

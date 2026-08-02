@@ -6,7 +6,7 @@
 ; identifiers syntactically; Clause 8 forbids non-semantic private
 ; extensions in conforming MPK output.
 
-mfen = mfen-signature SP state-profile SP ruleset SP board SP side
+mfen = mfen-signature SP state-profile SP board SP side
        SP phase SP action SP hands SP obligations SP no-progress
        SP primary-ply SP outcome *(SP extension)
 
@@ -66,14 +66,13 @@ standard-reason = %s"fewer-than-minimum" / %s"no-legal-move" /
 extension = extension-key %s"=" *value-character
 key-extension = extension
 extension-key = standard-extension-key / private-identifier
-standard-extension-key = %s"lm" / %s"pc" / %s"rh" / %s"ul"
+standard-extension-key = %s"lm" / %s"pc" / %s"ul"
 value-character = %x21-3C / %x3E-7E
 
 ; Registered extension-value subgrammars.
 lm-value = coord-or-dash %s"," coord-or-dash %s";"
            coord-or-dash %s"," coord-or-dash
 pc-value = uint %s"," uint
-rh-value = %s"sha256:" 64lc-hex
 ul-value = line-bitset %s"," line-bitset
 line-bitset = 4lc-hex / 5lc-hex
 

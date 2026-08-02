@@ -7,13 +7,13 @@
   "files": [
     {
       "path": "README.md",
-      "bytes": 3373,
-      "sha256": "f09ded55b68aa2d0dfa029fbe6c399f357db8e1494fa60a12c689cfa999d8f9c"
+      "bytes": 3960,
+      "sha256": "8fd21f9388669feda3b88e1d2cafdd2b0dc1a75c2fabf65028613cddf16022d7"
     },
     {
       "path": "examples/mstate-pending-board.json",
-      "bytes": 4256,
-      "sha256": "411c3aaf78aa3f3d42002a1c0a4a9c95688c67117c5481f062d77b8469681923"
+      "bytes": 4066,
+      "sha256": "8f36fc43fdc1557a003f4d0845cf0947915380c634d40a0e51b918257ea989b5"
     },
     {
       "path": "manifests/x-mif-fixture-delay@2.json",
@@ -52,8 +52,13 @@
     },
     {
       "path": "mif-0.4.abnf",
-      "bytes": 3149,
-      "sha256": "8aa83c0bfff8a899ba8545f20467a1ae24162de50fc98f4b7f59d5b71bd20c3c"
+      "bytes": 3097,
+      "sha256": "6cb1a17b0f0d4f70a9f51780f3fc5e511bc3e11ac5cd030d760190b14f053839"
+    },
+    {
+      "path": "vectors/conversion.json",
+      "bytes": 3277,
+      "sha256": "ef5d95b0ed5ab2fb39f746cf80102c7a30107634aade3666d9b387c65788e880"
     },
     {
       "path": "vectors/implementation-mappings.json",
@@ -62,23 +67,28 @@
     },
     {
       "path": "vectors/json-jcs.json",
-      "bytes": 7295,
-      "sha256": "0de236315a22ab4f15f38393c110a92e019202b568fcfc4e737ed53092cbab96"
+      "bytes": 7105,
+      "sha256": "3a32092ef0d0feb73169ca833ec9ce6e178101e892b946f13416d866e9b77397"
     },
     {
       "path": "vectors/mfen.json",
-      "bytes": 13685,
-      "sha256": "a8eb5c95676bcf2942233c28ab5d618619b6f899b476563da34b2f3b752950b3"
+      "bytes": 11941,
+      "sha256": "28a10c75fab66593db0941cdc1af6342be4312ea09f914b1179c3123827ea6ba"
     },
     {
       "path": "vectors/mpk.json",
-      "bytes": 6259,
-      "sha256": "888ca964218fd79646ab0ce5ebbc691dbaa2411ea2fafe9aab2da2e8a5adb5c0"
+      "bytes": 5633,
+      "sha256": "e6d8940275c9f42bf9013506dacadb86ad81f309eb515b6f3c089da0b7eca7df"
     },
     {
       "path": "vectors/mstate.json",
-      "bytes": 29768,
-      "sha256": "9eebfd2fb16d63a8e1592537665d486afa8170bbd15a0f9eb438e969fc4df320"
+      "bytes": 25581,
+      "sha256": "97384bfe3d8fdca1705fca0fafa8d2d57d1aeb32d3f36cfbb768aca9c4d750bb"
+    },
+    {
+      "path": "vectors/rules.json",
+      "bytes": 3857,
+      "sha256": "e2073b72b5030e1ce35945f7a14ee26b6a6ca9f26faefb70b811c7eea725e88b"
     },
     {
       "path": "vectors/transforms.json",

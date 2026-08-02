@@ -5,89 +5,99 @@
     {
       "id": "MPK-VALID-0001",
       "description": "Empty board under D4",
-      "source": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 ......../......../........ w p p 9,9 - 0 0 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
+      "manifest": "../manifests/x-mif-fixture-nmm@2.json",
+      "source": "MFEN/0.4 mill24-state-v1 ......../......../........ w p p 9,9 - 0 0 -",
       "keyProfile": "structural-d4-v1",
-      "canonical": "MPK/0.4 mill24-state-v1 x-mif-fixture-nmm@2 structural-d4-v1 ........................ w p 9,9 rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
+      "canonical": "MPK/0.4 mill24-state-v1 x-mif-fixture-nmm@2 structural-d4-v1 ........................ w p 9,9",
       "selectedTransform": "i"
     },
     {
       "id": "MPK-VALID-0002",
       "description": "A White piece at d7 normalizes to a4 under D4",
-      "source": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 .W....../......../........ b p p 8,9 - 0 1 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
+      "manifest": "../manifests/x-mif-fixture-nmm@2.json",
+      "source": "MFEN/0.4 mill24-state-v1 .W....../......../........ b p p 8,9 - 0 1 -",
       "keyProfile": "structural-d4-v1",
-      "canonical": "MPK/0.4 mill24-state-v1 x-mif-fixture-nmm@2 structural-d4-v1 .......W................ b p 8,9 rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
+      "canonical": "MPK/0.4 mill24-state-v1 x-mif-fixture-nmm@2 structural-d4-v1 .......W................ b p 8,9",
       "selectedTransform": "r90ccw"
     },
     {
       "id": "MPK-VALID-0003",
       "description": "The same source normalizes to c4 under the full 16-transform profile",
-      "source": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 .W....../......../........ b p p 8,9 - 0 1 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
+      "manifest": "../manifests/x-mif-fixture-nmm@2.json",
+      "source": "MFEN/0.4 mill24-state-v1 .W....../......../........ b p p 8,9 - 0 1 -",
       "keyProfile": "structural-aut16-v1",
-      "canonical": "MPK/0.4 mill24-state-v1 x-mif-fixture-nmm@2 structural-aut16-v1 .......................W b p 8,9 rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
+      "ringExchangeInvariance": {
+        "authority": "MIF conformance corpus",
+        "declarationVersion": 1,
+        "ruleset": "x-mif-fixture-nmm@2"
+      },
+      "canonical": "MPK/0.4 mill24-state-v1 x-mif-fixture-nmm@2 structural-aut16-v1 .......................W b p 8,9",
       "selectedTransform": "exchange-r90ccw"
     },
     {
       "id": "MPK-VALID-0004",
       "description": "All semantic state extensions participate in candidate comparison",
-      "source": "MFEN/0.4 mill24-state-v1 x-mif-fixture-stateful@2 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - lm=d1,d7;-,- rh=sha256:ff9ddf44f2d0335b34021f161ccc2550f6b5bf820df59445ffe9049c13bf14c6 ul=0003,0000",
+      "manifest": "../manifests/x-mif-fixture-stateful@2.json",
+      "source": "MFEN/0.4 mill24-state-v1 W.W.W.../B.B.B.../........ w m m 0,0 - 4 18 - lm=d1,d7;-,- ul=0003,0000",
       "keyProfile": "structural-d4-v1",
       "requirement": "Transform board, lm and ul together before selecting the complete lexical minimum",
       "candidates": [
         {
           "transform": "i",
-          "candidate": "MPK/0.4 mill24-state-v1 x-mif-fixture-stateful@2 structural-d4-v1 W.W.W...B.B.B........... w m 0,0 lm=d1,d7;-,- rh=sha256:ff9ddf44f2d0335b34021f161ccc2550f6b5bf820df59445ffe9049c13bf14c6 ul=0003,0000"
+          "candidate": "MPK/0.4 mill24-state-v1 x-mif-fixture-stateful@2 structural-d4-v1 W.W.W...B.B.B........... w m 0,0 lm=d1,d7;-,- ul=0003,0000"
         },
         {
           "transform": "r90ccw",
-          "candidate": "MPK/0.4 mill24-state-v1 x-mif-fixture-stateful@2 structural-d4-v1 W.W...W.B.B...B......... w m 0,0 lm=g4,a4;-,- rh=sha256:ff9ddf44f2d0335b34021f161ccc2550f6b5bf820df59445ffe9049c13bf14c6 ul=0009,0000"
+          "candidate": "MPK/0.4 mill24-state-v1 x-mif-fixture-stateful@2 structural-d4-v1 W.W...W.B.B...B......... w m 0,0 lm=g4,a4;-,- ul=0009,0000"
         },
         {
           "transform": "r180",
-          "candidate": "MPK/0.4 mill24-state-v1 x-mif-fixture-stateful@2 structural-d4-v1 W...W.W.B...B.B......... w m 0,0 lm=d7,d1;-,- rh=sha256:ff9ddf44f2d0335b34021f161ccc2550f6b5bf820df59445ffe9049c13bf14c6 ul=000c,0000"
+          "candidate": "MPK/0.4 mill24-state-v1 x-mif-fixture-stateful@2 structural-d4-v1 W...W.W.B...B.B......... w m 0,0 lm=d7,d1;-,- ul=000c,0000"
         },
         {
           "transform": "r90cw",
-          "candidate": "MPK/0.4 mill24-state-v1 x-mif-fixture-stateful@2 structural-d4-v1 ..W.W.W...B.B.B......... w m 0,0 lm=a4,g4;-,- rh=sha256:ff9ddf44f2d0335b34021f161ccc2550f6b5bf820df59445ffe9049c13bf14c6 ul=0006,0000"
+          "candidate": "MPK/0.4 mill24-state-v1 x-mif-fixture-stateful@2 structural-d4-v1 ..W.W.W...B.B.B......... w m 0,0 lm=a4,g4;-,- ul=0006,0000"
         },
         {
           "transform": "mirror-v",
-          "candidate": "MPK/0.4 mill24-state-v1 x-mif-fixture-stateful@2 structural-d4-v1 W.W...W.B.B...B......... w m 0,0 lm=d1,d7;-,- rh=sha256:ff9ddf44f2d0335b34021f161ccc2550f6b5bf820df59445ffe9049c13bf14c6 ul=0009,0000"
+          "candidate": "MPK/0.4 mill24-state-v1 x-mif-fixture-stateful@2 structural-d4-v1 W.W...W.B.B...B......... w m 0,0 lm=d1,d7;-,- ul=0009,0000"
         },
         {
           "transform": "mirror-h",
-          "candidate": "MPK/0.4 mill24-state-v1 x-mif-fixture-stateful@2 structural-d4-v1 ..W.W.W...B.B.B......... w m 0,0 lm=d7,d1;-,- rh=sha256:ff9ddf44f2d0335b34021f161ccc2550f6b5bf820df59445ffe9049c13bf14c6 ul=0006,0000"
+          "candidate": "MPK/0.4 mill24-state-v1 x-mif-fixture-stateful@2 structural-d4-v1 ..W.W.W...B.B.B......... w m 0,0 lm=d7,d1;-,- ul=0006,0000"
         },
         {
           "transform": "mirror-main",
-          "candidate": "MPK/0.4 mill24-state-v1 x-mif-fixture-stateful@2 structural-d4-v1 W.W.W...B.B.B........... w m 0,0 lm=a4,g4;-,- rh=sha256:ff9ddf44f2d0335b34021f161ccc2550f6b5bf820df59445ffe9049c13bf14c6 ul=0003,0000"
+          "candidate": "MPK/0.4 mill24-state-v1 x-mif-fixture-stateful@2 structural-d4-v1 W.W.W...B.B.B........... w m 0,0 lm=a4,g4;-,- ul=0003,0000"
         },
         {
           "transform": "mirror-anti",
-          "candidate": "MPK/0.4 mill24-state-v1 x-mif-fixture-stateful@2 structural-d4-v1 W...W.W.B...B.B......... w m 0,0 lm=g4,a4;-,- rh=sha256:ff9ddf44f2d0335b34021f161ccc2550f6b5bf820df59445ffe9049c13bf14c6 ul=000c,0000"
+          "candidate": "MPK/0.4 mill24-state-v1 x-mif-fixture-stateful@2 structural-d4-v1 W...W.W.B...B.B......... w m 0,0 lm=g4,a4;-,- ul=000c,0000"
         }
       ],
-      "canonical": "MPK/0.4 mill24-state-v1 x-mif-fixture-stateful@2 structural-d4-v1 ..W.W.W...B.B.B......... w m 0,0 lm=a4,g4;-,- rh=sha256:ff9ddf44f2d0335b34021f161ccc2550f6b5bf820df59445ffe9049c13bf14c6 ul=0006,0000",
+      "canonical": "MPK/0.4 mill24-state-v1 x-mif-fixture-stateful@2 structural-d4-v1 ..W.W.W...B.B.B......... w m 0,0 lm=a4,g4;-,- ul=0006,0000",
       "selectedTransform": "r90cw"
     }
   ],
   "invalid": [
     {
       "id": "MPK-INVALID-0001",
-      "source": "MFEN/0.4 mill24-state-v1 x-mif-fixture-nmm@2 WWW...B./......B./........ w p r 6,7 w:mill:b:b:1:004040:b 0 5 - rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
+      "manifest": "../manifests/x-mif-fixture-nmm@2.json",
+      "source": "MFEN/0.4 mill24-state-v1 WWW...B./......B./........ w p r 6,7 w:mill:b:b:1:004040:b 0 5 -",
       "expected": "reject",
       "category": "ineligible",
       "code": "unresolved-obligation"
     },
     {
       "id": "MPK-INVALID-0002",
-      "input": "MPK/0.4 mill24-state-v1 x-mif-fixture-nmm@2 structural-d4-v1 .W...................... b p 8,9 rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
+      "input": "MPK/0.4 mill24-state-v1 x-mif-fixture-nmm@2 structural-d4-v1 .W...................... b p 8,9",
       "expected": "reject",
       "category": "canonical",
       "code": "non-minimal-transform"
     },
     {
       "id": "MPK-INVALID-0003",
-      "input": "MPK/0.4 mill24-state-v1 x-mif-fixture-nmm@2 structural-aut16-v1 .......W................ b p 8,9 rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913",
+      "input": "MPK/0.4 mill24-state-v1 x-mif-fixture-nmm@2 structural-aut16-v1 .......W................ b p 8,9",
       "expected": "reject",
       "category": "canonical",
       "code": "wrong-key-profile-minimum"
@@ -95,10 +105,21 @@
     {
       "id": "MPK-INVALID-0004",
       "description": "Non-semantic private extensions shall not appear in MPK",
-      "input": "MPK/0.4 mill24-state-v1 x-mif-fixture-nmm@2 structural-d4-v1 ........................ w p 9,9 rh=sha256:eeb1e3495e02a004b0d9589ab43ee25455613dda6b024e25a8296c3c3f727913 x-note=abc",
+      "input": "MPK/0.4 mill24-state-v1 x-mif-fixture-nmm@2 structural-d4-v1 ........................ w p 9,9 x-note=abc",
       "expected": "reject",
       "category": "canonical",
       "code": "private-nonsemantic-extension"
+    },
+    {
+      "id": "MPK-INVALID-0005",
+      "description": "Aut16 production requires an external ring-exchange-invariance declaration bound to the resolved ruleset",
+      "manifest": "../manifests/x-mif-fixture-nmm@2.json",
+      "source": "MFEN/0.4 mill24-state-v1 .W....../......../........ b p p 8,9 - 0 1 -",
+      "keyProfile": "structural-aut16-v1",
+      "ringExchangeInvariance": null,
+      "expected": "reject",
+      "category": "ineligible",
+      "code": "ring-exchange-invariance-undeclared"
     }
   ]
 }

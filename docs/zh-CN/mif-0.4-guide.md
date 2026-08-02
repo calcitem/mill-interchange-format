@@ -33,7 +33,12 @@ MRS/0.4
 - full-board 在 placing 阶段也可确定性处理；
 - 双方同时低于 minimum 时判和；
 - 独立 MFEN 必须是 deterministic fixed point；
-- 任意非 accept-draw 的终局都会关闭 open offer。
+- MFEN 不再内嵌 ruleset ID 与版本，由调用方或 MSTATE 提供规则上下文；
+- 任意非 accept-draw 的终局都会关闭 open offer；
+- 明确标准九子棋为 16 线，20 线为对角线变体；
+- 明确 capture 是规则机制、removal 是实际状态操作、obligation 是未决要求；
+- Aut16 需要规则集/数据集外部的环交换不变性声明；
+- 新增五类规范转换状态和相应机器向量。
 
 ## 2. 总体架构
 
@@ -61,7 +66,7 @@ key-profile   = MPK 投影和对称归一化
 ## 3. MFEN/0.4 的核心形式
 
 ```text
-MFEN/0.4 <state-profile> <ruleset> <board> <side> <phase> <action>
+MFEN/0.4 <state-profile> <board> <side> <phase> <action>
 <hands> <obligations> <no-progress> <primary-ply> <outcome>
 [<extension> ...]
 ```
@@ -72,6 +77,15 @@ MFEN/0.4 <state-profile> <ruleset> <board> <side> <phase> <action>
 mill24-state-v1
 ```
 
+MFEN 现在只表达局面，不再内嵌规则集 ID 或版本。调用方必须另外提供
+ruleset context；没有 context 时可以做语法解析，但不能完成合法性、终局
+或 obligation 的语义校验。MSTATE 使用顶层 `ruleset` 为 `origin` 和
+`current` 统一提供这个 context。
+
+这里的 context 必须是完整 `ruleset-id@version`，而不是 `g`、`r`、
+“German”“Russian”“English”等应用标签。若 UI 提供默认规则集，也应
+显示最终解析出的完整身份；默认值不是 MFEN 行里编码的事实。
+
 与 0.1 相比，最大的变化是：
 
 - 删除 `ready` phase；
@@ -81,6 +95,17 @@ mill24-state-v1
   剩余次数、目标集合和完成后的控制权。
 
 ## 4. 公共棋盘顺序
+
+先区分两个常被混称为“九子棋盘”的拓扑：
+
+- 标准 Nine Men's Morris：16 条正交成磨线；
+- diagonal variant：增加四条角到内环的对角线，共 20 条。
+
+20 线版本额外加入：
+
+```text
+a7-b6-c5    g7-f6-e5    g1-f2-e3    a1-b2-c3
+```
 
 公共顺序固定为外圈—中圈—内圈：
 
@@ -146,6 +171,10 @@ Sanmill 可以继续使用适合其 Rust/TGF 热路径的 inner/middle/outer
 - 保留原所有者；
 - 只在规则定义的确定边界清除。
 
+实现层面可以把它归纳为：`W/B` 占点、活动、可移动、可成磨且计入物料；
+`w/b` 只占点并保留所有者，不活动、不成磨、不可再次移除；`.` 才是
+可用目的地。这些是状态配置文件边界必须保留的派生行为。
+
 `mif-finite-rules-v2` 将清除边界固定为：
 
 ```text
@@ -156,7 +185,8 @@ on-enter-moving-v1
 这不是玩家动作，所以 MSTATE 不记录额外的 `clear-mark` 事件。
 
 Sanmill 旧格式的单个 `X` 不携带所有者。转换器必须从其他权威状态取得
-所有者，否则应报告有损，不能随意猜成 `w` 或 `b`。
+所有者；否则状态是 `unrepresentable-under-profile`，不得输出貌似有效
+的 MFEN，更不能随意猜成 `w` 或 `b`。
 
 ## 7. 为什么 phase、action 和 hands 都保留
 
@@ -206,6 +236,9 @@ hand   = 0
 
 ### 7.3 hands 必须是直接值
 
+`hands` 首先应理解为“尚未落到棋盘的储备（unplaced reserve）”，
+“手中棋子”只是传统叫法。
+
 标准不使用通式：
 
 ```text
@@ -225,6 +258,32 @@ pc=<White 历史落子数>,<Black 历史落子数>
 吃手中或盘上棋子都不减少 `pc`。
 
 ## 8. obligation 分支模型
+
+先固定三个词的分工：
+
+- capture（吃子）是规则机制或取得移除权；
+- removal（移除）是实际改变棋盘/储备状态的操作；
+- obligation（义务）是尚待完成的权威要求。
+
+所以不应把规范中的 capture 全部替换成 removal。标准九子棋玩家说
+“capture a piece”没有问题；在线格式和状态机里，需要精确指出真正改变
+状态的是 remove。
+
+一个逻辑回合是一个主动作，加上零次、一次或多次补充移除，最后再经过
+确定性稳定边界处理：
+
+```text
+primary action
+   |
+   +-- no obligation -------------------+
+   |                                    |
+   +-- pending obligation -> remove ----+--> stable-boundary pipeline
+                              -> remove -+              |
+                                                   next primary
+```
+
+有 obligation 的中间状态使用 `action=r`；在分支耗尽前不能输入下一个
+primary action。
 
 单个 obligation 的线格式为：
 
@@ -255,6 +314,8 @@ w:mill:b:b:1:004040:b
 ```text
 w:mill:h:b:1:-:b
 ```
+
+这种“成磨后移除对手储备”的例子是规则变体，不是标准九子棋规则。
 
 ### 8.1 顺序和选择
 
@@ -334,7 +395,9 @@ ul=<White line bitset>,<Black line bitset>
 进行置换，`conformance/vectors/transforms.json` 给出了全部规范向量。
 
 Sanmill 当前的 per-player formed-point union 与 global used-line union
-并不总能恢复 per-player line set。遇到歧义时转换器必须报告有损。
+并不总能恢复 per-player line set。遇到歧义时转换器必须报告
+`lossy-semantic-state`，说明缺失的是 `ul`，并在输出简化结果前取得
+调用方明确接受。
 
 ## 10. MPK 的两个明确 profile
 
@@ -362,6 +425,12 @@ g1 <-> e3    d1 <-> d3    a1 <-> c3    a4 <-> c4
 
 中圈保持不变。
 
+但“它是图的自同构”并不足以证明特定规则集也把两种状态视为等价。
+使用 Aut16 前，数据集或配置必须提供带版本的外部声明，确认环交换保留
+该完整 `ruleset-id@version` 的全部规则相关状态。此声明不新增 MRS
+字段；数据库元数据应记录 key profile 和声明身份/版本。没有同样等价
+关系的普通 transposition table 不应直接采用 Aut16。
+
 同一个 `d7` 单 White 棋子：
 
 - D4 profile 归一化到 `a4`，即索引 7；
@@ -379,6 +448,11 @@ MPK 不能只变换棋盘后比较。以下字段若有语义，也必须同步�
 
 对完整候选线做 US-ASCII 字典序最小选择；并保留选中的 transform，以便
 把规范化空间中的着法逆变换回原棋盘。
+
+`MPK-VALID-0004` 给出一个直观反例：`r90cw` 与 `mirror-h` 产生相同
+的最小棋盘串，但前者把 `lm` 变为 `a4,g4;-,-`，后者变为
+`d7,d1;-,-`；两者的 `ul` 都是 `0006,0000`。完整候选选择
+`r90cw`，只比较棋盘会漏掉权威语义状态。
 
 ### 10.4 MPK 不是所有 tablebase 的完整状态
 
@@ -482,7 +556,7 @@ MSTATE 顶层增加：
 
 不再一边声称版本独立，一边把 MFEN 版本隐式写死。
 
-### 11.6 私有规则集 envelope
+### 11.6 MFEN 外部规则上下文与私有规则集 envelope
 
 私有 MSTATE 必须携带：
 
@@ -495,8 +569,20 @@ MSTATE 顶层增加：
 }
 ```
 
-单独 MFEN/MPK 使用 `rh=sha256:...`，通过调用方提供的本地 resolver
-按 `(id, version, digest)` 查找。解析器禁止自动联网。
+MFEN 不再保存 `id@version` 或 SHA-256；调用方按 `(id, version)`
+提供规则上下文，再由本地 resolver 查找 manifest。没有上下文的 MFEN
+只能做结构解析。解析器禁止自动联网。
+
+两个分量都必须存在。单字母 `g`/`r` 或“German”“Hungarian”
+“English”不是权威规则集身份；公开注册应标识实际规则来源/权威及其
+版本、日期或版次。
+
+MPK 仍保留 `id@version`，以避免不同规则集的分析键发生碰撞，但
+SHA-256 同样不写进 MPK。
+
+需要精确绑定 manifest 或校验完整性时，应使用上述 MSTATE envelope，
+或由其他外层传输元数据携带 digest。MFEN 的语义相等性必须同时比较
+外部 ruleset context 和 MFEN 文本。
 
 错误区分：
 
@@ -505,6 +591,9 @@ manifest-missing
 manifest-conflict
 manifest-digest-mismatch
 ```
+
+其中 `manifest-digest-mismatch` 仅在 envelope 或调用方提供了预期
+digest 时适用。
 
 ## 12. repetition 和 claims 已闭合
 
@@ -560,7 +649,79 @@ manifest-digest-mismatch
 - repetition 观察；
 - 所有终局条件的优先级。
 
-稳定边界的固定顺序为：
+MRS 只选择机制，不另设 trigger/terminal priority 字段。上述顺序属于
+`mif-finite-rules-v2` 的政策，不是所有未来语义配置文件的通用顺序；
+想采用另一优先级必须使用另一明确标识的 semantics profile。
+
+保留的公开标识符也有更自然的人类名称：
+
+- `targetProtection`：成磨吃子保护；
+- `reverseReformation`：立即反向重组；
+- placing regime：双方未落子储备均清空前的全局落子机制区间。
+
+### 13.1 三种特殊吃子机制示意
+
+以下图只解释动作关系，合法线族、保护过滤和精确顺序仍以英文规范及
+表 A.2 为准。设 `W` 为行动方、`B` 为对手。
+
+Custodian（夹吃/保管式吃子）：主动作落在一端，行动方已占另一端，
+中点对手棋子成为目标。
+
+```text
+a        m        b
+W  ----- B ------ W
+^ 主动作终点       已有 W
+          |
+       移除目标
+```
+
+Intervention（插入式吃子）：主动作落在中点，两端对手棋子组成所选
+候选线；经过成磨吃子保护后，存活端点形成一个有序移除分支。
+
+```text
+a        m        b
+B  ----- W ------ B
+^                 ^
+候选目标        候选目标
+         ^
+      主动作终点
+```
+
+Leap（跳吃）：行动方从一端跳到空的另一端，中点对手棋子成为唯一
+leap 目标。
+
+```text
+动作前: W(a) ---- B(m) ---- .(b)
+动作后: .(a) ---- B(m) ---- W(b)
+                    |
+                 移除目标
+```
+
+有合法 leap 目标时，leap 分支排斥 mill/intervention/custodian 分支；
+但同一主动作形成的磨仍是语义事件，仍更新 `lm`/`ul`，并在规则配置
+`mill-formation` 时重置 no-progress。
+
+### 13.2 容易误读的四个实例
+
+- 双成磨：在 `W.W...../.W....../.W......` 上落到 `d7`，同时形成
+  线 0 和线 12；`one-per-primary` 产生 1 次普通移除，
+  `one-per-new-line` 产生 2 次（再受目标物料上限约束）。
+- 全在磨内：`outside-mill-first` 是“磨外优先”，不是磨内绝对免疫；
+  若对手只有 `a7,d7,g7`，三枚都可移除。
+- 飞行阈值：`maximumLive=3` 时三枚棋可飞到任意空点，四枚棋不能仅凭
+  flying 跳过相邻限制。
+- 延迟清除：进入 moving 时
+  `WWW...../b......B/........` 确定性变为
+  `WWW...../.......B/........`，不新增 remove 事件。
+
+### 13.3 placing 机制组合边界
+
+`remove-by-current-mill-count-at-placing-end` 可以与 placing capture
+组合：后者在主动作序列中解决，前者到全局落子边界才生成。
+`opponent-remove-own-board` 则不能与 placing capture 组合，因为一个
+分支由对手执行，另一个由主动作行动方执行，会造成分支头 actor 冲突。
+
+在 `mif-finite-rules-v2` 中，稳定边界的固定顺序为：
 
 ```text
 进入 moving 并清除 delayed token
@@ -628,6 +789,26 @@ conformance/mif-0.4.abnf
 
 ## 16. 机器可运行的一致性语料
 
+### 16.1 转换器的五种结果
+
+转换 API 的外壳由实现决定，但状态名和输出政策固定：
+
+| 状态 | 输出政策 |
+|---|---|
+| `lossless` | 可直接输出 |
+| `lossy-history` | 指明丢失历史，调用方明确接受后输出 |
+| `lossy-semantic-state` | 指明丢失的序列依赖语义状态，调用方明确接受后输出 |
+| `requires-ruleset-resolution` | 不输出貌似有效的目标，先解析完整规则集 |
+| `unrepresentable-under-profile` | 不输出貌似有效的目标 |
+
+例如，带精确走法和吃子目标的 NMM_LLM 原子动作可拆成 MSTATE 的
+primary event + remove event，并报告 `lossless`；缺少每玩家 `ul`
+历史是 `lossy-semantic-state`；没有规则集上下文是
+`requires-ruleset-resolution`；无权威所有者的 Sanmill `X` 是
+`unrepresentable-under-profile`。
+
+### 16.2 语料内容
+
 `conformance/` 现在包含：
 
 ```text
@@ -636,6 +817,8 @@ mif-0.4.abnf
 MFEN 正反向量
 MPK D4/Aut16 向量
 MSTATE replay、phase 同步、动态移除与 leap 语义向量
+规则示例向量：双磨、磨内回退、飞行、延迟清除和 placing 组合
+转换向量：五类状态及 NMM_LLM/Sanmill 边界
 I-JSON/JCS/SHA-256 向量与自动完整性校验
 全部 16 个 transform 的点和线置换
 Sanmill/NMM_LLM 固定版本映射
