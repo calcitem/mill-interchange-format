@@ -134,9 +134,12 @@ and comparison behavior only. Replace the two command arrays in the adapter
 configuration with the Sanmill and NMM_LLM executables for independent
 byte-, state- and replay-level evidence. It is still not a published-suite
 conformance result. The 58-case candidate-4 deterministic reference loopback
-passes. A pre-publication local comparison also passes all 58 cases across the
-current three adapter binaries; the product repositories must still repin the
-immutable candidate-4 commit and persist pushed evidence before M3 is closed.
+passes. Sanmill and NMM_LLM subsequently published their candidate-4 pins and
+commit-bound evidence; the resulting
+[`M3 evidence record`](interop/evidence/mif-1.0-candidate-4-m3.json) closes the
+deterministic milestone with 58/58 and advances collaboration to M4
+differential testing. This remains Candidate evidence, not MIF Suite 1.0
+conformance.
 
 ## Sources and implementation artifacts
 

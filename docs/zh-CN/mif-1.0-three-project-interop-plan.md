@@ -139,13 +139,21 @@ Sanmill 与 NMM_LLM 可以在 M1 完成后并行开发，不需要等待对方�
   origin 上使 reference 错误接受未稳定 `p/p`，但不改变冻结的 wire contract；
 - candidate-4 修复该 reference/harness 缺陷，在 executable corpus 增加 origin
   `p/p` → `m/m` 状态回归，并把 deterministic corpus 扩展为 58 项；
-- 58-case 双 reference loopback 与发布前本地三 adapter 比较均为零差异。
+- 58-case 双 reference loopback、三 adapter 比较及独立复跑均为零差异；
+- Sanmill 在 `e6d639d41f079b15ca697268d0c2c21dad5c2bc3` 持久化原始报告，
+  并在 `fe780b7d40ce1c101b2f635e45bee780dfd30606` 发布 companion manifest；
+- companion manifest 绑定 MIF `7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978`、
+  Sanmill `e6d639d41f079b15ca697268d0c2c21dad5c2bc3`、NMM_LLM
+  `11bebd14e0d538a41a4b43aebfe57ee74c2a2601`、七个输入 hash、报告 hash
+  及 case/config digest；
+- MIF 的 `interop/evidence/mif-1.0-candidate-4-m3.json` 固定上述证据和独立
+  字节级复跑结果。
 
-M3 尚未关闭：Sanmill 与 NMM_LLM 仍须锁定 candidate-4 的不可变提交和新 hash，
-在各自已推送提交上持久化同一 58-case 报告。此前 candidate-3 的通过结果只能
-作为诊断证据，不能替代 candidate-4 的可追溯证据链。
+M3 已完成：candidate-4 的 byte/state/replay deterministic 比较为 58/58，且
+证据链绑定三个已发布的被测提交。该结论仍只是 Candidate interoperability
+evidence，不是 MIF Suite 1.0 conformance。
 
-### 5.2 Candidate-4 边界与外部项目动作
+### 5.2 Candidate-4 边界与闭合结果
 
 新增边界使用 `placing.movementAllowed=true`、White reserve 为 0、Black reserve
 为 1 的 ongoing origin。根据 11.4，当前 White 必须处于 phase/action `m/m`：
@@ -156,17 +164,29 @@ M3 尚未关闭：Sanmill 与 NMM_LLM 仍须锁定 candidate-4 的不可变提�
 3. `project-legal-actions-asymmetric-reserve-moving` 对稳定 `m/m` 返回 57 个
    规范排序的飞行动作。
 
-外部项目下一轮只需：
+两个外部项目已经更新 candidate-4 pin、重跑聚焦测试和 58-case 比较、发布各自
+提交并完成 commit-bound evidence。复核未发现 Sanmill 或 NMM_LLM 玩法实现需要
+因本次修复而改变。
 
-1. 更新 MIF commit、artifact index、reference corpus 和 deterministic corpus
-   的固定值；
-2. 重跑本地聚焦测试与 58-case 三方比较；
-3. 在 capability/evidence 中记录 candidate-4，并提交、推送各自目标分支；
-4. 将三方报告绑定三个项目的完整 commit SHA 和全部输入 hash。
+### 5.3 M4 Differential 启动
 
-现有复核未发现 Sanmill 或 NMM_LLM 玩法实现需要因本次修复而改变；若重新锁定
-后出现差异，仍按实现错误、corpus 错误或规范歧义重新分类，不得以 reference
-代码替代独立实现。
+M4 不改变 candidate-4 wire 或 M3 corpus。MIF 项目先发布独立的 differential
+launch package，至少固定：
+
+1. 版本化 PRNG、seed 列表、每个 seed 的最大 logical turns 与资源上限；
+2. 覆盖 placing、moving、flying、removal、claim/repetition 和终局的 ruleset
+   场景矩阵；
+3. 通过 `project-legal-actions` 取得三方一致动作集、确定性选择动作并用
+   `execute`/`replay` 比较每个 stable boundary 的 driver；
+4. 非法 event、非规范文本、digest/envelope 冲突、历史截断和资源上限的负向
+   变异族；
+5. 首次差异停止、固定 seed 重放和最小化复现输出；
+6. 绑定 MIF/Sanmill/NMM_LLM commit、launch-package hash、seed 和结果的报告。
+
+MIF 发布该 launch package 和开工 hash 之前，Sanmill 与 NMM_LLM 不需要修改
+适配器。收到通知后，两边使用现有独立 adapter 运行同一 seed/mutation 集，持久化
+各自及三方报告；若发现差异，继续按第 7 节分类。M4 的退出条件是全部固定 seed
+和必需负向变异均无未解释差异，且每个失败都可由单一 seed 与最小输入重放。
 
 ## 6. 比较要求
 

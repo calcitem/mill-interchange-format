@@ -16,6 +16,9 @@ conformance target.
   MSTATE/decision D4 matrices. It is engineering evidence, not a Suite corpus.
   Candidate-4 adds execute and legal-action boundaries for an active player
   whose reserve is empty while the opponent still has reserve material.
+- `evidence/mif-1.0-candidate-4-m3.json` binds the completed M3 result to all
+  three tested commits, the seven fixed inputs, Sanmill's raw 58/58 report and
+  its companion evidence manifest.
 - `adapters.reference-loopback.json` starts two isolated instances of the
   candidate Python reference adapter to test the harness itself.
 
@@ -42,9 +45,12 @@ deterministic. Use independent Sanmill and NMM_LLM entries for
 cross-implementation evidence. The current candidate-2 smoke has zero
 differences across the reference, Sanmill and NMM_LLM adapters, but it remains
 candidate evidence rather than MIF Suite 1.0 conformance. The 58-case
-candidate-4 set passes reference loopback and a pre-publication local run across
-the current three adapters. M3 remains open until Sanmill and NMM_LLM repin the
-immutable candidate-4 commit and persist pushed 58/58 evidence.
+candidate-4 set passes reference loopback and the three independent adapters.
+The commit-bound [`M3 evidence record`](evidence/mif-1.0-candidate-4-m3.json)
+fixes all three tested commits, seven input hashes, the 58/58 report and
+Sanmill's companion binding. M3 is complete as Candidate evidence; M4
+differential testing is next. No result in this directory claims Suite
+conformance.
 
 Adapter authors may use the specification, schemas, registries and corpus, but
 must not import or copy gameplay implementation code from `reference/`.

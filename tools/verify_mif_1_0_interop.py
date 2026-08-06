@@ -18,6 +18,7 @@ from jsonschema import Draft202012Validator
 ROOT = Path(__file__).resolve().parents[1]
 INTEROP = ROOT / "interop"
 PLAN = ROOT / "docs" / "zh-CN" / "mif-1.0-three-project-interop-plan.md"
+M3_EVIDENCE = INTEROP / "evidence" / "mif-1.0-candidate-4-m3.json"
 BASELINE_DIGESTS = {
     ROOT / "mif-1.0.md": (
         "330e65145ceb26fe582e58b89405d87bd73e8be200b476aef82c0ee27731d995"
@@ -45,6 +46,9 @@ BASELINE_DIGESTS = {
     INTEROP / "cases" / "deterministic-v1.json": (
         "d11317a090300f8a47f77afed647bdbd236dcdb1996c0147a81c874fa39dfd82"
     ),
+    M3_EVIDENCE: (
+        "a354e810de0c74dd26226bee39b09f05c2677dbd693f95574fccc17d8c0c6671"
+    ),
     ROOT / "mif-0.4.md": (
         "f1f1d839318a4d45f3ecea4850fee080c47ffcbc81025bd74e3ea48c815f3093"
     ),
@@ -59,6 +63,7 @@ TEXT_FILES = [
     INTEROP / "cases" / "smoke-v1.json",
     INTEROP / "cases" / "deterministic-v1.json",
     *sorted((INTEROP / "schema").glob("*.json")),
+    *sorted((INTEROP / "evidence").glob("*.json")),
     *sorted((ROOT / "reference").glob("*.py")),
     ROOT / "tools" / "compare_mif_1_0_adapters.py",
     ROOT / "tools" / "mif_1_0_reference_adapter.py",
@@ -259,9 +264,160 @@ def verify_required_language() -> None:
         "Replay-level",
         "M0 Baseline",
         "M5 Release",
+        "M3 已完成",
+        "M4 Differential",
     ):
         if token not in plan:
             raise VerificationError(f"collaboration plan omits required token: {token}")
+
+
+def verify_m3_evidence() -> None:
+    evidence = json.loads(
+        M3_EVIDENCE.read_text(encoding="utf-8"),
+        object_pairs_hook=reject_duplicate_members,
+    )
+    expected_members = {
+        "artifact",
+        "status",
+        "suiteConformance",
+        "baseline",
+        "implementations",
+        "threeProjectReport",
+        "commitBinding",
+        "verification",
+        "nextMilestone",
+    }
+    if set(evidence) != expected_members:
+        raise VerificationError("M3 evidence member set mismatch")
+    if (
+        evidence["artifact"] != "mif-1.0-candidate-4-m3-evidence"
+        or evidence["status"]
+        != "m3-deterministic-complete-suite-unpublished"
+        or evidence["suiteConformance"] is not False
+        or evidence["nextMilestone"] != "M4-differential"
+    ):
+        raise VerificationError("M3 evidence status mismatch")
+
+    baseline = evidence["baseline"]
+    if set(baseline) != {"repository", "branch", "commit", "inputs"}:
+        raise VerificationError("M3 baseline member set mismatch")
+    if (
+        baseline["repository"]
+        != "https://github.com/calcitem/mill-interchange-format.git"
+        or baseline["branch"] != "master"
+        or baseline["commit"]
+        != "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+    ):
+        raise VerificationError("M3 baseline identity mismatch")
+    expected_inputs = {
+        "mif-1.0.md": (
+            "330e65145ceb26fe582e58b89405d87bd73e8be200b476aef82c0ee27731d995"
+        ),
+        "docs/zh-CN/mif-1.0.md": (
+            "9cc06abb57425e2bc2e26432b6da53abe503e9b5415ea0b4f854f19f68722cc1"
+        ),
+        "artifacts/mif-1.0/index.json": (
+            "5acbb714bed77e24eaac72fa5f24d2e54d1e17aaf568a8b60718c840281a6541"
+        ),
+        "artifacts/mif-1.0/corpus/executable/reference-cases.json": (
+            "350b7ff02772e820a57431e11c4e2f15a874d0779fb6e7afb01e9b16f6992741"
+        ),
+        "interop/adapter-protocol-v1.md": (
+            "253c1d201ea1db625e0c534da445ca4ecaa0b07597dfc7dbf59fbd6adf89874f"
+        ),
+        "interop/cases/smoke-v1.json": (
+            "a6d292f4d19381172fbc19f89d3ee42145a6d5533d6d81fd719394e25342bb53"
+        ),
+        "interop/cases/deterministic-v1.json": (
+            "d11317a090300f8a47f77afed647bdbd236dcdb1996c0147a81c874fa39dfd82"
+        ),
+    }
+    if not isinstance(baseline["inputs"], list) or any(
+        set(item) != {"path", "sha256"} for item in baseline["inputs"]
+    ):
+        raise VerificationError("M3 evidence input member set mismatch")
+    actual_inputs = {
+        item["path"]: item["sha256"] for item in baseline["inputs"]
+    }
+    if len(actual_inputs) != len(baseline["inputs"]) or actual_inputs != {
+        path: f"sha256:{digest}" for path, digest in expected_inputs.items()
+    }:
+        raise VerificationError("M3 evidence input binding mismatch")
+    for relative, digest in expected_inputs.items():
+        if hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() != digest:
+            raise VerificationError(f"M3 evidence input bytes changed: {relative}")
+
+    expected_implementations = [
+        {
+            "project": "MIF",
+            "adapter": "mif-reference",
+            "repository": "https://github.com/calcitem/mill-interchange-format.git",
+            "branch": "master",
+            "testedCommit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978",
+        },
+        {
+            "project": "Sanmill",
+            "adapter": "sanmill-rust",
+            "repository": "https://github.com/calcitem/Sanmill.git",
+            "branch": "master",
+            "testedCommit": "e6d639d41f079b15ca697268d0c2c21dad5c2bc3",
+            "evidenceCommit": "fe780b7d40ce1c101b2f635e45bee780dfd30606",
+        },
+        {
+            "project": "NMM_LLM",
+            "adapter": "nmm-llm-python",
+            "repository": "https://github.com/benmarkbrandwood-blip/NMM_LLM.git",
+            "branch": "dev",
+            "testedCommit": "11bebd14e0d538a41a4b43aebfe57ee74c2a2601",
+            "documentationCommit": "e2ab05d29885af9a16a9aa5d5f62b1517cf6d91b",
+        },
+    ]
+    if evidence["implementations"] != expected_implementations:
+        raise VerificationError("M3 implementation commit binding mismatch")
+
+    report = evidence["threeProjectReport"]
+    if report != {
+        "repository": "https://github.com/calcitem/Sanmill.git",
+        "commit": "e6d639d41f079b15ca697268d0c2c21dad5c2bc3",
+        "path": (
+            "interop/evidence/"
+            "mif-interop-candidate-4-three-project-report-2026-08-06.json"
+        ),
+        "sha256": (
+            "sha256:895c04cd69fc00e50bdcd349b150293e52fcc4150c63321d8c9771015f70aaaf"
+        ),
+        "protocol": "MIF-INTEROP-REPORT/1",
+        "adapters": ["mif-reference", "sanmill-rust", "nmm-llm-python"],
+        "casesDigest": (
+            "sha256:d11317a090300f8a47f77afed647bdbd236dcdb1996c0147a81c874fa39dfd82"
+        ),
+        "configDigest": (
+            "sha256:4184d56c696b2e5031d95cc18918757af9f91fa5634dded579ecfae2ef3cf70f"
+        ),
+        "summary": {"passed": 58, "failed": 0},
+    }:
+        raise VerificationError("M3 report binding mismatch")
+    if evidence["commitBinding"] != {
+        "repository": "https://github.com/calcitem/Sanmill.git",
+        "commit": "fe780b7d40ce1c101b2f635e45bee780dfd30606",
+        "path": (
+            "interop/evidence/"
+            "mif-interop-candidate-4-three-project-evidence-manifest-2026-08-06.json"
+        ),
+        "sha256": (
+            "sha256:aeb119d074a4ff53f819c9aed0d5ac2b5951e83ab9ea74e2d6a5bf91d1d4fd06"
+        ),
+        "protocol": "SANMILL-MIF-INTEROP-EVIDENCE/1",
+    }:
+        raise VerificationError("M3 companion evidence binding mismatch")
+    if evidence["verification"] != {
+        "method": "independent-rerun-and-byte-identity-v1",
+        "date": "2026-08-06",
+        "reportSha256": report["sha256"],
+        "passed": 58,
+        "failed": 0,
+    }:
+        raise VerificationError("M3 independent verification record mismatch")
 
 
 def verify_loopback() -> None:
@@ -305,14 +461,16 @@ def main() -> int:
         verify_python()
         verify_markdown()
         verify_required_language()
+        verify_m3_evidence()
         verify_loopback()
     except (OSError, UnicodeError, json.JSONDecodeError, VerificationError) as exc:
         print(f"MIF 1.0 interop launch gate FAILED: {exc}")
         return 1
     print(
         "MIF 1.0 interop launch gate passed: fixed baselines, documents, "
-        "Schema and 17-case smoke plus 58-case deterministic reference loopbacks "
-        "(harness evidence only; independent conformance not established)"
+        "Schema, 17-case smoke, 58-case deterministic reference loopbacks and "
+        "commit-bound three-project M3 evidence "
+        "(candidate evidence only; Suite conformance not established)"
     )
     return 0
 
