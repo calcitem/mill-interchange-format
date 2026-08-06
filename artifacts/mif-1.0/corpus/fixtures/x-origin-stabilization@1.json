@@ -1,0 +1,105 @@
+{
+  "boardFull": {
+    "action": "white-then-black-remove"
+  },
+  "captures": {
+    "custodian": {
+      "enabled": false,
+      "lines": {
+        "cross": false,
+        "diagonal": false,
+        "squareEdges": false
+      },
+      "maximumOwnLivePieces": null,
+      "phases": ["moving"]
+    },
+    "intervention": {
+      "enabled": false,
+      "lines": {
+        "cross": false,
+        "diagonal": false,
+        "squareEdges": false
+      },
+      "maximumOwnLivePieces": null,
+      "phases": ["moving"]
+    },
+    "leap": {
+      "enabled": false,
+      "lines": {
+        "cross": false,
+        "diagonal": false,
+        "squareEdges": false
+      },
+      "maximumOwnLivePieces": null,
+      "phases": ["moving"]
+    },
+    "resolution": "target-commits-v1"
+  },
+  "draw": {
+    "claimRights": {
+      "profile": "stable-claim-rights-v1"
+    },
+    "noProgress": {
+      "countedPrimaryActions": ["move"],
+      "endgameLimit": 0,
+      "endgamePredicate": "none",
+      "evaluationBoundary": "stable-after-primary-sequence-v1",
+      "mode": "automatic",
+      "normalLimit": 0,
+      "resetEvents": ["board-remove"]
+    },
+    "offers": {
+      "expiry": "explicit-only"
+    },
+    "repetition": {
+      "count": 3,
+      "mode": "claim",
+      "observation": "stable-primary-decision-v1",
+      "projection": "repetition-observation-v1",
+      "resetEvents": ["board-remove"],
+      "summary": "reset-count-smt-v1"
+    }
+  },
+  "flying": {
+    "enabled": true,
+    "maximumLive": 3
+  },
+  "format": "MRS/1.0",
+  "id": "x-origin-stabilization",
+  "mills": {
+    "delayedClearBoundary": "on-enter-moving-v1",
+    "lineReuse": "unlimited",
+    "movingEffect": "remove-opponent-board",
+    "placingEffect": "remove-opponent-board",
+    "removalMultiplicity": "one-per-primary",
+    "reverseReformation": "allowed",
+    "targetProtection": "outside-mill-first"
+  },
+  "pieces": {
+    "black": 12,
+    "minimumLive": 3,
+    "white": 12
+  },
+  "placing": {
+    "earlyStop": {
+      "boundary": "after-unobligated-place-v1",
+      "emptyPoints": 0
+    },
+    "movementAllowed": false,
+    "noLegalPrimaryAction": "loss"
+  },
+  "semanticState": [],
+  "semanticsProfile": "mif-finite-rules-v3",
+  "stalemate": {
+    "action": "loss",
+    "boardRemovalTargets": "adjacent-opponent"
+  },
+  "status": "fixture",
+  "title": "Origin stabilization executable fixture",
+  "topology": "mill24-orthogonal-v1",
+  "turn": {
+    "initial": "b",
+    "placingEndActivePlayer": "retain"
+  },
+  "version": 1
+}

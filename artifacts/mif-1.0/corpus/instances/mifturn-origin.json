@@ -1,0 +1,12 @@
+{
+  "format": "MIFTURN/1.0",
+  "fragments": [
+    {
+      "kind": "origin-stabilization",
+      "removeEventSeqs": [1, 2],
+      "status": "complete"
+    }
+  ],
+  "profile": "logical-turn-v1",
+  "sourceResumptionDigest": "sha256:846a5d9523b1a959b86f8c29fb2b53536c54b9babdffcbee2046899d21c6acc8"
+}

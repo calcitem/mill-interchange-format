@@ -1,0 +1,86 @@
+{
+  "artifact": "mif-1.0-registry",
+  "causeOrder": [
+    "leap",
+    "intervention",
+    "custodian",
+    "mill",
+    "mill-count",
+    "stalemate",
+    "board-full"
+  ],
+  "diagonalEdges": [
+    ["a7", "b6"], ["b6", "c5"],
+    ["g7", "f6"], ["f6", "e5"],
+    ["g1", "f2"], ["f2", "e3"],
+    ["a1", "b2"], ["b2", "c3"]
+  ],
+  "lineIds": [
+    { "id": 0, "points": ["a7", "d7", "g7"] },
+    { "id": 1, "points": ["g7", "g4", "g1"] },
+    { "id": 2, "points": ["g1", "d1", "a1"] },
+    { "id": 3, "points": ["a1", "a4", "a7"] },
+    { "id": 4, "points": ["b6", "d6", "f6"] },
+    { "id": 5, "points": ["f6", "f4", "f2"] },
+    { "id": 6, "points": ["f2", "d2", "b2"] },
+    { "id": 7, "points": ["b2", "b4", "b6"] },
+    { "id": 8, "points": ["c5", "d5", "e5"] },
+    { "id": 9, "points": ["e5", "e4", "e3"] },
+    { "id": 10, "points": ["e3", "d3", "c3"] },
+    { "id": 11, "points": ["c3", "c4", "c5"] },
+    { "id": 12, "points": ["d7", "d6", "d5"] },
+    { "id": 13, "points": ["g4", "f4", "e4"] },
+    { "id": 14, "points": ["d1", "d2", "d3"] },
+    { "id": 15, "points": ["a4", "b4", "c4"] },
+    { "id": 16, "points": ["a7", "b6", "c5"] },
+    { "id": 17, "points": ["g7", "f6", "e5"] },
+    { "id": 18, "points": ["g1", "f2", "e3"] },
+    { "id": 19, "points": ["a1", "b2", "c3"] }
+  ],
+  "orthogonalCrossRingEdges": [
+    ["d7", "d6"], ["d6", "d5"],
+    ["g4", "f4"], ["f4", "e4"],
+    ["d1", "d2"], ["d2", "d3"],
+    ["a4", "b4"], ["b4", "c4"]
+  ],
+  "outcomeReasons": [
+    { "id": "fewer-than-minimum", "results": ["win", "draw"] },
+    { "id": "no-legal-move", "results": ["win", "draw"] },
+    { "id": "no-legal-primary-action", "results": ["win", "draw"] },
+    { "id": "board-full", "results": ["win", "draw"] },
+    { "id": "no-progress", "results": ["draw"] },
+    { "id": "repetition", "results": ["draw"] },
+    { "id": "agreement", "results": ["draw"] },
+    { "id": "resignation", "results": ["win"] },
+    { "id": "adjudication", "results": ["win", "draw"] }
+  ],
+  "pointOrder": [
+    "a7", "d7", "g7", "g4", "g1", "d1", "a1", "a4",
+    "b6", "d6", "f6", "f4", "f2", "d2", "b2", "b4",
+    "c5", "d5", "e5", "e4", "e3", "d3", "c3", "c4"
+  ],
+  "registry": "mill24",
+  "ringExchangePairs": [
+    ["a7", "c5"], ["d7", "d5"], ["g7", "e5"], ["g4", "e4"],
+    ["g1", "e3"], ["d1", "d3"], ["a1", "c3"], ["a4", "c4"]
+  ],
+  "stateExtensions": [
+    { "feature": "last-mill", "key": "lm" },
+    { "feature": "placement-count", "key": "pc" },
+    { "feature": "used-lines", "key": "ul" }
+  ],
+  "topologies": [
+    { "id": "mill24-orthogonal-v1", "lineIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] },
+    { "id": "mill24-diagonal-v1", "lineIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19] }
+  ],
+  "transforms": [
+    { "id": "i", "mapping": "(x,y)->(x,y)", "ordinal": 0 },
+    { "id": "r90ccw", "mapping": "(x,y)->(-y,x)", "ordinal": 1 },
+    { "id": "r180", "mapping": "(x,y)->(-x,-y)", "ordinal": 2 },
+    { "id": "r90cw", "mapping": "(x,y)->(y,-x)", "ordinal": 3 },
+    { "id": "mirror-v", "mapping": "(x,y)->(-x,y)", "ordinal": 4 },
+    { "id": "mirror-h", "mapping": "(x,y)->(x,-y)", "ordinal": 5 },
+    { "id": "mirror-main", "mapping": "(x,y)->(y,x)", "ordinal": 6 },
+    { "id": "mirror-anti", "mapping": "(x,y)->(-y,-x)", "ordinal": 7 }
+  ]
+}

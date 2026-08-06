@@ -1,0 +1,33 @@
+{
+  "artifact": "mif-1.0-corpus",
+  "coordinateVectors": [
+    { "expected": "a7", "input": "a7", "transform": "i" },
+    { "expected": "a1", "input": "a7", "transform": "r90ccw" },
+    { "expected": "g1", "input": "a7", "transform": "r180" },
+    { "expected": "g7", "input": "a7", "transform": "r90cw" },
+    { "expected": "g7", "input": "a7", "transform": "mirror-v" },
+    { "expected": "a1", "input": "a7", "transform": "mirror-h" },
+    { "expected": "g1", "input": "a7", "transform": "mirror-main" },
+    { "expected": "a7", "input": "a7", "transform": "mirror-anti" }
+  ],
+  "equivalenceGates": [
+    {
+      "expectedCode": "transform-invariance-undeclared",
+      "id": "coordinate-conversion-without-invariance",
+      "invarianceDeclaration": null,
+      "semanticDigest": "sha256:224f7e368e322a4cc8c1225a025fb548d5b41eb096d34b7ae0543182d1aa9393",
+      "transform": "r90ccw",
+      "transformProfile": "mill24-full-state-v1"
+    },
+    {
+      "expectedCode": "insufficient-transform-history",
+      "id": "decision-root-without-materialized-history",
+      "input": "../instances/decision-state.json",
+      "materializedRepetitionHistory": false,
+      "transform": "r90ccw"
+    }
+  ],
+  "group": "transforms",
+  "runnerRequired": true,
+  "transformProfile": "mill24-full-state-v1"
+}

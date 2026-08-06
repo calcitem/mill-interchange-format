@@ -1,0 +1,48 @@
+{
+  "claimRights": null,
+  "claims": [
+    {
+      "actor": "b",
+      "eventSeq": 1,
+      "kind": "draw-offer",
+      "resolvedEventSeq": 2,
+      "source": "event",
+      "status": "withdrawn"
+    },
+    {
+      "actor": "b",
+      "eventSeq": 3,
+      "kind": "draw-offer",
+      "source": "event",
+      "status": "open"
+    }
+  ],
+  "current": "MFEN/1.0 mill24-state-v1 ......../......../........ b p p 9,9 - 0 0 -",
+  "lastEventSeq": 3,
+  "openOffer": {
+    "actor": "b",
+    "offerEventSeq": 3,
+    "source": "event"
+  },
+  "positionFormat": "MFEN/1.0",
+  "profile": "resumption-state-v1",
+  "repetitionHistory": [
+    {
+      "key": {
+        "action": "p",
+        "board": "......../......../........",
+        "hands": [9, 9],
+        "phase": "p",
+        "profile": "repetition-observation-v1",
+        "semantic": {},
+        "semanticDigest": "sha256:224f7e368e322a4cc8c1225a025fb548d5b41eb096d34b7ae0543182d1aa9393",
+        "side": "b",
+        "stateProfile": "mill24-state-v1"
+      },
+      "source": "origin"
+    }
+  ],
+  "replayPrefixDigest": "sha256:d8a8d2e595c1d37ed7f69bd9dee19039d52a346fbf7a1a28076ccf00b14e791a",
+  "semanticDigest": "sha256:224f7e368e322a4cc8c1225a025fb548d5b41eb096d34b7ae0543182d1aa9393",
+  "stateProfile": "mill24-state-v1"
+}

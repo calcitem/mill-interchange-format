@@ -1,0 +1,53 @@
+{
+  "claims": [
+    {
+      "actor": "b",
+      "eventSeq": 1,
+      "kind": "draw-offer",
+      "resolvedEventSeq": 2,
+      "source": "event",
+      "status": "withdrawn"
+    },
+    {
+      "actor": "b",
+      "eventSeq": 3,
+      "kind": "draw-offer",
+      "source": "event",
+      "status": "open"
+    }
+  ],
+  "current": "MFEN/1.0 mill24-state-v1 ......../......../........ b p p 9,9 - 0 0 -",
+  "events": [
+    { "actor": "b", "seq": 1, "type": "offer-draw" },
+    { "actor": "b", "offerEventSeq": 1, "seq": 2, "type": "withdraw-draw" },
+    { "actor": "b", "seq": 3, "type": "offer-draw" }
+  ],
+  "format": "MSTATE/1.0",
+  "origin": "MFEN/1.0 mill24-state-v1 ......../......../........ b p p 9,9 - 0 0 -",
+  "positionFormat": "MFEN/1.0",
+  "preOriginClaims": [],
+  "repetitionHistory": [
+    {
+      "key": {
+        "action": "p",
+        "board": "......../......../........",
+        "hands": [9, 9],
+        "phase": "p",
+        "profile": "repetition-observation-v1",
+        "semantic": {},
+        "semanticDigest": "sha256:224f7e368e322a4cc8c1225a025fb548d5b41eb096d34b7ae0543182d1aa9393",
+        "side": "b",
+        "stateProfile": "mill24-state-v1"
+      },
+      "source": "origin"
+    }
+  ],
+  "ruleset": {
+    "documentDigest": "sha256:62479b6f40efb8ab478bab3d2b725647213604fcd3cc9cd4c1f69357535ae257",
+    "id": "example-morris",
+    "mode": "reference",
+    "semanticDigest": "sha256:224f7e368e322a4cc8c1225a025fb548d5b41eb096d34b7ae0543182d1aa9393",
+    "version": 1
+  },
+  "stateProfile": "mill24-state-v1"
+}

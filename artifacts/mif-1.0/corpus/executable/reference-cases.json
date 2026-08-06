@@ -1,0 +1,231 @@
+{
+  "artifact": "mif-1.0-executable-corpus",
+  "capability": "../instances/mifcap.json",
+  "claimLifecycleCases": [
+    {
+      "events": [
+        { "actor": "b", "seq": 1, "type": "offer-draw" },
+        { "actor": "w", "offerEventSeq": 1, "seq": 2, "type": "decline-draw" }
+      ],
+      "expectedClaimRights": { "actor": "b", "reasons": ["repetition"] },
+      "id": "claim-negotiation-preserves-right",
+      "manifest": "../fixtures/example-morris@1.json",
+      "origin": "MFEN/1.0 mill24-state-v1 ......../......../........ b p p 9,9 - 0 0 -",
+      "repeatOriginObservation": 2
+    },
+    {
+      "events": [
+        { "actor": "b", "seq": 1, "type": "offer-draw" },
+        { "actor": "w", "offerEventSeq": 1, "seq": 2, "type": "decline-draw" },
+        { "actor": "b", "at": "a7", "seq": 3, "type": "place" }
+      ],
+      "expectedClaimRights": null,
+      "expectedCurrent": "MFEN/1.0 mill24-state-v1 B......./......../........ w p p 9,8 - 0 1 -",
+      "id": "primary-expires-old-claim-right",
+      "manifest": "../fixtures/example-morris@1.json",
+      "origin": "MFEN/1.0 mill24-state-v1 ......../......../........ b p p 9,9 - 0 0 -",
+      "repeatOriginObservation": 2
+    },
+    {
+      "events": [
+        { "actor": "b", "at": "g7", "seq": 1, "type": "place" },
+        { "actor": "b", "reason": "repetition", "seq": 2, "type": "claim-draw" }
+      ],
+      "expectedCode": "claim-during-obligation",
+      "id": "claim-forbidden-during-removal",
+      "manifest": "../fixtures/example-morris@1.json",
+      "origin": "MFEN/1.0 mill24-state-v1 BB....../......../W....... b p p 8,7 - 0 3 -",
+      "repeatOriginObservation": 2
+    }
+  ],
+  "historicalMigrationAudit": {
+    "expectedMatches": [
+      "MSTATE-REPLAY-0001",
+      "MSTATE-REPLAY-0002",
+      "MSTATE-REPLAY-0003",
+      "MSTATE-REPLAY-0004",
+      "MSTATE-REPLAY-0005",
+      "MSTATE-REPLAY-0006",
+      "MSTATE-REPLAY-0007",
+      "MSTATE-REPLAY-0008",
+      "MSTATE-ORIGIN-AUTOMATIC-NO-PROGRESS",
+      "MSTATE-ORIGIN-CLAIMABLE-NO-PROGRESS",
+      "MSTATE-REPLAY-PREORIGIN-OFFER",
+      "MSTATE-REPLAY-OFFER-EXPIRE-ON-RESIGN",
+      "MSTATE-REPLAY-STALEMATE-CHANGE-BILATERAL",
+      "MSTATE-ORIGIN-PREORIGIN-OFFER-AUTO-EXPIRE",
+      "MSTATE-REPLAY-PHASE-SYNC-M-TO-P",
+      "MSTATE-REPLAY-REMOVAL-DYNAMIC-CAPACITY",
+      "MSTATE-ORIGIN-SIMULTANEOUS-MINIMUM",
+      "MSTATE-REPLAY-LEAP-MILL-SEMANTICS",
+      "MSTATE-ORIGIN-PLACING-STABILIZATION"
+    ],
+    "sourceRejections": [
+      {
+        "correctedCurrent": "MFEN/1.0 mill24-state-v1 .W....B./.W....../WWW..... w p r 4,5 w:mill:b:b:1:000040:b 0 9 -",
+        "id": "MSTATE-REPLAY-REMOVAL-CAP",
+        "reason": "source-checkpoint-place-coordinate-conflict"
+      },
+      {
+        "correctedCurrent": "MFEN/1.0 mill24-state-v1 WWW.BBB./......../........ w m m 0,0 - 0 18 -",
+        "id": "MSTATE-REPLAY-PHASE-SYNC-P-TO-M",
+        "reason": "source-checkpoint-placing-end-player-conflict"
+      }
+    ]
+  },
+  "manifestErrorCases": [
+    {
+      "expectedCode": "no-legal-primary-action-policy-invalid",
+      "id": "apply-board-full-requires-enabled-effect",
+      "manifest": "../fixtures/example-morris@1.json",
+      "mutations": [
+        { "op": "replace", "path": "/placing/noLegalPrimaryAction", "value": "apply-board-full" }
+      ]
+    }
+  ],
+  "portableReplayCases": [
+    {
+      "document": "../instances/mstate-offer-r1.json",
+      "envelopeDocument": "../instances/mifpos-portable.json",
+      "expectedDecisionDigest": "sha256:f25cfb5dae617feba90fc1cbd48fb5d526727c8a3fad65910400a72a03657d19",
+      "expectedResumptionDigest": "sha256:1abb022db99a0959d00c90ca5ba6a946b99d183c8a811e01f242ef081bf5d5b3",
+      "id": "offer-history-r1-portable"
+    }
+  ],
+  "replayCases": [
+    {
+      "document": "../instances/mstate-offer-r1.json",
+      "expectedDecisionDigest": "sha256:f25cfb5dae617feba90fc1cbd48fb5d526727c8a3fad65910400a72a03657d19",
+      "expectedResumptionDigest": "sha256:1abb022db99a0959d00c90ca5ba6a946b99d183c8a811e01f242ef081bf5d5b3",
+      "id": "offer-history-r1",
+      "manifest": "../fixtures/example-morris@1.json"
+    },
+    {
+      "document": "../instances/mstate-offer-r2.json",
+      "expectedDecisionDigest": "sha256:f25cfb5dae617feba90fc1cbd48fb5d526727c8a3fad65910400a72a03657d19",
+      "expectedResumptionDigest": "sha256:2f2188fe6beb34042bcf201644f262d25552a5a6263d2ba0de024aa917a83657",
+      "id": "offer-history-r2",
+      "manifest": "../fixtures/example-morris@1.json"
+    },
+    {
+      "document": "../instances/mstate-origin-stabilization.json",
+      "expectedDecisionDigest": "sha256:3de23bd69afd898156746c547ef201eab7aa7cf9f31ca57f35d7b4827a776131",
+      "expectedResumptionDigest": "sha256:846a5d9523b1a959b86f8c29fb2b53536c54b9babdffcbee2046899d21c6acc8",
+      "id": "origin-stabilization-removals",
+      "manifest": "../fixtures/x-origin-stabilization@1.json"
+    }
+  ],
+  "stateCases": [
+    {
+      "expectedCurrent": "MFEN/1.0 mill24-state-v1 ......../......../........ b p p 9,9 - 0 0 -",
+      "expectedHistoryEntries": 1,
+      "id": "initial-player-black",
+      "manifest": "../fixtures/example-morris@1.json",
+      "normalInitial": true
+    },
+    {
+      "expectedCurrent": "MFEN/1.0 mill24-state-v1 WBWBWBWB/BWBWBWBW/WBWBWBWB - o o 1,1 - 0 0 b:board-full",
+      "id": "white-loses-is-fixed-identity-with-initial-black",
+      "manifest": "../fixtures/example-morris@1.json",
+      "mutations": [
+        { "op": "replace", "path": "/boardFull/action", "value": "white-loses" },
+        { "op": "replace", "path": "/pieces", "value": { "black": 13, "minimumLive": 3, "white": 13 } }
+      ],
+      "origin": "MFEN/1.0 mill24-state-v1 WBWBWBWB/BWBWBWBW/WBWBWBWB b p p 1,1 - 0 0 -"
+    },
+    {
+      "expectedCurrent": "MFEN/1.0 mill24-state-v1 WBWBWBWB/BWBWBWBW/WBWBWBWB - o o 1,1 - 0 0 b:no-legal-primary-action",
+      "id": "placing-full-board-loss",
+      "manifest": "../fixtures/example-morris@1.json",
+      "mutations": [
+        { "op": "replace", "path": "/pieces", "value": { "black": 13, "minimumLive": 3, "white": 13 } }
+      ],
+      "origin": "MFEN/1.0 mill24-state-v1 WBWBWBWB/BWBWBWBW/WBWBWBWB w p p 1,1 - 0 0 -"
+    },
+    {
+      "expectedCurrent": "MFEN/1.0 mill24-state-v1 WBWBWBWB/BWBWBWBW/WBWBWBWB - o o 1,1 - 0 0 d:no-legal-primary-action",
+      "id": "placing-full-board-draw",
+      "manifest": "../fixtures/example-morris@1.json",
+      "mutations": [
+        { "op": "replace", "path": "/pieces", "value": { "black": 13, "minimumLive": 3, "white": 13 } },
+        { "op": "replace", "path": "/placing/noLegalPrimaryAction", "value": "draw" }
+      ],
+      "origin": "MFEN/1.0 mill24-state-v1 WBWBWBWB/BWBWBWBW/WBWBWBWB w p p 1,1 - 0 0 -"
+    },
+    {
+      "events": [
+        { "actor": "w", "from": "a7", "seq": 1, "to": "a4", "type": "move" },
+        { "actor": "b", "from": "b6", "seq": 2, "to": "b4", "type": "move" },
+        { "actor": "w", "from": "a4", "seq": 3, "to": "a7", "type": "move" },
+        { "actor": "b", "from": "b4", "seq": 4, "to": "b6", "type": "move" }
+      ],
+      "expectedCurrent": "MFEN/1.0 mill24-state-v1 W......./B......./........ w p p 8,8 - 0 4 -",
+      "expectedEventObservations": 4,
+      "expectedHistoryEntries": 5,
+      "id": "placing-cycle-stable-primary",
+      "manifest": "../fixtures/example-morris@1.json",
+      "mutations": [
+        { "op": "replace", "path": "/placing/movementAllowed", "value": true }
+      ],
+      "origin": "MFEN/1.0 mill24-state-v1 W......./B......./........ w p p 8,8 - 0 0 -"
+    },
+    {
+      "events": [
+        { "actor": "w", "from": "a7", "seq": 1, "to": "a4", "type": "move" },
+        { "actor": "b", "from": "b6", "seq": 2, "to": "b4", "type": "move" },
+        { "actor": "w", "from": "a4", "seq": 3, "to": "a7", "type": "move" },
+        { "actor": "b", "from": "b4", "seq": 4, "to": "b6", "type": "move" }
+      ],
+      "expectedCurrent": "MFEN/1.0 mill24-state-v1 W......./B......./........ w p p 8,8 - 0 4 -",
+      "expectedEventObservations": 0,
+      "expectedHistoryEntries": 0,
+      "id": "placing-cycle-stable-moving",
+      "manifest": "../fixtures/example-morris@1.json",
+      "mutations": [
+        { "op": "replace", "path": "/placing/movementAllowed", "value": true },
+        { "op": "replace", "path": "/draw/repetition/observation", "value": "stable-moving-v1" }
+      ],
+      "origin": "MFEN/1.0 mill24-state-v1 W......./B......./........ w p p 8,8 - 0 0 -"
+    }
+  ],
+  "decisionTransformCases": [
+    {
+      "document": "../instances/decision-state.json",
+      "expectedCode": "insufficient-transform-history",
+      "id": "decision-root-without-materialized-history",
+      "manifest": "../fixtures/example-morris@1.json",
+      "transform": "r90ccw"
+    },
+    {
+      "document": "../instances/decision-state.json",
+      "id": "decision-with-materialized-history",
+      "manifest": "../fixtures/example-morris@1.json",
+      "materialization": "../instances/mstate-offer-r1.json",
+      "transforms": "all-d4"
+    }
+  ],
+  "transformCases": [
+    {
+      "document": "../instances/mstate-origin-stabilization.json",
+      "expectedGateCode": "transform-invariance-undeclared",
+      "expectedPoint": { "input": "a7", "output": "a1" },
+      "id": "r90ccw-full-history",
+      "manifest": "../fixtures/x-origin-stabilization@1.json",
+      "transform": "r90ccw"
+    }
+  ],
+  "turnCases": [
+    {
+      "document": "../instances/mstate-offer-r1.json",
+      "expected": "../instances/mifturn-empty.json",
+      "id": "draw-negotiation-is-not-logical-turn",
+      "manifest": "../fixtures/example-morris@1.json"
+    },
+    {
+      "document": "../instances/mstate-origin-stabilization.json",
+      "expected": "../instances/mifturn-origin.json",
+      "id": "origin-stabilization-removal-sequence",
+      "manifest": "../fixtures/x-origin-stabilization@1.json"
+    }
+  ]
+}

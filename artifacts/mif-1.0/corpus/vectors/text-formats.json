@@ -1,0 +1,43 @@
+{
+  "artifact": "mif-1.0-corpus",
+  "group": "text-formats",
+  "semanticReject": [
+    {
+      "code": "semantic-digest-mismatch",
+      "id": "mpk-resolver-digest-mismatch",
+      "resolverManifest": "../fixtures/example-morris@1.json",
+      "value": "MPK/1.0 mill24-state-v1 example-morris@1 sha256:0000000000000000000000000000000000000000000000000000000000000000 structural-d4-v1 ........................ b p 9,9"
+    },
+    {
+      "code": "manifest-missing",
+      "id": "mfen-context-not-supplied",
+      "value": "MFEN/1.0 mill24-state-v1 ......../......../........ b p p 9,9 - 0 0 -"
+    }
+  ],
+  "syntaxInvalid": [
+    {
+      "code": "mpk-semantic-digest-missing",
+      "id": "mpk-digest-omitted",
+      "value": "MPK/1.0 mill24-state-v1 example-morris@1 structural-d4-v1 ........................ b p 9,9"
+    },
+    {
+      "code": "non-canonical-digest",
+      "id": "mpk-uppercase-digest",
+      "value": "MPK/1.0 mill24-state-v1 example-morris@1 sha256:224F7E368E322A4CC8C1225A025FB548D5B41EB096D34B7AE0543182D1AA9393 structural-d4-v1 ........................ b p 9,9"
+    }
+  ],
+  "syntaxValid": [
+    {
+      "id": "mfen-initial-black",
+      "value": "MFEN/1.0 mill24-state-v1 ......../......../........ b p p 9,9 - 0 0 -"
+    },
+    {
+      "id": "mfen-placing-liveness-loss",
+      "value": "MFEN/1.0 mill24-state-v1 WBWBWBWB/BWBWBWBW/WBWBWBWB - o o 1,1 - 0 0 b:no-legal-primary-action"
+    },
+    {
+      "id": "mpk-semantic-bound",
+      "value": "MPK/1.0 mill24-state-v1 example-morris@1 sha256:224f7e368e322a4cc8c1225a025fb548d5b41eb096d34b7ae0543182d1aa9393 structural-d4-v1 ........................ b p 9,9"
+    }
+  ]
+}

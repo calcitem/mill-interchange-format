@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/calcitem/mill-interchange-format/raw/master/interop/schema/adapter-message-v1.schema.json",
+  "title": "MIF interoperability adapter protocol v1 messages",
+  "oneOf": [
+    { "$ref": "#/$defs/request" },
+    { "$ref": "#/$defs/okResponse" },
+    { "$ref": "#/$defs/errorResponse" }
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9.-]{0,127}$"
+    },
+    "operation": {
+      "enum": [
+        "capabilities",
+        "canonicalize",
+        "execute",
+        "project-logical-turns",
+        "replay",
+        "transform"
+      ]
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["protocol", "kind", "requestId", "operation", "payload"],
+      "properties": {
+        "protocol": { "const": "MIF-INTEROP/1" },
+        "kind": { "const": "request" },
+        "requestId": { "$ref": "#/$defs/identifier" },
+        "operation": { "$ref": "#/$defs/operation" },
+        "payload": { "type": "object" }
+      }
+    },
+    "okResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol", "kind", "requestId", "operation", "status", "result"
+      ],
+      "properties": {
+        "protocol": { "const": "MIF-INTEROP/1" },
+        "kind": { "const": "response" },
+        "requestId": { "$ref": "#/$defs/identifier" },
+        "operation": { "$ref": "#/$defs/operation" },
+        "status": { "const": "ok" },
+        "result": { "type": "object" }
+      }
+    },
+    "errorResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol", "kind", "requestId", "operation", "status", "diagnostics"
+      ],
+      "properties": {
+        "protocol": { "const": "MIF-INTEROP/1" },
+        "kind": { "const": "response" },
+        "requestId": { "$ref": "#/$defs/identifier" },
+        "operation": { "$ref": "#/$defs/operation" },
+        "status": { "const": "error" },
+        "diagnostics": {
+          "$ref": "../../artifacts/mif-1.0/schema/mifdiag-1.0.schema.json"
+        }
+      }
+    }
+  }
+}

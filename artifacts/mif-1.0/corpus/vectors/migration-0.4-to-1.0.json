@@ -1,0 +1,28 @@
+{
+  "artifact": "mif-1.0-corpus",
+  "group": "migration-0.4-to-1.0",
+  "mappings": [
+    { "source": "first-player-loses", "target": "white-loses" },
+    { "source": "first-then-second-remove", "target": "white-then-black-remove" },
+    { "source": "second-then-first-remove", "target": "black-then-white-remove" },
+    { "condition": "complete-ruleset-resolved", "source": "legal-state-v1", "target": "repetition-observation-v1" },
+    { "source": "full-manifest-digest", "target": "source-document-identity-only-and-recompute-target-digests" },
+    { "source": "mstate-with-manifest", "target": "portable-ruleset-envelope" },
+    { "source": "mstate-without-manifest", "target": "reference-envelope-or-resolve-before-portable" },
+    { "source": "mpk-without-resolvable-manifest", "target": "requires-ruleset-resolution" }
+  ],
+  "rejections": [
+    { "id": "pending-removal-claim", "reason": "claim-during-obligation" },
+    { "id": "unknown-semantic-extension", "reason": "unsupported-profile" },
+    { "id": "ownerless-delayed-material", "reason": "unrepresentable-under-profile" },
+    { "id": "missing-used-line-history", "reason": "required-semantic-state-missing" },
+    { "id": "missing-mpk-ruleset-semantics", "reason": "requires-ruleset-resolution" },
+    { "id": "unproven-transform-equivalence", "reason": "transform-invariance-undeclared" },
+    { "id": "placing-liveness-policy-not-selected", "reason": "unrepresentable-under-profile" }
+  ],
+  "runnerRequired": true,
+  "semanticChange": {
+    "explicitPolicyResult": "lossy-semantic-state",
+    "sourceCondition": "reachable-phase-p-no-legal-primary-action"
+  }
+}

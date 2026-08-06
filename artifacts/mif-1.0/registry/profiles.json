@@ -1,0 +1,29 @@
+{
+  "artifact": "mif-1.0-registry",
+  "contractStatus": "candidate-wire-frozen-suite-unpublished",
+  "entries": [
+    { "clause": "6", "id": "mill24-state-v1", "kind": "state" },
+    { "clause": "A.1", "id": "mill24-orthogonal-v1", "kind": "topology" },
+    { "clause": "A.1", "id": "mill24-diagonal-v1", "kind": "topology" },
+    { "clause": "11", "id": "mif-finite-rules-v3", "kind": "semantics" },
+    { "clause": "10.2", "id": "after-unobligated-place-v1", "kind": "transition-boundary" },
+    { "clause": "10.3", "id": "on-enter-moving-v1", "kind": "transition-boundary" },
+    { "clause": "10.3", "id": "target-commits-v1", "kind": "capture-resolution" },
+    { "clause": "10.5", "id": "stable-after-primary-sequence-v1", "kind": "evaluation-boundary" },
+    { "clause": "10.7", "id": "mrs-semantic-v1", "kind": "semantic-projection" },
+    { "clause": "7.2", "id": "structural-d4-v1", "kind": "key" },
+    { "clause": "7.2", "id": "structural-aut16-v1", "kind": "key" },
+    { "clause": "12.1", "id": "repetition-observation-v1", "kind": "repetition-projection" },
+    { "clause": "11.7", "id": "stable-moving-v1", "kind": "observation-boundary" },
+    { "clause": "11.7", "id": "stable-primary-decision-v1", "kind": "observation-boundary" },
+    { "clause": "12.4", "id": "reset-count-smt-v1", "kind": "repetition-summary" },
+    { "clause": "12.2", "id": "resumption-state-v1", "kind": "resumption" },
+    { "clause": "12.3", "id": "decision-state-v1", "kind": "decision" },
+    { "clause": "11.7", "id": "stable-claim-rights-v1", "kind": "claim-lifecycle" },
+    { "clause": "7.2", "id": "inline-semantic-digest-v1", "kind": "mpk-binding" },
+    { "clause": "14", "id": "mill24-full-state-v1", "kind": "full-state-transform" },
+    { "clause": "13.4", "id": "transform-invariance-v1", "kind": "invariance-declaration" },
+    { "clause": "14.3", "id": "logical-turn-v1", "kind": "logical-turn-projection" }
+  ],
+  "registry": "profiles"
+}

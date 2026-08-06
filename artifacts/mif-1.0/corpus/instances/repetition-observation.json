@@ -1,0 +1,11 @@
+{
+  "action": "p",
+  "board": "......../......../........",
+  "hands": [9, 9],
+  "phase": "p",
+  "profile": "repetition-observation-v1",
+  "semantic": {},
+  "semanticDigest": "sha256:224f7e368e322a4cc8c1225a025fb548d5b41eb096d34b7ae0543182d1aa9393",
+  "side": "b",
+  "stateProfile": "mill24-state-v1"
+}

@@ -1,0 +1,15 @@
+{
+  "protocol": "MIF-INTEROP-CONFIG/1",
+  "adapters": [
+    {
+      "name": "reference-a",
+      "command": ["{python}", "-B", "tools/mif_1_0_reference_adapter.py"],
+      "workingDirectory": "{repo}"
+    },
+    {
+      "name": "reference-b",
+      "command": ["{python}", "-B", "tools/mif_1_0_reference_adapter.py"],
+      "workingDirectory": "{repo}"
+    }
+  ]
+}

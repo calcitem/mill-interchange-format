@@ -1,0 +1,71 @@
+{
+  "classes": [
+    { "id": "conversion", "level": "none" },
+    { "id": "identity", "level": "tested" },
+    { "id": "key", "level": "none" },
+    { "id": "position", "level": "tested" },
+    { "id": "replay", "level": "tested" },
+    { "id": "ruleset", "level": "tested" },
+    { "id": "transform", "level": "tested" }
+  ],
+  "conversions": [],
+  "format": "MIFCAP/1.0",
+  "formats": [
+    { "id": "MFEN/1.0", "read": "tested", "write": "tested" },
+    { "id": "MIFCAP/1.0", "read": "none", "write": "none" },
+    { "id": "MIFCONV/1.0", "read": "none", "write": "none" },
+    { "id": "MIFDIAG/1.0", "read": "tested", "write": "tested" },
+    { "id": "MIFINV/1.0", "read": "implemented", "write": "none" },
+    { "id": "MIFPOS/1.0", "read": "implemented", "write": "implemented" },
+    { "id": "MIFSUITE/1.0", "read": "none", "write": "none" },
+    { "id": "MIFTURN/1.0", "read": "implemented", "write": "tested" },
+    { "id": "MPK/1.0", "read": "none", "write": "none" },
+    { "id": "MRS/1.0", "read": "tested", "write": "none" },
+    { "id": "MSTATE/1.0", "read": "tested", "write": "tested" }
+  ],
+  "implementation": {
+    "name": "mif-python-reference-runner",
+    "version": "candidate-1"
+  },
+  "invarianceDeclarations": [],
+  "profiles": {
+    "claimLifecycle": ["stable-claim-rights-v1"],
+    "decision": ["decision-state-v1"],
+    "key": [],
+    "logicalTurn": ["logical-turn-v1"],
+    "mpkBinding": [],
+    "observation": ["stable-moving-v1", "stable-primary-decision-v1"],
+    "placingLiveness": ["apply-board-full", "draw", "loss"],
+    "repetitionProjection": ["repetition-observation-v1"],
+    "repetitionSummary": ["reset-count-smt-v1"],
+    "resumption": ["resumption-state-v1"],
+    "semanticProjection": ["mrs-semantic-v1"],
+    "semantics": ["mif-finite-rules-v3"],
+    "state": ["mill24-state-v1"],
+    "transform": ["mill24-full-state-v1"]
+  },
+  "resourceLimits": [],
+  "rulesets": [
+    {
+      "documentDigest": "sha256:62479b6f40efb8ab478bab3d2b725647213604fcd3cc9cd4c1f69357535ae257",
+      "id": "example-morris",
+      "level": "tested",
+      "semanticDigest": "sha256:224f7e368e322a4cc8c1225a025fb548d5b41eb096d34b7ae0543182d1aa9393",
+      "version": 1
+    },
+    {
+      "documentDigest": "sha256:9e8a7aa8f71fe2d8cc4d0d3bc5571f2c09e21f98b12b336b691f1cdbe5bb2833",
+      "id": "x-origin-stabilization",
+      "level": "tested",
+      "semanticDigest": "sha256:173caf8189defd1ab7d4a3e8b9e26688a07fd77976bf09d56bff5fe0c273e1a1",
+      "version": 1
+    }
+  ],
+  "suites": [],
+  "testedCorpora": [
+    {
+      "classes": ["identity", "position", "replay", "ruleset", "transform"],
+      "digest": "sha256:e3af2bd5e2d88774a8ce7a4344702c0878ddffba8b77fa0740f3d3104a1258dd"
+    }
+  ]
+}

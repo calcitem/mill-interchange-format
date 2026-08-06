@@ -1,0 +1,81 @@
+{
+  "artifact": "mif-1.0-corpus",
+  "cases": [
+    {
+      "expectedOrigin": "MFEN/1.0 mill24-state-v1 ......../......../........ b p p 9,9 - 0 0 -",
+      "id": "initial-player-black",
+      "manifest": "../fixtures/example-morris@1.json",
+      "runnerRequired": true
+    },
+    {
+      "expected": "MFEN/1.0 mill24-state-v1 WBWBWBWB/BWBWBWBW/WBWBWBWB - o o 1,1 - 0 0 b:board-full",
+      "id": "white-loses-is-fixed-identity-with-initial-black",
+      "initialPlayer": "b",
+      "input": "MFEN/1.0 mill24-state-v1 WBWBWBWB/BWBWBWBW/WBWBWBWB b p p 1,1 - 0 0 -",
+      "policy": "white-loses",
+      "runnerRequired": true,
+      "winner": "b"
+    },
+    {
+      "expected": "MFEN/1.0 mill24-state-v1 WBWBWBWB/BWBWBWBW/WBWBWBWB - o o 1,1 - 0 0 b:no-legal-primary-action",
+      "id": "placing-full-board-loss",
+      "input": "MFEN/1.0 mill24-state-v1 WBWBWBWB/BWBWBWBW/WBWBWBWB w p p 1,1 - 0 0 -",
+      "policy": "loss",
+      "runnerRequired": true
+    },
+    {
+      "expected": "MFEN/1.0 mill24-state-v1 WBWBWBWB/BWBWBWBW/WBWBWBWB - o o 1,1 - 0 0 d:no-legal-primary-action",
+      "id": "placing-full-board-draw",
+      "input": "MFEN/1.0 mill24-state-v1 WBWBWBWB/BWBWBWBW/WBWBWBWB w p p 1,1 - 0 0 -",
+      "policy": "draw",
+      "runnerRequired": true
+    },
+    {
+      "expectedCode": "no-legal-primary-action-policy-invalid",
+      "id": "placing-apply-board-full-while-disabled",
+      "policy": "apply-board-full",
+      "boardFullAction": "disabled",
+      "runnerRequired": true
+    },
+    {
+      "cycle": ["w:a7-a4", "b:b6-b4", "w:a4-a7", "b:b4-b6"],
+      "expectedObservations": { "stable-moving-v1": 0, "stable-primary-decision-v1": 4 },
+      "hands": [8, 8],
+      "id": "placing-movement-cycle",
+      "initial": "MFEN/1.0 mill24-state-v1 W......./B......./........ w p p 8,8 - 0 0 -",
+      "runnerRequired": true
+    },
+    {
+      "claimDuringObligationCode": "claim-during-obligation",
+      "id": "claim-right-lifecycle",
+      "initialRight": { "actor": "b", "reasons": ["repetition"] },
+      "negotiation": ["offer-draw(1,b)", "decline-draw(2,w,offerEventSeq=1)"],
+      "primaryActionEffect": "expire-before-mutation",
+      "removalEffect": "claim-rights-null-until-next-stable-boundary",
+      "runnerRequired": true
+    },
+    {
+      "expectedFragment": {
+        "kind": "origin-stabilization",
+        "removeEventSeqs": [1, 2],
+        "status": "complete"
+      },
+      "forbiddenMembers": ["primaryEventSeq", "causedBySeq"],
+      "id": "origin-stabilization-obligation",
+      "runnerRequired": true
+    }
+  ],
+  "group": "state-boundaries",
+  "stableBoundaryOrder": [
+    "placing-boundary-or-delayed-clear",
+    "mill-count",
+    "board-full",
+    "minimum-material",
+    "phase-p-no-legal-primary-action",
+    "phase-m-stalemate",
+    "repetition",
+    "automatic-no-progress",
+    "claim-right-derivation",
+    "action-finalization"
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "artifact": "mif-1.0-corpus",
+  "decision": {
+    "digest": "sha256:f25cfb5dae617feba90fc1cbd48fb5d526727c8a3fad65910400a72a03657d19",
+    "instance": "../instances/decision-state.json"
+  },
+  "documentVariants": [
+    {
+      "documentDigest": "sha256:62479b6f40efb8ab478bab3d2b725647213604fcd3cc9cd4c1f69357535ae257",
+      "id": "D1",
+      "semanticDigest": "sha256:224f7e368e322a4cc8c1225a025fb548d5b41eb096d34b7ae0543182d1aa9393"
+    },
+    {
+      "documentDigest": "sha256:60b8f91214e2273a0f7eb411794ce3b133c61653b2199763ab555d90f042e6e4",
+      "id": "D2",
+      "mutation": { "op": "replace", "path": "/title", "value": "Example Morris (retitled)" },
+      "semanticDigest": "sha256:224f7e368e322a4cc8c1225a025fb548d5b41eb096d34b7ae0543182d1aa9393"
+    }
+  ],
+  "fixture": "../fixtures/example-morris@1.json",
+  "group": "digest-identities",
+  "observation": {
+    "digest": "sha256:6adc3718c5b16999b2a75b444728656e9901b003b8ff641813d73b2cdcba1e4e",
+    "instance": "../instances/repetition-observation.json"
+  },
+  "relationship": {
+    "differentResumptionDigest": true,
+    "sameDecisionDigest": true
+  },
+  "repetitionSummary": {
+    "emptyRoot": "sha256:e9fbf966ccdff764594a5e199e6aea0cc36034b46c8057cc3df88a088c20101a",
+    "oneOccurrenceRoot": "sha256:3a08cdfcc2a0be8a7fd9277649ff0a2e2b30cb20b98d808f825594c9a31aa885",
+    "profile": "reset-count-smt-v1",
+    "threshold": 3
+  },
+  "resumptions": [
+    {
+      "digest": "sha256:1abb022db99a0959d00c90ca5ba6a946b99d183c8a811e01f242ef081bf5d5b3",
+      "id": "R1",
+      "instance": "../instances/resumption-state-r1.json",
+      "mstate": "../instances/mstate-offer-r1.json"
+    },
+    {
+      "digest": "sha256:2f2188fe6beb34042bcf201644f262d25552a5a6263d2ba0de024aa917a83657",
+      "id": "R2",
+      "instance": "../instances/resumption-state-r2.json",
+      "mstate": "../instances/mstate-offer-r2.json"
+    }
+  ],
+  "semanticDigest": "sha256:224f7e368e322a4cc8c1225a025fb548d5b41eb096d34b7ae0543182d1aa9393",
+  "semanticProjection": {
+    "boardFull": { "action": "disabled" },
+    "captures": {
+      "custodian": { "enabled": false },
+      "intervention": { "enabled": false },
+      "leap": { "enabled": false },
+      "resolution": "target-commits-v1"
+    },
+    "draw": {
+      "claimRights": { "profile": "stable-claim-rights-v1" },
+      "noProgress": { "enabled": false },
+      "offers": { "expiry": "explicit-only" },
+      "repetition": {
+        "count": 3,
+        "mode": "claim",
+        "observation": "stable-primary-decision-v1",
+        "projection": "repetition-observation-v1",
+        "resetEvents": ["board-remove"],
+        "summary": "reset-count-smt-v1"
+      }
+    },
+    "flying": { "enabled": true, "maximumLive": 3 },
+    "mills": {
+      "delayedClearBoundary": "on-enter-moving-v1",
+      "lineReuse": "unlimited",
+      "movingEffect": "remove-opponent-board",
+      "placingEffect": "remove-opponent-board",
+      "removalMultiplicity": "one-per-primary",
+      "reverseReformation": "allowed",
+      "targetProtection": "outside-mill-first"
+    },
+    "pieces": { "black": 9, "minimumLive": 3, "white": 9 },
+    "placing": {
+      "earlyStop": { "emptyPoints": 0 },
+      "movementAllowed": false,
+      "noLegalPrimaryAction": "loss"
+    },
+    "profile": "mrs-semantic-v1",
+    "semanticState": [],
+    "semanticsProfile": "mif-finite-rules-v3",
+    "stalemate": { "action": "loss", "boardRemovalTargets": "adjacent-opponent" },
+    "topology": "mill24-orthogonal-v1",
+    "turn": { "initial": "b", "placingEndActivePlayer": "retain" }
+  }
+}

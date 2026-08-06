@@ -1,0 +1,21 @@
+{
+  "diagnostics": {
+    "errors": [
+      {
+        "category": "conversion",
+        "code": "manifest-missing"
+      }
+    ],
+    "format": "MIFDIAG/1.0"
+  },
+  "format": "MIFCONV/1.0",
+  "omitted": [
+    {
+      "instancePath": "",
+      "reason": "ruleset-semantics-unresolved"
+    }
+  ],
+  "sourceFormat": "MPK/0.4",
+  "status": "requires-ruleset-resolution",
+  "targetFormat": "MPK/1.0"
+}

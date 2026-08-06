@@ -1,0 +1,12 @@
+{
+  "errors": [
+    {
+      "actual": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "category": "integrity",
+      "code": "semantic-digest-mismatch",
+      "expected": "sha256:224f7e368e322a4cc8c1225a025fb548d5b41eb096d34b7ae0543182d1aa9393",
+      "instancePath": "/ruleset/semanticDigest"
+    }
+  ],
+  "format": "MIFDIAG/1.0"
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/calcitem/mill-interchange-format/raw/master/interop/schema/adapter-config-v1.schema.json",
+  "title": "MIF interoperability adapter harness configuration v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["protocol", "adapters"],
+  "properties": {
+    "protocol": { "const": "MIF-INTEROP-CONFIG/1" },
+    "adapters": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "command"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9.-]{0,62}$"
+          },
+          "command": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "workingDirectory": { "type": "string", "minLength": 1 },
+          "environment": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

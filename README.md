@@ -10,11 +10,16 @@ This repository contains the byte-frozen historical **MIF Community Working
 Draft 0.4** and the frozen **MIF 1.0 Candidate Wire Contract**.
 
 The 1.0 wire meanings are frozen, but MIF Suite 1.0 is not yet a conformance
-target. Standalone ABNF, JSON Schemas, registries, a 1.0 conformance corpus,
-an executable reference runner and two agreeing independent adapters still
-have to be delivered and bound by `mif-suite-1.0.json`. Neither edition is an
-ISO, IEC, CEN, WMD or tournament-federation standard and shall not be cited
-as one.
+target. Candidate standalone ABNF, JSON Schemas, registries and an initial
+structural, identity and executable corpus are available under
+[`artifacts/mif-1.0/`](artifacts/mif-1.0/). A candidate Python reference
+runner is available under [`reference/`](reference/). The non-normative
+three-project adapter protocol, smoke cases and comparator are under
+[`interop/`](interop/), with the collaboration plan in
+[`docs/zh-CN/mif-1.0-three-project-interop-plan.md`](docs/zh-CN/mif-1.0-three-project-interop-plan.md).
+Two agreeing independent product adapters and release governance still have to
+be delivered and bound by `mif-suite-1.0.json`. Neither edition is an ISO, IEC,
+CEN, WMD or tournament-federation standard and shall not be cited as one.
 
 The immutable baselines are WD 0.2 at `4346b24` and WD 0.3 at
 `3f1ffc30`. MIF/0.4 at
@@ -39,9 +44,12 @@ The design basis is retained for decision history:
   translation.
 
 The contracts freeze wire syntax, closed JSON members, algorithms and inline
-ABNF. They do not publish the next-stage machine artifacts. Until the release
-gates and `mif-suite-1.0.json` are complete, this repository has no MIF
-Suite 1.0 conformance target.
+ABNF. The candidate machine artifacts are derived from that contract and are
+integrity-checked. The separate candidate reference runner executes gameplay,
+replay, identities, transforms and logical-turn projection, but one
+implementation does not publish a suite. Until the release gates and
+`mif-suite-1.0.json` are complete, this repository has no MIF Suite 1.0
+conformance target.
 
 Raw-file identities of the frozen bilingual contracts are:
 
@@ -56,12 +64,67 @@ NMM_LLM and Sanmill target MIF Suite 1.0 directly; neither needs to implement
 MIF/0.4 first. The only continuing 0.4 work is explicit 0.4-to-1.0 conversion
 and rejection coverage. Ambiguous 0.4 data shall never be silently upgraded.
 
-## Normative sources
+## MIF 1.0 candidate machine artifacts
+
+[`artifacts/mif-1.0/`](artifacts/mif-1.0/) contains the generated standalone
+ABNF, JSON Schema Draft 2020-12 entry points, closed candidate registries and
+the first positive/negative wire corpus. Its `index.json` binds every
+delivered artifact to the frozen bilingual contract hashes.
+
+Run:
+
+```text
+python tools/verify_mif_1_0_artifacts.py
+```
+
+This check proves artifact, Schema, registry and deterministic vector integrity
+only. Run the distinct executable candidate corpus with:
+
+```text
+python -B tools/run_mif_1_0_reference.py
+```
+
+The runner covers finite-rules transitions, MSTATE replay, claim and repetition
+lifecycles, derived identities, full-state transforms, invariance gating,
+logical-turn projection and explicit 0.4 migration/rejection cases. Its passing
+result is evidence from one implementation only, not cross-implementation MIF
+conformance.
+
+## Three-project interoperability
+
+Sanmill and NMM_LLM implement independent adapters against
+[`interop/adapter-protocol-v1.md`](interop/adapter-protocol-v1.md). The MIF
+repository supplies the protocol Schema, deterministic case source and
+comparison process; it does not supply either product's gameplay logic.
+
+Verify the fixed collaboration package and its two-process reference loopback:
+
+```text
+python -B tools/verify_mif_1_0_interop.py
+```
+
+Run the comparator directly when substituting product adapter commands:
+
+```text
+python -B tools/compare_mif_1_0_adapters.py --config interop/adapters.reference-loopback.json --cases interop/cases/smoke-v1.json
+```
+
+A passing loopback proves process framing, Schema validation, case expansion
+and comparison behavior only. Replace the two command arrays in the adapter
+configuration with the Sanmill and NMM_LLM executables for independent
+byte-, state- and replay-level evidence. It is still not a published-suite
+conformance result.
+
+## Sources and implementation artifacts
 
 | Artifact | Role |
 |---|---|
 | [`mif-1.0.md`](mif-1.0.md) | Frozen normative English Candidate Wire Contract |
 | [`docs/zh-CN/mif-1.0.md`](docs/zh-CN/mif-1.0.md) | Complete aligned Chinese translation |
+| [`docs/zh-CN/mif-1.0-three-project-interop-plan.md`](docs/zh-CN/mif-1.0-three-project-interop-plan.md) | Sanmill, NMM_LLM and MIF collaboration plan |
+| [`artifacts/mif-1.0/`](artifacts/mif-1.0/) | Derived candidate machine artifacts; not a published suite |
+| [`reference/`](reference/) | Candidate Python reference runner; single-implementation evidence only |
+| [`interop/`](interop/) | Non-normative adapter protocol, Schema, cases and loopback configuration |
 | [`mif-0.4.md`](mif-0.4.md) | Frozen English historical working draft |
 | [`conformance/`](conformance/) | Frozen 0.4 corpus and migration-test input |
 | [`conformance/mif-0.4.abnf`](conformance/mif-0.4.abnf) | Standalone ABNF |

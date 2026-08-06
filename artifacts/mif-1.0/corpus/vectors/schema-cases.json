@@ -1,0 +1,97 @@
+{
+  "artifact": "mif-1.0-corpus",
+  "group": "schema-cases",
+  "positive": [
+    { "id": "mrs-fixture", "instance": "../fixtures/example-morris@1.json", "schema": "../../schema/mrs-1.0.schema.json" },
+    { "id": "mrs-origin-stabilization-fixture", "instance": "../fixtures/x-origin-stabilization@1.json", "schema": "../../schema/mrs-1.0.schema.json" },
+    { "id": "mifpos-reference", "instance": "../instances/mifpos-reference.json", "schema": "../../schema/mifpos-1.0.schema.json" },
+    { "id": "mifpos-portable", "instance": "../instances/mifpos-portable.json", "schema": "../../schema/mifpos-1.0.schema.json" },
+    { "id": "mstate-offer-r1", "instance": "../instances/mstate-offer-r1.json", "schema": "../../schema/mstate-1.0.schema.json" },
+    { "id": "mstate-origin-stabilization", "instance": "../instances/mstate-origin-stabilization.json", "schema": "../../schema/mstate-1.0.schema.json" },
+    { "id": "repetition-observation", "instance": "../instances/repetition-observation.json", "schema": "../../schema/repetition-observation-v1.schema.json" },
+    { "id": "mstate-offer-r2", "instance": "../instances/mstate-offer-r2.json", "schema": "../../schema/mstate-1.0.schema.json" },
+    { "id": "decision-state", "instance": "../instances/decision-state.json", "schema": "../../schema/decision-state-v1.schema.json" },
+    { "id": "resumption-state-r1", "instance": "../instances/resumption-state-r1.json", "schema": "../../schema/resumption-state-v1.schema.json" },
+    { "id": "resumption-state-r2", "instance": "../instances/resumption-state-r2.json", "schema": "../../schema/resumption-state-v1.schema.json" },
+    { "id": "diagnostic-envelope", "instance": "../instances/mifdiag.json", "schema": "../../schema/mifdiag-1.0.schema.json" },
+    { "id": "capability-envelope", "instance": "../instances/mifcap.json", "schema": "../../schema/mifcap-1.0.schema.json" },
+    { "id": "conversion-envelope", "instance": "../instances/mifconv.json", "schema": "../../schema/mifconv-1.0.schema.json" },
+    { "id": "logical-turn-empty", "instance": "../instances/mifturn-empty.json", "schema": "../../schema/mifturn-1.0.schema.json" },
+    {
+      "id": "logical-turn-origin-stabilization",
+      "executableSource": "../instances/mstate-origin-stabilization.json",
+      "instance": "../instances/mifturn-origin.json",
+      "referenceRunnerVerified": true,
+      "schema": "../../schema/mifturn-1.0.schema.json"
+    }
+  ],
+  "negative": [
+    {
+      "base": "../instances/mifpos-portable.json",
+      "expected": "schema-invalid",
+      "id": "portable-requires-document-digest",
+      "mutation": { "op": "remove", "path": "/ruleset/documentDigest" },
+      "schema": "../../schema/mifpos-1.0.schema.json"
+    },
+    {
+      "base": "../instances/mifpos-reference.json",
+      "expected": "schema-invalid",
+      "id": "reference-forbids-manifest",
+      "mutation": { "op": "add", "path": "/ruleset/manifest", "value": {} },
+      "schema": "../../schema/mifpos-1.0.schema.json"
+    },
+    {
+      "base": "../instances/mstate-offer-r1.json",
+      "expected": "schema-invalid",
+      "id": "mstate-forbids-cached-decision-digest",
+      "mutation": {
+        "op": "add",
+        "path": "/decisionDigest",
+        "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "schema": "../../schema/mstate-1.0.schema.json"
+    },
+    {
+      "base": "../instances/decision-state.json",
+      "expected": "schema-invalid",
+      "id": "decision-excludes-primary-ply",
+      "mutation": { "op": "add", "path": "/primaryPly", "value": 1 },
+      "schema": "../../schema/decision-state-v1.schema.json"
+    },
+    {
+      "base": "../instances/resumption-state-r1.json",
+      "expected": "schema-invalid",
+      "id": "resumption-requires-replay-prefix-digest",
+      "mutation": { "op": "remove", "path": "/replayPrefixDigest" },
+      "schema": "../../schema/resumption-state-v1.schema.json"
+    },
+    {
+      "base": "../instances/mifconv.json",
+      "expected": "schema-invalid",
+      "id": "unresolved-conversion-forbids-output",
+      "mutation": { "op": "add", "path": "/output", "value": {} },
+      "schema": "../../schema/mifconv-1.0.schema.json"
+    },
+    {
+      "base": "../instances/mifturn-origin.json",
+      "expected": "schema-invalid",
+      "id": "origin-stabilization-forbids-primary-seq",
+      "mutation": { "op": "add", "path": "/fragments/0/primaryEventSeq", "value": 1 },
+      "schema": "../../schema/mifturn-1.0.schema.json"
+    },
+    {
+      "base": "../fixtures/example-morris@1.json",
+      "expected": "schema-invalid",
+      "id": "mrs-closed-top-level",
+      "mutation": { "op": "add", "path": "/unexpected", "value": true },
+      "schema": "../../schema/mrs-1.0.schema.json"
+    },
+    {
+      "base": "../instances/mifdiag.json",
+      "expected": "schema-invalid",
+      "id": "diagnostics-require-one-error",
+      "mutation": { "op": "replace", "path": "/errors", "value": [] },
+      "schema": "../../schema/mifdiag-1.0.schema.json"
+    }
+  ]
+}

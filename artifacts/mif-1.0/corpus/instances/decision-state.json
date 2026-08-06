@@ -1,0 +1,27 @@
+{
+  "action": "p",
+  "board": "......../......../........",
+  "claimRights": null,
+  "hands": [9, 9],
+  "noProgress": null,
+  "obligations": "-",
+  "openOffer": {
+    "available": [
+      { "action": "accept", "actor": "w" },
+      { "action": "decline", "actor": "w" },
+      { "action": "withdraw", "actor": "b" }
+    ],
+    "offerer": "b"
+  },
+  "outcome": "-",
+  "phase": "p",
+  "profile": "decision-state-v1",
+  "repetitionSummary": {
+    "profile": "reset-count-smt-v1",
+    "root": "sha256:3a08cdfcc2a0be8a7fd9277649ff0a2e2b30cb20b98d808f825594c9a31aa885"
+  },
+  "semantic": {},
+  "semanticDigest": "sha256:224f7e368e322a4cc8c1225a025fb548d5b41eb096d34b7ae0543182d1aa9393",
+  "side": "b",
+  "stateProfile": "mill24-state-v1"
+}

@@ -1,0 +1,53 @@
+{
+  "claims": [],
+  "current": "MFEN/1.0 mill24-state-v1 ..WBWBWB/BWBWBWBW/WBWBWBWB w m m 0,0 - 0 24 -",
+  "events": [
+    {
+      "actor": "w",
+      "seq": 1,
+      "target": {
+        "at": "d7",
+        "zone": "board"
+      },
+      "type": "remove"
+    },
+    {
+      "actor": "b",
+      "seq": 2,
+      "target": {
+        "at": "a7",
+        "zone": "board"
+      },
+      "type": "remove"
+    }
+  ],
+  "format": "MSTATE/1.0",
+  "origin": "MFEN/1.0 mill24-state-v1 WBWBWBWB/BWBWBWBW/WBWBWBWB w m m 0,0 - 0 24 -",
+  "positionFormat": "MFEN/1.0",
+  "preOriginClaims": [],
+  "repetitionHistory": [
+    {
+      "eventSeq": 2,
+      "key": {
+        "action": "m",
+        "board": "..WBWBWB/BWBWBWBW/WBWBWBWB",
+        "hands": [0, 0],
+        "phase": "m",
+        "profile": "repetition-observation-v1",
+        "semantic": {},
+        "semanticDigest": "sha256:173caf8189defd1ab7d4a3e8b9e26688a07fd77976bf09d56bff5fe0c273e1a1",
+        "side": "w",
+        "stateProfile": "mill24-state-v1"
+      },
+      "source": "event"
+    }
+  ],
+  "ruleset": {
+    "documentDigest": "sha256:9e8a7aa8f71fe2d8cc4d0d3bc5571f2c09e21f98b12b336b691f1cdbe5bb2833",
+    "id": "x-origin-stabilization",
+    "mode": "reference",
+    "semanticDigest": "sha256:173caf8189defd1ab7d4a3e8b9e26688a07fd77976bf09d56bff5fe0c273e1a1",
+    "version": 1
+  },
+  "stateProfile": "mill24-state-v1"
+}

@@ -1,0 +1,1407 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/calcitem/mill-interchange-format/raw/master/artifacts/mif-1.0/schema/mif-1.0.schema.json",
+  "title": "MIF 1.0 Candidate JSON wire objects",
+  "description": "Closed structural schemas generated from the frozen Candidate Wire Contract. Semantic consistency and replay require a separate executable implementation; the repository includes one candidate Python reference runner.",
+  "oneOf": [
+    { "$ref": "#/$defs/mifpos" },
+    { "$ref": "#/$defs/mstate" },
+    { "$ref": "#/$defs/mrs" },
+    { "$ref": "#/$defs/mifdiag" },
+    { "$ref": "#/$defs/mifcap" },
+    { "$ref": "#/$defs/mifconv" },
+    { "$ref": "#/$defs/mifinv" },
+    { "$ref": "#/$defs/mifturn" },
+    { "$ref": "#/$defs/mifsuite" },
+    { "$ref": "#/$defs/repetitionObservation" },
+    { "$ref": "#/$defs/resumptionState" },
+    { "$ref": "#/$defs/decisionState" }
+  ],
+  "$defs": {
+    "uint": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "positiveInteger": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9.-]{0,62}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "player": {
+      "enum": ["w", "b"]
+    },
+    "coordinate": {
+      "enum": [
+        "a7", "d7", "g7", "g4", "g1", "d1", "a1", "a4",
+        "b6", "d6", "f6", "f4", "f2", "d2", "b2", "b4",
+        "c5", "d5", "e5", "e4", "e3", "d3", "c3", "c4"
+      ]
+    },
+    "board": {
+      "type": "string",
+      "pattern": "^[WBwb.]{8}/[WBwb.]{8}/[WBwb.]{8}$"
+    },
+    "mfen": {
+      "type": "string",
+      "pattern": "^MFEN/1\\.0 mill24-state-v1 [WBwb.]{8}/[WBwb.]{8}/[WBwb.]{8} [wb-] [pmo] [pmro] [0-9]+,[0-9]+ [!-~]+ [0-9]+ [0-9]+ [!-~]+(?: [a-z0-9][a-z0-9.-]{0,62}=[!-~]*)*$"
+    },
+    "annotations": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "extension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile", "value"],
+      "properties": {
+        "profile": { "$ref": "#/$defs/identifier" },
+        "value": true
+      }
+    },
+    "extensions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/extension" }
+    },
+    "hands": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "prefixItems": [
+        { "$ref": "#/$defs/uint" },
+        { "$ref": "#/$defs/uint" }
+      ],
+      "items": false
+    },
+    "pieces": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["white", "black", "minimumLive"],
+      "properties": {
+        "white": { "$ref": "#/$defs/positiveInteger" },
+        "black": { "$ref": "#/$defs/positiveInteger" },
+        "minimumLive": { "$ref": "#/$defs/positiveInteger" }
+      }
+    },
+    "turn": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["initial", "placingEndActivePlayer"],
+      "properties": {
+        "initial": { "$ref": "#/$defs/player" },
+        "placingEndActivePlayer": { "enum": ["w", "b", "retain"] }
+      }
+    },
+    "flying": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "maximumLive"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "maximumLive": { "$ref": "#/$defs/positiveInteger" }
+      }
+    },
+    "earlyStop": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["emptyPoints", "boundary"],
+      "properties": {
+        "emptyPoints": { "$ref": "#/$defs/uint" },
+        "boundary": { "const": "after-unobligated-place-v1" }
+      }
+    },
+    "placing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["movementAllowed", "earlyStop", "noLegalPrimaryAction"],
+      "properties": {
+        "movementAllowed": { "type": "boolean" },
+        "earlyStop": { "$ref": "#/$defs/earlyStop" },
+        "noLegalPrimaryAction": {
+          "enum": ["apply-board-full", "loss", "draw"]
+        }
+      }
+    },
+    "mills": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "placingEffect",
+        "movingEffect",
+        "removalMultiplicity",
+        "targetProtection",
+        "lineReuse",
+        "reverseReformation",
+        "delayedClearBoundary"
+      ],
+      "properties": {
+        "placingEffect": {
+          "enum": [
+            "remove-opponent-board",
+            "remove-opponent-hand-change",
+            "remove-opponent-hand-retain",
+            "opponent-remove-own-board",
+            "mark-opponent-board-until-moving",
+            "remove-by-current-mill-count-at-placing-end"
+          ]
+        },
+        "movingEffect": { "const": "remove-opponent-board" },
+        "removalMultiplicity": {
+          "enum": ["one-per-primary", "one-per-new-line"]
+        },
+        "targetProtection": {
+          "enum": ["outside-mill-first", "all-opponent"]
+        },
+        "lineReuse": { "enum": ["unlimited", "once-per-player"] },
+        "reverseReformation": {
+          "enum": ["allowed", "prohibit-immediate"]
+        },
+        "delayedClearBoundary": { "const": "on-enter-moving-v1" }
+      }
+    },
+    "lineFamilies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["squareEdges", "cross", "diagonal"],
+      "properties": {
+        "squareEdges": { "type": "boolean" },
+        "cross": { "type": "boolean" },
+        "diagonal": { "type": "boolean" }
+      }
+    },
+    "captureMechanism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "lines", "phases", "maximumOwnLivePieces"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "lines": { "$ref": "#/$defs/lineFamilies" },
+        "phases": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["moving", "placing"] }
+        },
+        "maximumOwnLivePieces": {
+          "oneOf": [
+            { "$ref": "#/$defs/positiveInteger" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "captures": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["resolution", "custodian", "intervention", "leap"],
+      "properties": {
+        "resolution": { "const": "target-commits-v1" },
+        "custodian": { "$ref": "#/$defs/captureMechanism" },
+        "intervention": { "$ref": "#/$defs/captureMechanism" },
+        "leap": { "$ref": "#/$defs/captureMechanism" }
+      }
+    },
+    "boardFull": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action"],
+      "properties": {
+        "action": {
+          "enum": [
+            "disabled",
+            "white-loses",
+            "white-then-black-remove",
+            "black-then-white-remove",
+            "active-player-removes",
+            "draw"
+          ]
+        }
+      }
+    },
+    "stalemate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action", "boardRemovalTargets"],
+      "properties": {
+        "action": {
+          "enum": [
+            "loss",
+            "change-player",
+            "remove-and-retain",
+            "remove-and-change",
+            "draw",
+            "both-remove"
+          ]
+        },
+        "boardRemovalTargets": { "const": "adjacent-opponent" }
+      }
+    },
+    "resetEvents": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": ["board-remove", "hand-remove", "mill-formation", "place"]
+      }
+    },
+    "noProgress": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "normalLimit",
+        "endgameLimit",
+        "endgamePredicate",
+        "mode",
+        "countedPrimaryActions",
+        "resetEvents",
+        "evaluationBoundary"
+      ],
+      "properties": {
+        "normalLimit": { "$ref": "#/$defs/uint" },
+        "endgameLimit": { "$ref": "#/$defs/uint" },
+        "endgamePredicate": {
+          "enum": ["none", "either-player-live-equals-3"]
+        },
+        "mode": { "enum": ["automatic", "claim"] },
+        "countedPrimaryActions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["move", "place"] }
+        },
+        "resetEvents": { "$ref": "#/$defs/resetEvents" },
+        "evaluationBoundary": {
+          "const": "stable-after-primary-sequence-v1"
+        }
+      }
+    },
+    "repetition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "count",
+        "mode",
+        "observation",
+        "projection",
+        "summary",
+        "resetEvents"
+      ],
+      "properties": {
+        "count": {
+          "oneOf": [
+            { "const": 0 },
+            { "type": "integer", "minimum": 2, "maximum": 9007199254740991 }
+          ]
+        },
+        "mode": { "enum": ["automatic", "claim"] },
+        "observation": {
+          "enum": ["stable-moving-v1", "stable-primary-decision-v1"]
+        },
+        "projection": { "const": "repetition-observation-v1" },
+        "summary": { "const": "reset-count-smt-v1" },
+        "resetEvents": { "$ref": "#/$defs/resetEvents" }
+      }
+    },
+    "offers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expiry"],
+      "properties": {
+        "expiry": { "enum": ["explicit-only", "on-opponent-primary-action"] }
+      }
+    },
+    "claimRightsProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile"],
+      "properties": {
+        "profile": { "const": "stable-claim-rights-v1" }
+      }
+    },
+    "draw": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["noProgress", "repetition", "offers", "claimRights"],
+      "properties": {
+        "noProgress": { "$ref": "#/$defs/noProgress" },
+        "repetition": { "$ref": "#/$defs/repetition" },
+        "offers": { "$ref": "#/$defs/offers" },
+        "claimRights": { "$ref": "#/$defs/claimRightsProfile" }
+      }
+    },
+    "mrs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "id",
+        "version",
+        "title",
+        "status",
+        "semanticsProfile",
+        "topology",
+        "pieces",
+        "turn",
+        "flying",
+        "placing",
+        "mills",
+        "captures",
+        "boardFull",
+        "stalemate",
+        "draw",
+        "semanticState"
+      ],
+      "properties": {
+        "format": { "const": "MRS/1.0" },
+        "id": { "$ref": "#/$defs/identifier" },
+        "version": { "$ref": "#/$defs/positiveInteger" },
+        "title": { "type": "string" },
+        "status": {
+          "enum": ["fixture", "experimental", "registered", "deprecated"]
+        },
+        "semanticsProfile": { "const": "mif-finite-rules-v3" },
+        "topology": {
+          "enum": ["mill24-orthogonal-v1", "mill24-diagonal-v1"]
+        },
+        "pieces": { "$ref": "#/$defs/pieces" },
+        "turn": { "$ref": "#/$defs/turn" },
+        "flying": { "$ref": "#/$defs/flying" },
+        "placing": { "$ref": "#/$defs/placing" },
+        "mills": { "$ref": "#/$defs/mills" },
+        "captures": { "$ref": "#/$defs/captures" },
+        "boardFull": { "$ref": "#/$defs/boardFull" },
+        "stalemate": { "$ref": "#/$defs/stalemate" },
+        "draw": { "$ref": "#/$defs/draw" },
+        "semanticState": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "enum": ["last-mill", "placement-count", "used-lines"] }
+        },
+        "description": { "type": "string", "minLength": 1 },
+        "annotations": { "$ref": "#/$defs/annotations" },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      }
+    },
+    "portableRuleset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "id",
+        "version",
+        "semanticDigest",
+        "documentDigest",
+        "manifest"
+      ],
+      "properties": {
+        "mode": { "const": "portable" },
+        "id": { "$ref": "#/$defs/identifier" },
+        "version": { "$ref": "#/$defs/positiveInteger" },
+        "semanticDigest": { "$ref": "#/$defs/digest" },
+        "documentDigest": { "$ref": "#/$defs/digest" },
+        "manifest": { "$ref": "#/$defs/mrs" }
+      }
+    },
+    "referenceRuleset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "id", "version", "semanticDigest"],
+      "properties": {
+        "mode": { "const": "reference" },
+        "id": { "$ref": "#/$defs/identifier" },
+        "version": { "$ref": "#/$defs/positiveInteger" },
+        "semanticDigest": { "$ref": "#/$defs/digest" },
+        "documentDigest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "rulesetEnvelope": {
+      "oneOf": [
+        { "$ref": "#/$defs/portableRuleset" },
+        { "$ref": "#/$defs/referenceRuleset" }
+      ]
+    },
+    "mifpos": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "positionFormat", "stateProfile", "position", "ruleset"],
+      "properties": {
+        "format": { "const": "MIFPOS/1.0" },
+        "positionFormat": { "const": "MFEN/1.0" },
+        "stateProfile": { "const": "mill24-state-v1" },
+        "position": { "$ref": "#/$defs/mfen" },
+        "ruleset": { "$ref": "#/$defs/rulesetEnvelope" },
+        "annotations": { "$ref": "#/$defs/annotations" },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      }
+    },
+    "semanticState": {
+      "type": "object",
+      "propertyNames": { "$ref": "#/$defs/identifier" }
+    },
+    "repetitionObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "stateProfile",
+        "semanticDigest",
+        "board",
+        "side",
+        "phase",
+        "action",
+        "hands",
+        "semantic"
+      ],
+      "properties": {
+        "profile": { "const": "repetition-observation-v1" },
+        "stateProfile": { "const": "mill24-state-v1" },
+        "semanticDigest": { "$ref": "#/$defs/digest" },
+        "board": { "$ref": "#/$defs/board" },
+        "side": { "$ref": "#/$defs/player" },
+        "phase": { "enum": ["p", "m"] },
+        "action": { "enum": ["p", "m"] },
+        "hands": { "$ref": "#/$defs/hands" },
+        "semantic": { "$ref": "#/$defs/semanticState" }
+      }
+    },
+    "repetitionEntryEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "eventSeq", "key"],
+      "properties": {
+        "source": { "const": "event" },
+        "eventSeq": { "$ref": "#/$defs/positiveInteger" },
+        "key": { "$ref": "#/$defs/repetitionObservation" }
+      }
+    },
+    "repetitionEntryBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "key"],
+      "properties": {
+        "source": { "enum": ["pre-origin", "origin"] },
+        "key": { "$ref": "#/$defs/repetitionObservation" }
+      }
+    },
+    "repetitionEntry": {
+      "oneOf": [
+        { "$ref": "#/$defs/repetitionEntryEvent" },
+        { "$ref": "#/$defs/repetitionEntryBoundary" }
+      ]
+    },
+    "preOriginClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor", "kind", "status"],
+      "properties": {
+        "actor": { "$ref": "#/$defs/player" },
+        "kind": { "const": "draw-offer" },
+        "status": {
+          "enum": ["open", "accepted", "declined", "withdrawn", "expired"]
+        }
+      }
+    },
+    "claimAudit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "actor", "kind", "status"],
+      "properties": {
+        "source": { "enum": ["pre-origin", "event"] },
+        "actor": { "$ref": "#/$defs/player" },
+        "eventSeq": { "$ref": "#/$defs/positiveInteger" },
+        "kind": { "enum": ["draw-offer", "draw-claim"] },
+        "status": {
+          "enum": ["open", "accepted", "declined", "withdrawn", "expired"]
+        },
+        "resolvedEventSeq": { "$ref": "#/$defs/positiveInteger" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "source": { "const": "event" } } },
+          "then": { "required": ["eventSeq"] },
+          "else": { "not": { "required": ["eventSeq"] } }
+        }
+      ]
+    },
+    "boardRemoveTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["zone", "at"],
+      "properties": {
+        "zone": { "const": "board" },
+        "at": { "$ref": "#/$defs/coordinate" }
+      }
+    },
+    "handRemoveTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["zone", "player"],
+      "properties": {
+        "zone": { "const": "hand" },
+        "player": { "$ref": "#/$defs/player" }
+      }
+    },
+    "eventCommon": {
+      "type": "object",
+      "required": ["seq", "actor", "type"],
+      "properties": {
+        "seq": { "$ref": "#/$defs/positiveInteger" },
+        "actor": { "enum": ["w", "b", "system"] },
+        "type": { "type": "string" },
+        "annotations": { "$ref": "#/$defs/annotations" },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      }
+    },
+    "placeEvent": {
+      "allOf": [
+        { "$ref": "#/$defs/eventCommon" },
+        {
+          "type": "object",
+          "required": ["at"],
+          "properties": {
+            "actor": { "$ref": "#/$defs/player" },
+            "type": { "const": "place" },
+            "at": { "$ref": "#/$defs/coordinate" },
+            "interventionLine": { "type": "integer", "minimum": 0, "maximum": 19 }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "moveEvent": {
+      "allOf": [
+        { "$ref": "#/$defs/eventCommon" },
+        {
+          "type": "object",
+          "required": ["from", "to"],
+          "properties": {
+            "actor": { "$ref": "#/$defs/player" },
+            "type": { "const": "move" },
+            "from": { "$ref": "#/$defs/coordinate" },
+            "to": { "$ref": "#/$defs/coordinate" },
+            "interventionLine": { "type": "integer", "minimum": 0, "maximum": 19 }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "removeEvent": {
+      "allOf": [
+        { "$ref": "#/$defs/eventCommon" },
+        {
+          "type": "object",
+          "required": ["target"],
+          "properties": {
+            "actor": { "$ref": "#/$defs/player" },
+            "type": { "const": "remove" },
+            "target": {
+              "oneOf": [
+                { "$ref": "#/$defs/boardRemoveTarget" },
+                { "$ref": "#/$defs/handRemoveTarget" }
+              ]
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "offerDrawEvent": {
+      "allOf": [
+        { "$ref": "#/$defs/eventCommon" },
+        {
+          "type": "object",
+          "properties": {
+            "actor": { "$ref": "#/$defs/player" },
+            "type": { "const": "offer-draw" }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "resolveDrawEvent": {
+      "allOf": [
+        { "$ref": "#/$defs/eventCommon" },
+        {
+          "type": "object",
+          "required": ["offerEventSeq"],
+          "properties": {
+            "actor": { "$ref": "#/$defs/player" },
+            "type": { "enum": ["accept-draw", "decline-draw", "withdraw-draw"] },
+            "offerEventSeq": { "$ref": "#/$defs/uint" }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "claimDrawEvent": {
+      "allOf": [
+        { "$ref": "#/$defs/eventCommon" },
+        {
+          "type": "object",
+          "required": ["reason"],
+          "properties": {
+            "actor": { "$ref": "#/$defs/player" },
+            "type": { "const": "claim-draw" },
+            "reason": { "enum": ["no-progress", "repetition"] }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "resignEvent": {
+      "allOf": [
+        { "$ref": "#/$defs/eventCommon" },
+        {
+          "type": "object",
+          "properties": {
+            "actor": { "$ref": "#/$defs/player" },
+            "type": { "const": "resign" }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "adjudicateEvent": {
+      "allOf": [
+        { "$ref": "#/$defs/eventCommon" },
+        {
+          "type": "object",
+          "required": ["result", "reason", "authority"],
+          "properties": {
+            "actor": { "const": "system" },
+            "type": { "const": "adjudicate" },
+            "result": { "enum": ["w", "b", "d"] },
+            "reason": { "$ref": "#/$defs/identifier" },
+            "authority": { "type": "string", "minLength": 1 }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "event": {
+      "oneOf": [
+        { "$ref": "#/$defs/placeEvent" },
+        { "$ref": "#/$defs/moveEvent" },
+        { "$ref": "#/$defs/removeEvent" },
+        { "$ref": "#/$defs/offerDrawEvent" },
+        { "$ref": "#/$defs/resolveDrawEvent" },
+        { "$ref": "#/$defs/claimDrawEvent" },
+        { "$ref": "#/$defs/resignEvent" },
+        { "$ref": "#/$defs/adjudicateEvent" }
+      ]
+    },
+    "mstate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "positionFormat",
+        "stateProfile",
+        "ruleset",
+        "origin",
+        "events",
+        "current",
+        "repetitionHistory",
+        "preOriginClaims",
+        "claims"
+      ],
+      "properties": {
+        "format": { "const": "MSTATE/1.0" },
+        "positionFormat": { "const": "MFEN/1.0" },
+        "stateProfile": { "const": "mill24-state-v1" },
+        "ruleset": { "$ref": "#/$defs/rulesetEnvelope" },
+        "origin": { "$ref": "#/$defs/mfen" },
+        "events": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/event" }
+        },
+        "current": { "$ref": "#/$defs/mfen" },
+        "repetitionHistory": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/repetitionEntry" }
+        },
+        "preOriginClaims": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/preOriginClaim" }
+        },
+        "claims": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/claimAudit" }
+        },
+        "annotations": { "$ref": "#/$defs/annotations" },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      }
+    },
+    "claimRights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor", "reasons"],
+      "properties": {
+        "actor": { "$ref": "#/$defs/player" },
+        "reasons": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["no-progress", "repetition"] }
+        }
+      }
+    },
+    "rawOpenOffer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "actor", "offerEventSeq"],
+      "properties": {
+        "source": { "enum": ["pre-origin", "event"] },
+        "actor": { "$ref": "#/$defs/player" },
+        "offerEventSeq": { "$ref": "#/$defs/uint" }
+      }
+    },
+    "resumptionState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "positionFormat",
+        "stateProfile",
+        "semanticDigest",
+        "current",
+        "replayPrefixDigest",
+        "lastEventSeq",
+        "repetitionHistory",
+        "claims",
+        "openOffer",
+        "claimRights"
+      ],
+      "properties": {
+        "profile": { "const": "resumption-state-v1" },
+        "positionFormat": { "const": "MFEN/1.0" },
+        "stateProfile": { "const": "mill24-state-v1" },
+        "semanticDigest": { "$ref": "#/$defs/digest" },
+        "current": { "$ref": "#/$defs/mfen" },
+        "replayPrefixDigest": { "$ref": "#/$defs/digest" },
+        "lastEventSeq": { "$ref": "#/$defs/uint" },
+        "repetitionHistory": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/repetitionEntry" }
+        },
+        "claims": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/claimAudit" }
+        },
+        "openOffer": {
+          "oneOf": [
+            { "$ref": "#/$defs/rawOpenOffer" },
+            { "type": "null" }
+          ]
+        },
+        "claimRights": {
+          "oneOf": [
+            { "$ref": "#/$defs/claimRights" },
+            { "type": "null" }
+          ]
+        },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      }
+    },
+    "repetitionSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile", "root"],
+      "properties": {
+        "profile": { "const": "reset-count-smt-v1" },
+        "root": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "offerOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor", "action"],
+      "properties": {
+        "actor": { "$ref": "#/$defs/player" },
+        "action": { "enum": ["accept", "decline", "withdraw"] }
+      }
+    },
+    "semanticOpenOffer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["offerer", "available"],
+      "properties": {
+        "offerer": { "$ref": "#/$defs/player" },
+        "available": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/offerOperation" }
+        }
+      }
+    },
+    "decisionState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "stateProfile",
+        "semanticDigest",
+        "board",
+        "side",
+        "phase",
+        "action",
+        "hands",
+        "obligations",
+        "noProgress",
+        "outcome",
+        "semantic",
+        "repetitionSummary",
+        "openOffer",
+        "claimRights"
+      ],
+      "properties": {
+        "profile": { "const": "decision-state-v1" },
+        "stateProfile": { "const": "mill24-state-v1" },
+        "semanticDigest": { "$ref": "#/$defs/digest" },
+        "board": { "$ref": "#/$defs/board" },
+        "side": { "enum": ["w", "b", "-"] },
+        "phase": { "enum": ["p", "m", "o"] },
+        "action": { "enum": ["p", "m", "r", "o"] },
+        "hands": { "$ref": "#/$defs/hands" },
+        "obligations": { "type": "string", "minLength": 1 },
+        "noProgress": {
+          "oneOf": [
+            { "$ref": "#/$defs/uint" },
+            { "type": "null" }
+          ]
+        },
+        "outcome": { "type": "string", "minLength": 1 },
+        "semantic": { "$ref": "#/$defs/semanticState" },
+        "repetitionSummary": {
+          "oneOf": [
+            { "$ref": "#/$defs/repetitionSummary" },
+            { "type": "null" }
+          ]
+        },
+        "openOffer": {
+          "oneOf": [
+            { "$ref": "#/$defs/semanticOpenOffer" },
+            { "type": "null" }
+          ]
+        },
+        "claimRights": {
+          "oneOf": [
+            { "$ref": "#/$defs/claimRights" },
+            { "type": "null" }
+          ]
+        },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      }
+    },
+    "textOffset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end"],
+      "properties": {
+        "start": { "$ref": "#/$defs/uint" },
+        "end": { "$ref": "#/$defs/uint" }
+      }
+    },
+    "resourceLimitError": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "limit", "actual"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "limit": { "$ref": "#/$defs/uint" },
+        "actual": { "$ref": "#/$defs/uint" }
+      }
+    },
+    "diagnosticError": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["category", "code"],
+      "properties": {
+        "category": {
+          "enum": [
+            "syntax", "canonical", "unsupported", "integrity",
+            "inconsistent", "ineligible", "replay", "conversion",
+            "resource", "unreachable"
+          ]
+        },
+        "code": { "$ref": "#/$defs/identifier" },
+        "instancePath": { "type": "string" },
+        "textOffset": { "$ref": "#/$defs/textOffset" },
+        "eventSeq": { "$ref": "#/$defs/uint" },
+        "expected": true,
+        "actual": true,
+        "resourceLimit": { "$ref": "#/$defs/resourceLimitError" },
+        "message": { "type": "string" }
+      }
+    },
+    "mifdiag": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "errors"],
+      "properties": {
+        "format": { "const": "MIFDIAG/1.0" },
+        "errors": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/diagnosticError" }
+        },
+        "annotations": { "$ref": "#/$defs/annotations" }
+      }
+    },
+    "supportLevel": {
+      "enum": ["none", "experimental", "implemented", "tested"]
+    },
+    "idLevel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "level"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "level": { "$ref": "#/$defs/supportLevel" }
+      }
+    },
+    "formatCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "read", "write"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "read": { "$ref": "#/$defs/supportLevel" },
+        "write": { "$ref": "#/$defs/supportLevel" }
+      }
+    },
+    "profileCapabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "semantics", "semanticProjection", "state", "key",
+        "repetitionProjection", "observation", "repetitionSummary",
+        "resumption", "decision", "claimLifecycle", "mpkBinding",
+        "transform", "logicalTurn", "placingLiveness"
+      ],
+      "properties": {
+        "semantics": { "$ref": "#/$defs/identifierArray" },
+        "semanticProjection": { "$ref": "#/$defs/identifierArray" },
+        "state": { "$ref": "#/$defs/identifierArray" },
+        "key": { "$ref": "#/$defs/identifierArray" },
+        "repetitionProjection": { "$ref": "#/$defs/identifierArray" },
+        "observation": { "$ref": "#/$defs/identifierArray" },
+        "repetitionSummary": { "$ref": "#/$defs/identifierArray" },
+        "resumption": { "$ref": "#/$defs/identifierArray" },
+        "decision": { "$ref": "#/$defs/identifierArray" },
+        "claimLifecycle": { "$ref": "#/$defs/identifierArray" },
+        "mpkBinding": { "$ref": "#/$defs/identifierArray" },
+        "transform": { "$ref": "#/$defs/identifierArray" },
+        "logicalTurn": { "$ref": "#/$defs/identifierArray" },
+        "placingLiveness": { "$ref": "#/$defs/identifierArray" }
+      }
+    },
+    "identifierArray": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/identifier" }
+    },
+    "rulesetCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "semanticDigest", "level"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "version": { "$ref": "#/$defs/positiveInteger" },
+        "semanticDigest": { "$ref": "#/$defs/digest" },
+        "documentDigest": { "$ref": "#/$defs/digest" },
+        "level": { "$ref": "#/$defs/supportLevel" }
+      }
+    },
+    "invarianceCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["semanticDigest", "transformProfile", "documentDigest", "level"],
+      "properties": {
+        "semanticDigest": { "$ref": "#/$defs/digest" },
+        "transformProfile": { "$ref": "#/$defs/identifier" },
+        "documentDigest": { "$ref": "#/$defs/digest" },
+        "level": { "$ref": "#/$defs/supportLevel" }
+      }
+    },
+    "conversionCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceFormat", "targetFormat", "statuses"],
+      "properties": {
+        "sourceFormat": { "type": "string", "minLength": 1 },
+        "targetFormat": { "type": "string", "minLength": 1 },
+        "statuses": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/conversionStatus" }
+        }
+      }
+    },
+    "resourceLimitCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "limit"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "limit": { "$ref": "#/$defs/uint" }
+      }
+    },
+    "testedCorpus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["digest", "classes"],
+      "properties": {
+        "digest": { "$ref": "#/$defs/digest" },
+        "classes": { "$ref": "#/$defs/identifierArray" }
+      }
+    },
+    "mifcap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format", "implementation", "suites", "classes", "formats",
+        "profiles", "rulesets", "invarianceDeclarations", "conversions",
+        "resourceLimits", "testedCorpora"
+      ],
+      "properties": {
+        "format": { "const": "MIFCAP/1.0" },
+        "implementation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "version"],
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "version": { "type": "string", "minLength": 1 }
+          }
+        },
+        "suites": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/digest" }
+        },
+        "classes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/idLevel" }
+        },
+        "formats": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/formatCapability" }
+        },
+        "profiles": { "$ref": "#/$defs/profileCapabilities" },
+        "rulesets": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/rulesetCapability" }
+        },
+        "invarianceDeclarations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/invarianceCapability" }
+        },
+        "conversions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/conversionCapability" }
+        },
+        "resourceLimits": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/resourceLimitCapability" }
+        },
+        "testedCorpora": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/testedCorpus" }
+        },
+        "annotations": { "$ref": "#/$defs/annotations" }
+      }
+    },
+    "conversionStatus": {
+      "enum": [
+        "lossless",
+        "lossy-history",
+        "lossy-semantic-state",
+        "requires-ruleset-resolution",
+        "unrepresentable-under-profile"
+      ]
+    },
+    "omission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["instancePath", "reason"],
+      "properties": {
+        "instancePath": { "type": "string" },
+        "reason": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "mifconv": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "sourceFormat", "targetFormat", "status", "omitted"],
+      "properties": {
+        "format": { "const": "MIFCONV/1.0" },
+        "sourceFormat": { "type": "string", "minLength": 1 },
+        "targetFormat": { "type": "string", "minLength": 1 },
+        "status": { "$ref": "#/$defs/conversionStatus" },
+        "omitted": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/omission" }
+        },
+        "output": true,
+        "diagnostics": { "$ref": "#/$defs/mifdiag" },
+        "annotations": { "$ref": "#/$defs/annotations" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": ["lossless", "lossy-history", "lossy-semantic-state"]
+              }
+            }
+          },
+          "then": { "required": ["output"] },
+          "else": { "not": { "required": ["output"] } }
+        },
+        {
+          "if": { "properties": { "status": { "const": "lossless" } } },
+          "then": { "properties": { "omitted": { "maxItems": 0 } } }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": { "enum": ["lossy-history", "lossy-semantic-state"] }
+            }
+          },
+          "then": { "properties": { "omitted": { "minItems": 1 } } }
+        }
+      ]
+    },
+    "extensionTreatment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile", "treatmentProfile"],
+      "properties": {
+        "profile": { "$ref": "#/$defs/identifier" },
+        "treatmentProfile": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "transformId": {
+      "enum": ["i", "r90ccw", "r180", "r90cw", "mirror-v", "mirror-h", "mirror-main", "mirror-anti"]
+    },
+    "mifinv": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format", "profile", "semanticDigest", "stateProfile",
+        "transformProfile", "transforms", "extensionTreatments", "documentDigest"
+      ],
+      "properties": {
+        "format": { "const": "MIFINV/1.0" },
+        "profile": { "const": "transform-invariance-v1" },
+        "semanticDigest": { "$ref": "#/$defs/digest" },
+        "stateProfile": { "const": "mill24-state-v1" },
+        "transformProfile": { "const": "mill24-full-state-v1" },
+        "transforms": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/transformId" }
+        },
+        "extensionTreatments": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/extensionTreatment" }
+        },
+        "documentDigest": { "$ref": "#/$defs/digest" },
+        "annotations": { "$ref": "#/$defs/annotations" }
+      }
+    },
+    "turnFragment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "removeEventSeqs", "status"],
+      "properties": {
+        "kind": { "enum": ["logical-turn", "origin-obligation", "origin-stabilization"] },
+        "primaryEventSeq": { "$ref": "#/$defs/positiveInteger" },
+        "removeEventSeqs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/positiveInteger" }
+        },
+        "status": { "enum": ["complete", "truncated"] }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "logical-turn" } } },
+          "then": { "required": ["primaryEventSeq"] },
+          "else": { "not": { "required": ["primaryEventSeq"] } }
+        }
+      ]
+    },
+    "mifturn": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "profile", "sourceResumptionDigest", "fragments"],
+      "properties": {
+        "format": { "const": "MIFTURN/1.0" },
+        "profile": { "const": "logical-turn-v1" },
+        "sourceResumptionDigest": { "$ref": "#/$defs/digest" },
+        "fragments": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/turnFragment" }
+        },
+        "annotations": { "$ref": "#/$defs/annotations" }
+      }
+    },
+    "artifactRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "sha256"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "sha256": { "$ref": "#/$defs/digest" },
+        "commit": { "type": "string", "minLength": 1 }
+      }
+    },
+    "formatValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "value"],
+      "properties": {
+        "format": { "type": "string", "minLength": 1 },
+        "value": { "type": "string", "minLength": 1 }
+      }
+    },
+    "suiteComponents": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mfen", "mpk", "mifpos", "mstate", "mrs", "diagnostics",
+        "capabilities", "conversion", "invariance", "logicalTurn"
+      ],
+      "properties": {
+        "mfen": { "const": "MFEN/1.0" },
+        "mpk": { "const": "MPK/1.0" },
+        "mifpos": { "const": "MIFPOS/1.0" },
+        "mstate": { "const": "MSTATE/1.0" },
+        "mrs": { "const": "MRS/1.0" },
+        "diagnostics": { "const": "MIFDIAG/1.0" },
+        "capabilities": { "const": "MIFCAP/1.0" },
+        "conversion": { "const": "MIFCONV/1.0" },
+        "invariance": { "const": "MIFINV/1.0" },
+        "logicalTurn": { "const": "MIFTURN/1.0" }
+      }
+    },
+    "suiteProfiles": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "semantics", "semanticProjection", "state", "key",
+        "repetitionProjection", "observation", "repetitionSummary",
+        "resumption", "decision", "claimLifecycle", "mpkBinding",
+        "transform", "logicalTurn"
+      ],
+      "properties": {
+        "semantics": { "const": "mif-finite-rules-v3" },
+        "semanticProjection": { "const": "mrs-semantic-v1" },
+        "state": { "const": "mill24-state-v1" },
+        "key": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["structural-d4-v1", "structural-aut16-v1"] }
+        },
+        "repetitionProjection": { "const": "repetition-observation-v1" },
+        "observation": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["stable-moving-v1", "stable-primary-decision-v1"] }
+        },
+        "repetitionSummary": { "const": "reset-count-smt-v1" },
+        "resumption": { "const": "resumption-state-v1" },
+        "decision": { "const": "decision-state-v1" },
+        "claimLifecycle": { "const": "stable-claim-rights-v1" },
+        "mpkBinding": { "const": "inline-semantic-digest-v1" },
+        "transform": { "const": "mill24-full-state-v1" },
+        "logicalTurn": { "const": "logical-turn-v1" }
+      }
+    },
+    "suiteArtifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["registries", "corpora", "schemas", "abnf", "conversions", "runners", "adapters"],
+      "properties": {
+        "registries": { "$ref": "#/$defs/nonEmptyArtifactArray" },
+        "corpora": { "$ref": "#/$defs/nonEmptyArtifactArray" },
+        "schemas": { "$ref": "#/$defs/nonEmptyArtifactArray" },
+        "abnf": { "$ref": "#/$defs/nonEmptyArtifactArray" },
+        "conversions": { "$ref": "#/$defs/nonEmptyArtifactArray" },
+        "runners": { "$ref": "#/$defs/nonEmptyArtifactArray" },
+        "adapters": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/artifactRecord" }
+        }
+      }
+    },
+    "nonEmptyArtifactArray": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/artifactRecord" }
+    },
+    "mifsuite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format", "id", "components", "profiles", "specifications",
+        "artifacts", "rulesets", "invarianceDeclarations",
+        "compatibilityPolicy", "mediaTypes", "fileExtensions", "releaseManifest"
+      ],
+      "properties": {
+        "format": { "const": "MIFSUITE/1.0" },
+        "id": { "$ref": "#/$defs/identifier" },
+        "components": { "$ref": "#/$defs/suiteComponents" },
+        "profiles": { "$ref": "#/$defs/suiteProfiles" },
+        "specifications": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "allOf": [
+              { "$ref": "#/$defs/artifactRecord" },
+              { "required": ["commit"] }
+            ]
+          }
+        },
+        "artifacts": { "$ref": "#/$defs/suiteArtifacts" },
+        "rulesets": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/digest" }
+        },
+        "invarianceDeclarations": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/digest" }
+        },
+        "compatibilityPolicy": { "$ref": "#/$defs/identifier" },
+        "mediaTypes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/formatValue" }
+        },
+        "fileExtensions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/formatValue" }
+        },
+        "releaseManifest": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

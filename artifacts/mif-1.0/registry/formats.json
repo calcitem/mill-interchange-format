@@ -1,0 +1,84 @@
+{
+  "artifact": "mif-1.0-registry",
+  "contractStatus": "candidate-wire-frozen-suite-unpublished",
+  "entries": [
+    {
+      "conformanceTarget": false,
+      "grammar": "../abnf/mif-1.0.abnf#mfen",
+      "id": "MFEN/1.0",
+      "kind": "text",
+      "role": "context-bound-position"
+    },
+    {
+      "conformanceTarget": false,
+      "grammar": "../abnf/mif-1.0.abnf#mpk",
+      "id": "MPK/1.0",
+      "kind": "text",
+      "role": "semantic-bound-structural-key"
+    },
+    {
+      "conformanceTarget": false,
+      "id": "MIFPOS/1.0",
+      "kind": "json",
+      "role": "self-identifying-position",
+      "schema": "../schema/mifpos-1.0.schema.json"
+    },
+    {
+      "conformanceTarget": false,
+      "id": "MSTATE/1.0",
+      "kind": "json",
+      "role": "resumable-event-history",
+      "schema": "../schema/mstate-1.0.schema.json"
+    },
+    {
+      "conformanceTarget": false,
+      "id": "MRS/1.0",
+      "kind": "json",
+      "role": "finite-ruleset-manifest",
+      "schema": "../schema/mrs-1.0.schema.json"
+    },
+    {
+      "conformanceTarget": false,
+      "id": "MIFDIAG/1.0",
+      "kind": "json",
+      "role": "diagnostics",
+      "schema": "../schema/mifdiag-1.0.schema.json"
+    },
+    {
+      "conformanceTarget": false,
+      "id": "MIFCAP/1.0",
+      "kind": "json",
+      "role": "implementation-capabilities",
+      "schema": "../schema/mifcap-1.0.schema.json"
+    },
+    {
+      "conformanceTarget": false,
+      "id": "MIFCONV/1.0",
+      "kind": "json",
+      "role": "conversion-report",
+      "schema": "../schema/mifconv-1.0.schema.json"
+    },
+    {
+      "conformanceTarget": false,
+      "id": "MIFINV/1.0",
+      "kind": "json",
+      "role": "transform-invariance-declaration",
+      "schema": "../schema/mifinv-1.0.schema.json"
+    },
+    {
+      "conformanceTarget": false,
+      "id": "MIFTURN/1.0",
+      "kind": "json",
+      "role": "logical-turn-projection",
+      "schema": "../schema/mifturn-1.0.schema.json"
+    },
+    {
+      "conformanceTarget": false,
+      "id": "MIFSUITE/1.0",
+      "kind": "json-shape-only",
+      "role": "future-suite-manifest",
+      "schema": "../schema/mifsuite-1.0.schema.json"
+    }
+  ],
+  "registry": "formats"
+}
