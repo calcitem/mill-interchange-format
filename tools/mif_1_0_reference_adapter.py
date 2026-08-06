@@ -13,6 +13,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from reference.mif1_adapter import handle_request  # noqa: E402
+from reference.jcs import jcs_bytes  # noqa: E402
 
 
 def reject_duplicate_members(pairs: list[tuple[str, object]]) -> dict[str, object]:
@@ -44,16 +45,7 @@ def main() -> int:
                 file=sys.stderr,
             )
             return 2
-        sys.stdout.write(
-            json.dumps(
-                response,
-                ensure_ascii=False,
-                allow_nan=False,
-                sort_keys=True,
-                separators=(",", ":"),
-            )
-            + "\n"
-        )
+        sys.stdout.write(jcs_bytes(response).decode("utf-8") + "\n")
         sys.stdout.flush()
     return 0
 

@@ -7,6 +7,9 @@ frozen MIF 1.0 Candidate Wire Contract.
 - `instances/` contains complete JSON wire or derived-identity objects.
 - `vectors/schema-cases.json` maps instances to entry schemas and defines
   isolated negative mutations using JSON Pointer.
+- `vectors/jcs-rfc8785.json` covers the 24 finite RFC 8785 Appendix B
+  binary64 samples, UTF-16 member ordering, MIF I-JSON rejection and
+  annotation-only document identity.
 - `executable/reference-cases.json` binds replay, boundary, claim, transform,
   turn-projection and historical migration cases to exact resources and
   expected results.
@@ -30,7 +33,7 @@ The origin-stabilization MIFTURN instance is bound to a real MSTATE replay and
 its exact `resumptionDigest`. The runner also records two contradictory frozen
 0.4 checkpoints as source rejections, so they cannot be silently upgraded.
 
-`instances/mifcap.json` names the candidate Python implementation and binds
+`instances/mifcap.json` names the candidate-2 Python implementation and binds
 its tested classes to the raw SHA-256 of `executable/reference-cases.json`. It
 claims no suite, general conversion, MPK support, invariance or resource limit.
 

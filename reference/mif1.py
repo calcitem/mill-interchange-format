@@ -21,6 +21,8 @@ from typing import Any, Iterable, Iterator, Mapping
 from jsonschema import Draft202012Validator
 from referencing import Registry, Resource
 
+from .jcs import jcs_bytes, jcs_digest
+
 
 ROOT = Path(__file__).resolve().parents[1]
 ARTIFACT = ROOT / "artifacts" / "mif-1.0"
@@ -110,21 +112,6 @@ def live_character(player: str) -> str:
 
 def delayed_character(player: str) -> str:
     return player
-
-
-def jcs_bytes(value: Any) -> bytes:
-    """RFC 8785 bytes for the integer/string I-JSON subset used by MIF."""
-    return json.dumps(
-        value,
-        ensure_ascii=False,
-        allow_nan=False,
-        sort_keys=True,
-        separators=(",", ":"),
-    ).encode("utf-8")
-
-
-def jcs_digest(value: Any) -> str:
-    return "sha256:" + hashlib.sha256(jcs_bytes(value)).hexdigest()
 
 
 @lru_cache(maxsize=1)

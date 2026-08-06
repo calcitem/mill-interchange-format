@@ -7,6 +7,7 @@ import argparse
 import copy
 import hashlib
 import json
+import struct
 import sys
 from pathlib import Path
 from typing import Any, Mapping
@@ -22,8 +23,10 @@ from reference.mif1 import (  # noqa: E402
     Session,
     parse_mfen,
     replay_mstate,
+    semantic_projection,
     validate_schema,
 )
+from reference.jcs import JCSValueError, jcs_bytes, jcs_digest  # noqa: E402
 from reference.mif1_transform import (  # noqa: E402
     TRANSFORM_IDS,
     point_permutation,
@@ -49,7 +52,7 @@ def validate_capability_binding(
     validate_schema(capability, "mifcap-1.0.schema.json")
     assert capability["implementation"] == {
         "name": "mif-python-reference-runner",
-        "version": "candidate-1",
+        "version": "candidate-2",
     }
     assert capability["suites"] == []
     corpus_digest = "sha256:" + hashlib.sha256(vector_path.read_bytes()).hexdigest()
@@ -103,6 +106,49 @@ def mutate(value: Any, mutations: list[Mapping[str, Any]]) -> Any:
 def load_manifest(case: Mapping[str, Any], vector_path: Path) -> dict[str, Any]:
     manifest = read_json(resolve(vector_path.parent, case["manifest"]))
     return mutate(manifest, case.get("mutations", []))
+
+
+def run_jcs_cases(vector: Mapping[str, Any], vector_path: Path) -> int:
+    source_path = resolve(vector_path.parent, vector["jcsCases"])
+    source = read_json(source_path)
+    assert source["artifact"] == "mif-1.0-jcs-rfc8785-vectors"
+
+    for case in source["numberSerialization"]:
+        raw = bytes.fromhex(case["ieee754"])
+        assert len(raw) == 8, case["ieee754"]
+        value = struct.unpack(">d", raw)[0]
+        assert jcs_bytes(value).decode("ascii") == case["expected"], case["ieee754"]
+
+    ordering = source["utf16Ordering"]
+    ordering_bytes = jcs_bytes(ordering["value"])
+    assert ordering_bytes.hex() == ordering["expectedHex"]
+    assert jcs_digest(ordering["value"]) == ordering["expectedSha256"]
+
+    identity = source["mifAnnotationIdentity"]
+    manifest = read_json(resolve(source_path.parent, identity["manifest"]))
+    annotated = copy.deepcopy(manifest)
+    annotated["annotations"] = copy.deepcopy(identity["annotations"])
+    assert jcs_digest(annotated) == identity["expectedDocumentDigest"]
+    assert (
+        jcs_digest(semantic_projection(annotated))
+        == identity["expectedSemanticDigest"]
+    )
+
+    for case in source["rejections"]:
+        if "ieee754" in case:
+            value = struct.unpack(">d", bytes.fromhex(case["ieee754"]))[0]
+        elif "codePoint" in case:
+            value = {"value": chr(case["codePoint"])}
+        else:
+            value = int(case["integerText"])
+        try:
+            jcs_bytes(value)
+        except JCSValueError:
+            pass
+        else:
+            raise AssertionError(f"JCS rejection unexpectedly passed: {case['id']}")
+
+    return len(source["numberSerialization"]) + len(source["rejections"]) + 2
 
 
 def run_replay_cases(vector: Mapping[str, Any], vector_path: Path) -> int:
@@ -394,6 +440,7 @@ def run_corpus() -> None:
     vector = read_json(EXECUTABLE_VECTOR)
     validate_capability_binding(vector, EXECUTABLE_VECTOR)
     native = 0
+    native += run_jcs_cases(vector, EXECUTABLE_VECTOR)
     native += run_replay_cases(vector, EXECUTABLE_VECTOR)
     native += run_portable_replay_cases(vector, EXECUTABLE_VECTOR)
     native += run_state_cases(vector, EXECUTABLE_VECTOR)

@@ -266,6 +266,44 @@
           "$json": "artifacts/mif-1.0/corpus/instances/mstate-offer-r1.json"
         }
       }
+    },
+    {
+      "id": "transform-mifpos-portable-jcs-boundaries",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "kind": "mifpos",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mifpos-portable.json",
+          "$patch": [
+            {
+              "op": "add",
+              "path": "/ruleset/manifest/annotations",
+              "value": {
+                "numberBoundaries": [
+                  -0.0,
+                  0.000001,
+                  1e-7,
+                  333333333.3333333,
+                  1424953923781206.2,
+                  5e-324
+                ],
+                "\ue000": "bmp-private-use",
+                "\ud800\udc00": "astral-plane"
+              }
+            },
+            {
+              "op": "replace",
+              "path": "/ruleset/documentDigest",
+              "value": "sha256:ba1209a494389396d4bef5e7aca54edd9035926655b21fe5e63215cac39165a7"
+            }
+          ]
+        },
+        "transform": "r90ccw",
+        "verifyReplay": false,
+        "requireEquivalence": false
+      }
     }
   ]
 }

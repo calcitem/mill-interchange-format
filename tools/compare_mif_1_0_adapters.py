@@ -18,12 +18,16 @@ from referencing import Registry, Resource
 
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from reference.jcs import JCSValueError, jcs_bytes as rfc8785_bytes  # noqa: E402
+
 INTEROP = ROOT / "interop"
 ARTIFACT = ROOT / "artifacts" / "mif-1.0"
 MESSAGE_SCHEMA = INTEROP / "schema" / "adapter-message-v1.schema.json"
 CONFIG_SCHEMA = INTEROP / "schema" / "adapter-config-v1.schema.json"
 CASES_SCHEMA = INTEROP / "schema" / "adapter-cases-v1.schema.json"
-IJSON_MAX = 9007199254740991
 
 
 class HarnessError(Exception):
@@ -54,35 +58,10 @@ def raw_digest(path: Path) -> str:
 
 
 def jcs_bytes(value: Any) -> bytes:
-    def check(item: Any, path: str) -> None:
-        if item is None or isinstance(item, (str, bool)):
-            return
-        if isinstance(item, int) and not isinstance(item, bool):
-            if abs(item) > IJSON_MAX:
-                raise HarnessError(f"integer outside I-JSON safe range at {path}")
-            return
-        if isinstance(item, float):
-            raise HarnessError(f"floating-point value is forbidden at {path}")
-        if isinstance(item, list):
-            for index, child in enumerate(item):
-                check(child, f"{path}/{index}")
-            return
-        if isinstance(item, dict):
-            for key, child in item.items():
-                if not isinstance(key, str):
-                    raise HarnessError(f"non-string member name at {path}")
-                check(child, f"{path}/{key}")
-            return
-        raise HarnessError(f"unsupported JSON value at {path}: {type(item).__name__}")
-
-    check(value, "")
-    return json.dumps(
-        value,
-        ensure_ascii=False,
-        allow_nan=False,
-        sort_keys=True,
-        separators=(",", ":"),
-    ).encode("utf-8")
+    try:
+        return rfc8785_bytes(value)
+    except JCSValueError as exc:
+        raise HarnessError(str(exc)) from exc
 
 
 def safe_repo_path(relative: str) -> Path:
@@ -708,7 +687,7 @@ def main(argv: list[str] | None = None) -> int:
         print(
             "MIF interop comparison passed: "
             f"{len(case_reports)} cases across {len(adapters)} adapters "
-            "(loopback is harness evidence only)"
+            "(candidate interoperability evidence only)"
         )
         return 0
     except HarnessError as exc:

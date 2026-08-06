@@ -26,7 +26,7 @@ BASELINE_DIGESTS = {
         "9cc06abb57425e2bc2e26432b6da53abe503e9b5415ea0b4f854f19f68722cc1"
     ),
     ROOT / "artifacts" / "mif-1.0" / "index.json": (
-        "176db4d3701af8aa66c1691e87f99fddb71bf484f07ce9d9380e79e8fa62e10b"
+        "3849a70897829d6d994c790b64e63484469483a940887fe828a1a0d421d78e90"
     ),
     ROOT
     / "artifacts"
@@ -34,7 +34,13 @@ BASELINE_DIGESTS = {
     / "corpus"
     / "executable"
     / "reference-cases.json": (
-        "e3af2bd5e2d88774a8ce7a4344702c0878ddffba8b77fa0740f3d3104a1258dd"
+        "a48c50352caebce30deb1de11f8f73dbc4540ee538651c3a139d9bcb166ba983"
+    ),
+    INTEROP / "adapter-protocol-v1.md": (
+        "a59e5e5af3e948f6c7cac6a39a490c6eae6338151741b6c7fcdde5c88d991e2d"
+    ),
+    INTEROP / "cases" / "smoke-v1.json": (
+        "a6d292f4d19381172fbc19f89d3ee42145a6d5533d6d81fd719394e25342bb53"
     ),
     ROOT / "mif-0.4.md": (
         "f1f1d839318a4d45f3ecea4850fee080c47ffcbc81025bd74e3ea48c815f3093"
@@ -43,6 +49,8 @@ BASELINE_DIGESTS = {
 TEXT_FILES = [
     ROOT / "README.md",
     ROOT / "reference" / "README.md",
+    ROOT / "reference" / "jcs.py",
+    ROOT / "reference" / "mif1.py",
     PLAN,
     INTEROP / "README.md",
     INTEROP / "adapter-protocol-v1.md",
@@ -192,7 +200,7 @@ def verify_loopback() -> None:
     if completed.returncode != 0:
         details = (completed.stdout + completed.stderr).strip()
         raise VerificationError(f"reference loopback failed: {details}")
-    expected = "MIF interop comparison passed: 16 cases across 2 adapters"
+    expected = "MIF interop comparison passed: 17 cases across 2 adapters"
     if expected not in completed.stdout:
         raise VerificationError("reference loopback did not report the fixed case count")
 
@@ -211,7 +219,7 @@ def main() -> int:
         return 1
     print(
         "MIF 1.0 interop launch gate passed: fixed baselines, documents, "
-        "Schema and 16-case reference loopback "
+        "Schema and 17-case reference loopback "
         "(harness evidence only; independent conformance not established)"
     )
     return 0

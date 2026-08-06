@@ -6,7 +6,9 @@ conformance target.
 
 - `adapter-protocol-v1.md` defines the NDJSON process contract and operations.
 - `schema/` validates adapter messages, harness configuration and case sources.
-- `cases/smoke-v1.json` is the first cross-process smoke set.
+- `cases/smoke-v1.json` is the 17-case candidate-2 cross-process smoke set,
+  including a portable MIFPOS case that exposes UTF-16 key-order and binary64
+  JCS differences through `documentDigest`.
 - `adapters.reference-loopback.json` starts two isolated instances of the
   candidate Python reference adapter to test the harness itself.
 
@@ -25,8 +27,10 @@ python -B tools/compare_mif_1_0_adapters.py \
 ```
 
 The loopback result proves only that the process protocol and comparator are
-deterministic. Independent Sanmill and NMM_LLM adapters must replace the two
-loopback entries before any cross-implementation claim is possible.
+deterministic. Use independent Sanmill and NMM_LLM entries for
+cross-implementation evidence. The current candidate-2 smoke has zero
+differences across the reference, Sanmill and NMM_LLM adapters, but it remains
+candidate evidence rather than MIF Suite 1.0 conformance.
 
 Adapter authors may use the specification, schemas, registries and corpus, but
 must not import or copy gameplay implementation code from `reference/`.

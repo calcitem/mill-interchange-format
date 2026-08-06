@@ -27,6 +27,11 @@ except ImportError as exc:  # pragma: no cover - exercised only on incomplete to
 
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from reference.jcs import JCSValueError, jcs_bytes, jcs_digest  # noqa: E402
+
 ARTIFACT = ROOT / "artifacts" / "mif-1.0"
 SCHEMA_DIR = ARTIFACT / "schema"
 CORPUS_DIR = ARTIFACT / "corpus"
@@ -171,21 +176,6 @@ def read_json(path: Path) -> Any:
 
 def raw_sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
-def jcs_bytes(value: Any) -> bytes:
-    """Serialize the I-JSON subset used by these vectors as RFC 8785 JCS."""
-    return json.dumps(
-        value,
-        allow_nan=False,
-        ensure_ascii=False,
-        separators=(",", ":"),
-        sort_keys=True,
-    ).encode("utf-8")
-
-
-def jcs_digest(value: Any) -> str:
-    return "sha256:" + hashlib.sha256(jcs_bytes(value)).hexdigest()
 
 
 def artifact_path(base: Path, relative: str) -> Path:
@@ -532,7 +522,7 @@ def check_executable_vectors(check: Verification) -> None:
         capability = read_json(capability_path)
         check.require(
             capability.get("implementation")
-            == {"name": "mif-python-reference-runner", "version": "candidate-1"},
+            == {"name": "mif-python-reference-runner", "version": "candidate-2"},
             "reference runner capability identity mismatch",
         )
         check.require(capability.get("suites") == [], "candidate runner must not claim a suite")
@@ -577,9 +567,79 @@ def check_executable_vectors(check: Verification) -> None:
         "decisionTransformCases",
         "transformCases",
         "turnCases",
+        "jcsCases",
         "historicalMigrationAudit",
     }
     check.require(required_groups.issubset(vector), "executable corpus group set is incomplete")
+
+    jcs_vector_path = artifact_path(path.parent, vector.get("jcsCases", ""))
+    check.require(jcs_vector_path.is_file(), "executable JCS vector binding is missing")
+    if jcs_vector_path.is_file():
+        try:
+            jcs_vector = read_json(jcs_vector_path)
+            check.require(
+                jcs_vector.get("artifact") == "mif-1.0-jcs-rfc8785-vectors",
+                "JCS vector identity mismatch",
+            )
+            number_cases = jcs_vector["numberSerialization"]
+            check.require(len(number_cases) == 24, "RFC 8785 number case set mismatch")
+            for case in number_cases:
+                raw = bytes.fromhex(case["ieee754"])
+                check.require(len(raw) == 8, f"invalid IEEE 754 vector: {case['ieee754']}")
+                if len(raw) == 8:
+                    value = struct.unpack(">d", raw)[0]
+                    check.require(
+                        jcs_bytes(value).decode("ascii") == case["expected"],
+                        f"RFC 8785 number serialization mismatch: {case['ieee754']}",
+                    )
+
+            ordering = jcs_vector["utf16Ordering"]
+            ordering_bytes = jcs_bytes(ordering["value"])
+            check.require(
+                ordering_bytes.hex() == ordering["expectedHex"],
+                "RFC 8785 UTF-16 member ordering mismatch",
+            )
+            check.require(
+                jcs_digest(ordering["value"]) == ordering["expectedSha256"],
+                "RFC 8785 UTF-16 ordering digest mismatch",
+            )
+
+            identity = jcs_vector["mifAnnotationIdentity"]
+            identity_manifest = read_json(
+                artifact_path(jcs_vector_path.parent, identity["manifest"])
+            )
+            annotated_manifest = copy.deepcopy(identity_manifest)
+            annotated_manifest["annotations"] = copy.deepcopy(identity["annotations"])
+            check.require(
+                jcs_digest(annotated_manifest) == identity["expectedDocumentDigest"],
+                "annotated MRS document digest mismatch",
+            )
+            check.require(
+                jcs_digest(semantic_projection(annotated_manifest))
+                == identity["expectedSemanticDigest"],
+                "annotations changed the MRS semantic digest",
+            )
+
+            rejection_cases = jcs_vector["rejections"]
+            check.require(len(rejection_cases) == 5, "JCS rejection case set mismatch")
+            for case in rejection_cases:
+                if "ieee754" in case:
+                    value = struct.unpack(
+                        ">d", bytes.fromhex(case["ieee754"])
+                    )[0]
+                elif "codePoint" in case:
+                    value = {"value": chr(case["codePoint"])}
+                else:
+                    value = int(case["integerText"])
+                try:
+                    jcs_bytes(value)
+                except JCSValueError:
+                    rejected = True
+                else:
+                    rejected = False
+                check.require(rejected, f"JCS rejection unexpectedly passed: {case['id']}")
+        except Exception as exc:  # noqa: BLE001
+            check.errors.append(f"executable JCS vectors could not run: {exc}")
 
     reference_fields = {
         "replayCases": ("manifest", "document"),

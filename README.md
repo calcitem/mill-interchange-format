@@ -51,6 +51,11 @@ implementation does not publish a suite. Until the release gates and
 `mif-suite-1.0.json` are complete, this repository has no MIF Suite 1.0
 conformance target.
 
+The candidate-2 reference/harness baseline uses one RFC 8785 implementation for
+all digest and canonical NDJSON paths and adds executable UTF-16 ordering,
+binary64 and annotation-identity vectors. This is a tooling/artifact correction:
+the frozen wire contract and its bilingual raw-file identities are unchanged.
+
 Raw-file identities of the frozen bilingual contracts are:
 
 ```text

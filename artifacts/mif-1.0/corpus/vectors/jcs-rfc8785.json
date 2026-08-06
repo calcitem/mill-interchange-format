@@ -1,0 +1,61 @@
+{
+  "artifact": "mif-1.0-jcs-rfc8785-vectors",
+  "mifAnnotationIdentity": {
+    "annotations": {
+      "numberBoundaries": [
+        -0.0,
+        0.000001,
+        1e-7,
+        333333333.3333333,
+        1424953923781206.2,
+        5e-324
+      ],
+      "\ue000": "bmp-private-use",
+      "\ud800\udc00": "astral-plane"
+    },
+    "expectedDocumentDigest": "sha256:ba1209a494389396d4bef5e7aca54edd9035926655b21fe5e63215cac39165a7",
+    "expectedSemanticDigest": "sha256:224f7e368e322a4cc8c1225a025fb548d5b41eb096d34b7ae0543182d1aa9393",
+    "manifest": "../fixtures/example-morris@1.json"
+  },
+  "numberSerialization": [
+    { "expected": "0", "ieee754": "0000000000000000" },
+    { "expected": "0", "ieee754": "8000000000000000" },
+    { "expected": "5e-324", "ieee754": "0000000000000001" },
+    { "expected": "-5e-324", "ieee754": "8000000000000001" },
+    { "expected": "1.7976931348623157e+308", "ieee754": "7fefffffffffffff" },
+    { "expected": "-1.7976931348623157e+308", "ieee754": "ffefffffffffffff" },
+    { "expected": "9007199254740992", "ieee754": "4340000000000000" },
+    { "expected": "-9007199254740992", "ieee754": "c340000000000000" },
+    { "expected": "295147905179352830000", "ieee754": "4430000000000000" },
+    { "expected": "9.999999999999997e+22", "ieee754": "44b52d02c7e14af5" },
+    { "expected": "1e+23", "ieee754": "44b52d02c7e14af6" },
+    { "expected": "1.0000000000000001e+23", "ieee754": "44b52d02c7e14af7" },
+    { "expected": "999999999999999700000", "ieee754": "444b1ae4d6e2ef4e" },
+    { "expected": "999999999999999900000", "ieee754": "444b1ae4d6e2ef4f" },
+    { "expected": "1e+21", "ieee754": "444b1ae4d6e2ef50" },
+    { "expected": "9.999999999999997e-7", "ieee754": "3eb0c6f7a0b5ed8c" },
+    { "expected": "0.000001", "ieee754": "3eb0c6f7a0b5ed8d" },
+    { "expected": "333333333.3333332", "ieee754": "41b3de4355555553" },
+    { "expected": "333333333.33333325", "ieee754": "41b3de4355555554" },
+    { "expected": "333333333.3333333", "ieee754": "41b3de4355555555" },
+    { "expected": "333333333.3333334", "ieee754": "41b3de4355555556" },
+    { "expected": "333333333.33333343", "ieee754": "41b3de4355555557" },
+    { "expected": "-0.0000033333333333333333", "ieee754": "becbf647612f3696" },
+    { "expected": "1424953923781206.2", "ieee754": "43143ff3c1cb0959" }
+  ],
+  "rejections": [
+    { "id": "nan", "ieee754": "7fffffffffffffff" },
+    { "id": "positive-infinity", "ieee754": "7ff0000000000000" },
+    { "codePoint": 55296, "id": "unpaired-surrogate" },
+    { "id": "negative-exact-integer", "integerText": "-1" },
+    { "id": "integer-above-exact-range", "integerText": "9007199254740992" }
+  ],
+  "utf16Ordering": {
+    "expectedHex": "7b22f0908080223a2261737472616c222c22ee8080223a22626d70227d",
+    "expectedSha256": "sha256:5e72745dd500f8b8d997ef851679707b89099da29d2aca4b93dfd85810ebaa20",
+    "value": {
+      "\ue000": "bmp",
+      "\ud800\udc00": "astral"
+    }
+  }
+}

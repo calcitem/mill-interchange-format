@@ -25,7 +25,7 @@
   ],
   "implementation": {
     "name": "mif-python-reference-runner",
-    "version": "candidate-1"
+    "version": "candidate-2"
   },
   "invarianceDeclarations": [],
   "profiles": {
@@ -65,7 +65,7 @@
   "testedCorpora": [
     {
       "classes": ["identity", "position", "replay", "ruleset", "transform"],
-      "digest": "sha256:e3af2bd5e2d88774a8ce7a4344702c0878ddffba8b77fa0740f3d3104a1258dd"
+      "digest": "sha256:a48c50352caebce30deb1de11f8f73dbc4540ee538651c3a139d9bcb166ba983"
     }
   ]
 }

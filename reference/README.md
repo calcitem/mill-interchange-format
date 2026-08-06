@@ -5,6 +5,11 @@ Contract. It implements the finite-rules state machine, MSTATE replay,
 claim/repetition processing, decision and resumption identities, full-state D4
 coordinate transforms, invariance gating and logical-turn projection.
 
+Canonical JSON and digest inputs use the shared dependency-free RFC 8785
+implementation in `jcs.py`. The candidate-2 executable corpus covers the 24
+finite Appendix B number samples, UTF-16 member ordering, invalid I-JSON
+rejection and the MRS annotation/document-identity boundary.
+
 Run the repository corpus from the repository root:
 
 ```text
@@ -53,6 +58,8 @@ corpus digest.
 
 Passing this runner demonstrates one implementation's agreement with the
 candidate executable corpus. It is not a published MIF Suite 1.0 target and is
-not cross-implementation conformance. Sanmill and NMM_LLM must still implement
-independent adapters and compare byte, state and replay results before a suite
-manifest can be released.
+not cross-implementation conformance. Sanmill and NMM_LLM now have independent
+adapters, and the candidate-2 17-case smoke has zero differences across all
+three implementations. The complete deterministic corpus, differential tests
+and remaining release gates must still pass before a suite manifest can be
+released.

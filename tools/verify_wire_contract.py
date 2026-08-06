@@ -18,6 +18,11 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from reference.jcs import jcs_bytes  # noqa: E402
+
 EN_PATH = ROOT / "mif-1.0.md"
 ZH_PATH = ROOT / "docs" / "zh-CN" / "mif-1.0.md"
 README_PATH = ROOT / "README.md"
@@ -190,18 +195,6 @@ EXPECTED_EXAMPLE_DIGESTS = {
 
 def raw_sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
-def jcs_bytes(value: object) -> bytes:
-    # Inline vectors use only JCS-safe integers and strings; this is the exact
-    # RFC 8785 serialization for that restricted value set.
-    return json.dumps(
-        value,
-        ensure_ascii=False,
-        allow_nan=False,
-        separators=(",", ":"),
-        sort_keys=True,
-    ).encode("utf-8")
 
 
 def jcs_sha256(value: object) -> str:

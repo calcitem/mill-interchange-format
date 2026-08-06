@@ -1,6 +1,7 @@
 {
   "artifact": "mif-1.0-executable-corpus",
   "capability": "../instances/mifcap.json",
+  "jcsCases": "../vectors/jcs-rfc8785.json",
   "claimLifecycleCases": [
     {
       "events": [

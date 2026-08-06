@@ -33,10 +33,16 @@ docs/zh-CN/mif-1.0.md
 sha256:9cc06abb57425e2bc2e26432b6da53abe503e9b5415ea0b4f854f19f68722cc1
 
 artifacts/mif-1.0/index.json
-sha256:176db4d3701af8aa66c1691e87f99fddb71bf484f07ce9d9380e79e8fa62e10b
+sha256:3849a70897829d6d994c790b64e63484469483a940887fe828a1a0d421d78e90
 
 artifacts/mif-1.0/corpus/executable/reference-cases.json
-sha256:e3af2bd5e2d88774a8ce7a4344702c0878ddffba8b77fa0740f3d3104a1258dd
+sha256:a48c50352caebce30deb1de11f8f73dbc4540ee538651c3a139d9bcb166ba983
+
+interop/adapter-protocol-v1.md
+sha256:a59e5e5af3e948f6c7cac6a39a490c6eae6338151741b6c7fcdde5c88d991e2d
+
+interop/cases/smoke-v1.json
+sha256:a6d292f4d19381172fbc19f89d3ee42145a6d5533d6d81fd719394e25342bb53
 ```
 
 0.4 是冻结的历史迁移输入。Sanmill 与 NMM_LLM 不需要先实现 0.4，也不以
@@ -107,7 +113,7 @@ NMM_LLM 同样实现 Adapter CLI，并输出准确的 `MIFCAP/1.0`。
 
 | 里程碑 | 工作 | 退出条件 |
 |---|---|---|
-| M0 Baseline | MIF 提交并推送当前合同、制品和 runner | 公布完整 commit 与四个基线 hash |
+| M0 Baseline | MIF 提交并推送当前合同、制品和 runner | 公布完整 commit、四个正式与两个 harness hash |
 | M1 Harness | MIF 发布 Adapter CLI、Schema、smoke cases 和比较器 | 两个 reference adapter 进程 loopback 零差异 |
 | M2 Adapters | Sanmill、NMM_LLM 各自实现 | 均能完成 handshake、输出 MIFCAP 并执行首批 replay |
 | M3 Deterministic | 三方运行完整 deterministic corpus | 所有要求的 byte/state/replay 比较为零差异 |
@@ -116,6 +122,17 @@ NMM_LLM 同样实现 Adapter CLI，并输出准确的 `MIFCAP/1.0`。
 
 Sanmill 与 NMM_LLM 可以在 M1 完成后并行开发，不需要等待对方。两边不得通过
 交换状态机代码来修复差异。
+
+### 5.1 当前进度（candidate-2）
+
+- M0 与 M1 的 candidate-2 基线、runner、Schema、比较器和 loopback 已完成；
+- M2 的首批退出条件已满足：Sanmill 与 NMM_LLM 均有独立 adapter、
+  `MIFCAP/1.0`、replay、identity 与 transform 实现；
+- candidate-2 统一修复了 reference/harness 的 RFC 8785 JCS，wire contract
+  及其中英文 raw-file hashes 未改变；
+- 17-case smoke 已在 MIF reference、Sanmill 与 NMM_LLM 三个进程间零差异；
+- M3 尚未完成：下一阶段仍须扩展并执行完整 deterministic corpus，而不是把
+  当前 smoke 结果表述为 Suite conformance。
 
 ## 6. 比较要求
 
