@@ -9,11 +9,13 @@ conformance target.
 - `cases/smoke-v1.json` is the 17-case candidate-2 cross-process smoke set,
   including a portable MIFPOS case that exposes UTF-16 key-order and binary64
   JCS differences through `documentDigest`.
-- `cases/deterministic-v1.json` is the 55-case M3 deterministic set. It maps
+- `cases/deterministic-v1.json` is the 58-case candidate-4 M3 set. It maps
   every currently executable candidate corpus behavior into the adapter
   protocol and adds MFEN/MPK byte canonicalization, state and claim boundaries,
   replay identities, logical-turn and legal-action projections, and complete
   MSTATE/decision D4 matrices. It is engineering evidence, not a Suite corpus.
+  Candidate-4 adds execute and legal-action boundaries for an active player
+  whose reserve is empty while the opponent still has reserve material.
 - `adapters.reference-loopback.json` starts two isolated instances of the
   candidate Python reference adapter to test the harness itself.
 
@@ -39,11 +41,10 @@ The loopback result proves only that the process protocol and comparator are
 deterministic. Use independent Sanmill and NMM_LLM entries for
 cross-implementation evidence. The current candidate-2 smoke has zero
 differences across the reference, Sanmill and NMM_LLM adapters, but it remains
-candidate evidence rather than MIF Suite 1.0 conformance. The 55-case M3 set
-passes reference loopback and currently has 44 cross-project passes plus 11
-known adapter gaps, including the new legal-action operation; M3 remains open
-until all 55 pass across all three
-implementations.
+candidate evidence rather than MIF Suite 1.0 conformance. The 58-case
+candidate-4 set passes reference loopback and a pre-publication local run across
+the current three adapters. M3 remains open until Sanmill and NMM_LLM repin the
+immutable candidate-4 commit and persist pushed 58/58 evidence.
 
 Adapter authors may use the specification, schemas, registries and corpus, but
 must not import or copy gameplay implementation code from `reference/`.

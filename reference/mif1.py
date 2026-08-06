@@ -710,7 +710,10 @@ class Session:
             self.claims.append(record)
 
     def stabilize_origin(self) -> None:
-        if self.state.outcome != "-" or self.state.obligations:
+        if self.state.outcome != "-":
+            return
+        self._synchronize_phase()
+        if self.state.obligations:
             return
         boundary_pending = (
             not self.placing_done

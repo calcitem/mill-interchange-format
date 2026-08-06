@@ -62,6 +62,13 @@ the 55-case deterministic comparison set and the non-normative
 `legal-actions-v1` adapter projection. It changes harness and artifact-index
 identities, not frozen MIF wire semantics.
 
+The candidate-4 reference/harness baseline synchronizes an ongoing origin's
+phase and action from the active player's reserve before stable-boundary
+processing. It adds asymmetric-reserve origin regression coverage and expands
+the deterministic comparison set to 58 cases. This corrects reference,
+corpus and artifact-index identities; the frozen wire semantics and bilingual
+contract hashes remain unchanged.
+
 Raw-file identities of the frozen bilingual contracts are:
 
 ```text
@@ -126,9 +133,10 @@ A passing loopback proves process framing, Schema validation, case expansion
 and comparison behavior only. Replace the two command arrays in the adapter
 configuration with the Sanmill and NMM_LLM executables for independent
 byte-, state- and replay-level evidence. It is still not a published-suite
-conformance result. The 55-case deterministic reference loopback passes; the
-current three-project run is 44/55, with the remaining adapter work recorded in
-the collaboration plan.
+conformance result. The 58-case candidate-4 deterministic reference loopback
+passes. A pre-publication local comparison also passes all 58 cases across the
+current three adapter binaries; the product repositories must still repin the
+immutable candidate-4 commit and persist pushed evidence before M3 is closed.
 
 ## Sources and implementation artifacts
 

@@ -513,9 +513,9 @@ def check_executable_vectors(check: Verification) -> None:
     path = CORPUS_DIR / "executable" / "reference-cases.json"
     corpus_readme = (CORPUS_DIR / "README.md").read_text(encoding="utf-8")
     check.require(
-        "candidate-3" in corpus_readme
+        "candidate-4" in corpus_readme
         and "`structural-d4-v1` MPK support" in corpus_readme,
-        "corpus README does not describe the candidate-3 MPK support boundary",
+        "corpus README does not describe the candidate-4 MPK support boundary",
     )
     check.require(path.is_file(), "missing executable reference corpus")
     if not path.is_file():
@@ -528,7 +528,7 @@ def check_executable_vectors(check: Verification) -> None:
         capability = read_json(capability_path)
         check.require(
             capability.get("implementation")
-            == {"name": "mif-python-reference-runner", "version": "candidate-3"},
+            == {"name": "mif-python-reference-runner", "version": "candidate-4"},
             "reference runner capability identity mismatch",
         )
         check.require(capability.get("suites") == [], "candidate runner must not claim a suite")
@@ -677,6 +677,18 @@ def check_executable_vectors(check: Verification) -> None:
             for field in fields:
                 linked = artifact_path(path.parent, case[field])
                 check.require(linked.is_file(), f"missing executable case resource: {case_id}.{field}")
+
+    state_cases = {case["id"]: case for case in vector["stateCases"]}
+    phase_sync = state_cases.get("origin-phase-sync-p-to-m-asymmetric-reserve")
+    check.require(
+        phase_sync is not None
+        and phase_sync.get("origin")
+        == "MFEN/1.0 mill24-state-v1 W.W.W.../B.B...../........ w p p 0,1 - 0 0 -"
+        and phase_sync.get("expectedCurrent")
+        == "MFEN/1.0 mill24-state-v1 W.W.W.../B.B...../........ w m m 0,1 - 0 0 -"
+        and phase_sync.get("expectedHistoryEntries") == 1,
+        "origin asymmetric-reserve phase synchronization vector mismatch",
+    )
 
     decision_transforms = {
         case["id"]: case for case in vector["decisionTransformCases"]

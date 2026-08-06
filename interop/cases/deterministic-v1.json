@@ -154,6 +154,24 @@
       }
     },
     {
+      "id": "execute-origin-phase-sync-asymmetric-reserve",
+      "operation": "execute",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json",
+          "$patch": [
+            { "op": "replace", "path": "/placing/movementAllowed", "value": true }
+          ]
+        },
+        "origin": "MFEN/1.0 mill24-state-v1 W.W.W.../B.B...../........ w p p 0,1 - 0 0 -",
+        "events": [],
+        "repetitionSeed": [],
+        "preOriginClaims": []
+      }
+    },
+    {
       "id": "execute-white-loses-initial-black",
       "operation": "execute",
       "comparison": "semantic-equality",
@@ -942,6 +960,37 @@
           ]
         },
         "current": "MFEN/1.0 mill24-state-v1 W......./B......./........ w p p 8,8 - 0 0 -"
+      }
+    },
+    {
+      "id": "project-legal-actions-asymmetric-reserve-moving",
+      "operation": "project-legal-actions",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json",
+          "$patch": [
+            { "op": "replace", "path": "/placing/movementAllowed", "value": true }
+          ]
+        },
+        "current": "MFEN/1.0 mill24-state-v1 W.W.W.../B.B...../........ w m m 0,1 - 0 0 -"
+      }
+    },
+    {
+      "id": "project-legal-actions-asymmetric-reserve-unstabilized",
+      "operation": "project-legal-actions",
+      "comparison": "semantic-equality",
+      "expectedStatus": "error",
+      "expectedCode": "unstabilized-boundary",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json",
+          "$patch": [
+            { "op": "replace", "path": "/placing/movementAllowed", "value": true }
+          ]
+        },
+        "current": "MFEN/1.0 mill24-state-v1 W.W.W.../B.B...../........ w p p 0,1 - 0 0 -"
       }
     },
     {

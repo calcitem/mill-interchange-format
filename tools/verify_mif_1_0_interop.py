@@ -26,7 +26,7 @@ BASELINE_DIGESTS = {
         "9cc06abb57425e2bc2e26432b6da53abe503e9b5415ea0b4f854f19f68722cc1"
     ),
     ROOT / "artifacts" / "mif-1.0" / "index.json": (
-        "2bd247cd7e27ff4b0e142d8a0b2d6dececd619c882bb67f0be11bf763a794895"
+        "5acbb714bed77e24eaac72fa5f24d2e54d1e17aaf568a8b60718c840281a6541"
     ),
     ROOT
     / "artifacts"
@@ -34,7 +34,7 @@ BASELINE_DIGESTS = {
     / "corpus"
     / "executable"
     / "reference-cases.json": (
-        "a48c50352caebce30deb1de11f8f73dbc4540ee538651c3a139d9bcb166ba983"
+        "350b7ff02772e820a57431e11c4e2f15a874d0779fb6e7afb01e9b16f6992741"
     ),
     INTEROP / "adapter-protocol-v1.md": (
         "253c1d201ea1db625e0c534da445ca4ecaa0b07597dfc7dbf59fbd6adf89874f"
@@ -43,7 +43,7 @@ BASELINE_DIGESTS = {
         "a6d292f4d19381172fbc19f89d3ee42145a6d5533d6d81fd719394e25342bb53"
     ),
     INTEROP / "cases" / "deterministic-v1.json": (
-        "c2d7017b2a8583914aff1eeea38bc02b078814ca11346c484e0a2b38b5e94f0c"
+        "d11317a090300f8a47f77afed647bdbd236dcdb1996c0147a81c874fa39dfd82"
     ),
     ROOT / "mif-0.4.md": (
         "f1f1d839318a4d45f3ecea4850fee080c47ffcbc81025bd74e3ea48c815f3093"
@@ -124,7 +124,7 @@ def verify_json_and_schemas() -> None:
         (INTEROP / "schema" / "adapter-cases-v1.schema.json").resolve()
     ]
     cases_validator = Draft202012Validator(cases_schema)
-    expected_counts = {"smoke-v1.json": 17, "deterministic-v1.json": 55}
+    expected_counts = {"smoke-v1.json": 17, "deterministic-v1.json": 58}
     for path in sorted((INTEROP / "cases").glob("*.json")):
         document = documents[path.resolve()]
         errors = sorted(
@@ -167,8 +167,8 @@ def verify_json_and_schemas() -> None:
     expected_operation_counts = {
         "capabilities": 1,
         "canonicalize": 10,
-        "execute": 10,
-        "project-legal-actions": 6,
+        "execute": 11,
+        "project-legal-actions": 8,
         "project-logical-turns": 2,
         "replay": 5,
         "transform": 21,
@@ -182,9 +182,12 @@ def verify_json_and_schemas() -> None:
         "canonicalize-mpk-digest-uppercase",
         "execute-placing-cycle-stable-moving",
         "execute-claim-forbidden-during-removal",
+        "execute-origin-phase-sync-asymmetric-reserve",
         "project-legal-actions-moving-flying",
         "project-legal-actions-pending-remove",
         "project-legal-actions-unstabilized",
+        "project-legal-actions-asymmetric-reserve-moving",
+        "project-legal-actions-asymmetric-reserve-unstabilized",
         "replay-offer-r1-portable",
         "project-origin-stabilization",
         "transform-mstate-mirror-anti",
@@ -262,7 +265,7 @@ def verify_required_language() -> None:
 
 
 def verify_loopback() -> None:
-    for case_name, count in (("smoke-v1.json", 17), ("deterministic-v1.json", 55)):
+    for case_name, count in (("smoke-v1.json", 17), ("deterministic-v1.json", 58)):
         command = [
             sys.executable,
             "-B",
@@ -308,7 +311,7 @@ def main() -> int:
         return 1
     print(
         "MIF 1.0 interop launch gate passed: fixed baselines, documents, "
-        "Schema and 17-case smoke plus 55-case deterministic reference loopbacks "
+        "Schema and 17-case smoke plus 58-case deterministic reference loopbacks "
         "(harness evidence only; independent conformance not established)"
     )
     return 0

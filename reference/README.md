@@ -8,10 +8,13 @@ non-normative `legal-actions-v1` comparison projection and extension-free
 `structural-d4-v1` MPK canonicalization for its declared rulesets.
 
 Canonical JSON and digest inputs use the shared dependency-free RFC 8785
-implementation in `jcs.py`. The candidate-3 runner retains the executable
+implementation in `jcs.py`. The candidate-4 runner retains the executable
 corpus's 24
 finite Appendix B number samples, UTF-16 member ordering, invalid I-JSON
 rejection and the MRS annotation/document-identity boundary.
+It also synchronizes an ongoing origin's phase/action from the active player's
+reserve before stable-boundary processing and tests the asymmetric-reserve
+placing boundary explicitly.
 
 Run the repository corpus from the repository root:
 
@@ -63,10 +66,9 @@ corpus digest.
 
 Passing this runner demonstrates one implementation's agreement with the
 candidate executable corpus. It is not a published MIF Suite 1.0 target and is
-not cross-implementation conformance. Sanmill and NMM_LLM now have independent
+not cross-implementation conformance. Sanmill and NMM_LLM have independent
 adapters, and the candidate-2 17-case smoke has zero differences across all
-three implementations. The 55-case deterministic reference loopback also
-passes; its current three-project run passes 44 cases and exposes 11 adapter
-gaps, including the new legal-action projection. Those differences,
-differential tests and the remaining release gates must be closed before a
-suite manifest can be released.
+three implementations. The candidate-4 58-case deterministic reference
+loopback and pre-publication local three-adapter comparison pass. Product-side
+candidate-4 pins, durable reports, differential tests and the remaining release
+gates must still be completed before a suite manifest can be released.
