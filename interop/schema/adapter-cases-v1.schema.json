@@ -26,6 +26,7 @@
               "capabilities",
               "canonicalize",
               "execute",
+              "project-legal-actions",
               "project-logical-turns",
               "replay",
               "transform"

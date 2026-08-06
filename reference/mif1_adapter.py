@@ -13,6 +13,8 @@ from referencing import Registry, Resource
 
 from .mif1 import (
     MIFError,
+    PLAYER_ORDER,
+    POINT_INDEX,
     Rules,
     Session,
     jcs_digest,
@@ -22,6 +24,7 @@ from .mif1 import (
     validate_ruleset_envelope,
     validate_schema,
 )
+from .mif1_key import canonicalize_mpk
 from .mif1_transform import (
     transform_decision_state,
     transform_mifpos,
@@ -212,7 +215,7 @@ def _canonicalize(payload: Mapping[str, Any]) -> dict[str, Any]:
     format_name = _require_string(payload["format"], "format")
     value = _require_string(payload["value"], "value")
     require(
-        format_name == "MFEN/1.0",
+        format_name in {"MFEN/1.0", "MPK/1.0"},
         "unsupported-profile",
         f"reference adapter cannot canonicalize {format_name}",
         category="unsupported",
@@ -225,6 +228,8 @@ def _canonicalize(payload: Mapping[str, Any]) -> dict[str, Any]:
             category="integrity",
         )
     manifest = _require_mapping(manifest, "manifest")
+    if format_name == "MPK/1.0":
+        return {"value": canonicalize_mpk(value, manifest)}
     rules = Rules(manifest)
     state = parse_mfen(value, rules)
     return {"value": state.serialize(rules)}
@@ -385,12 +390,52 @@ def _project_logical_turns(payload: Mapping[str, Any]) -> dict[str, Any]:
     return {"document": document}
 
 
+def _project_legal_actions(payload: Mapping[str, Any]) -> dict[str, Any]:
+    _payload_members(payload, required={"manifest", "current"})
+    manifest = _require_mapping(payload["manifest"], "manifest")
+    current = _require_string(payload["current"], "current")
+    rules = Rules(manifest)
+    state = parse_mfen(current, rules)
+    canonical = state.serialize(rules)
+    session = Session(rules, state)
+    session.stabilize_origin()
+    require(
+        session.state.serialize(rules) == canonical,
+        "unstabilized-boundary",
+        "legal action projection requires a stable, pending-obligation, or terminal state",
+        category="inconsistent",
+    )
+    actions = session.legal_actions()
+
+    def action_key(action: Mapping[str, Any]) -> tuple[int, int, int]:
+        action_type = action["type"]
+        if action_type == "place":
+            return 0, POINT_INDEX[action["at"]], 0
+        if action_type == "move":
+            return 1, POINT_INDEX[action["from"]], POINT_INDEX[action["to"]]
+        target = action["target"]
+        if target["zone"] == "board":
+            return 2, 0, POINT_INDEX[target["at"]]
+        return 2, 1, PLAYER_ORDER[target["player"]]
+
+    actions.sort(key=action_key)
+    document = {
+        "profile": "legal-actions-v1",
+        "stateProfile": "mill24-state-v1",
+        "semanticDigest": rules.semantic_digest,
+        "current": canonical,
+        "actions": actions,
+    }
+    return {"document": document}
+
+
 OPERATIONS = {
     "capabilities": _capabilities,
     "canonicalize": _canonicalize,
     "execute": _execute_operation,
     "replay": _replay,
     "transform": _transform,
+    "project-legal-actions": _project_legal_actions,
     "project-logical-turns": _project_logical_turns,
 }
 

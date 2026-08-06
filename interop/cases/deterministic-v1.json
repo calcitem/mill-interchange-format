@@ -1,0 +1,1011 @@
+{
+  "protocol": "MIF-INTEROP-CASES/1",
+  "cases": [
+    {
+      "id": "capabilities",
+      "operation": "capabilities",
+      "comparison": "schema-only",
+      "expectedStatus": "ok",
+      "payload": {}
+    },
+    {
+      "id": "canonicalize-mfen-initial-black",
+      "operation": "canonicalize",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "format": "MFEN/1.0",
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "value": "MFEN/1.0 mill24-state-v1 ......../......../........ b p p 9,9 - 0 0 -"
+      }
+    },
+    {
+      "id": "canonicalize-mfen-missing-manifest",
+      "operation": "canonicalize",
+      "comparison": "semantic-equality",
+      "expectedStatus": "error",
+      "expectedCode": "manifest-missing",
+      "payload": {
+        "format": "MFEN/1.0",
+        "value": "MFEN/1.0 mill24-state-v1 ......../......../........ b p p 9,9 - 0 0 -"
+      }
+    },
+    {
+      "id": "canonicalize-mpk-empty",
+      "operation": "canonicalize",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "format": "MPK/1.0",
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "value": "MPK/1.0 mill24-state-v1 example-morris@1 sha256:224f7e368e322a4cc8c1225a025fb548d5b41eb096d34b7ae0543182d1aa9393 structural-d4-v1 ........................ b p 9,9"
+      }
+    },
+    {
+      "id": "canonicalize-mpk-orientation-a7",
+      "operation": "canonicalize",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "format": "MPK/1.0",
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "value": "MPK/1.0 mill24-state-v1 example-morris@1 sha256:224f7e368e322a4cc8c1225a025fb548d5b41eb096d34b7ae0543182d1aa9393 structural-d4-v1 W....................... w p 8,9"
+      }
+    },
+    {
+      "id": "canonicalize-mpk-orientation-a1",
+      "operation": "canonicalize",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "format": "MPK/1.0",
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "value": "MPK/1.0 mill24-state-v1 example-morris@1 sha256:224f7e368e322a4cc8c1225a025fb548d5b41eb096d34b7ae0543182d1aa9393 structural-d4-v1 ......W................. w p 8,9"
+      }
+    },
+    {
+      "id": "canonicalize-mpk-digest-mismatch",
+      "operation": "canonicalize",
+      "comparison": "semantic-equality",
+      "expectedStatus": "error",
+      "expectedCode": "semantic-digest-mismatch",
+      "payload": {
+        "format": "MPK/1.0",
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "value": "MPK/1.0 mill24-state-v1 example-morris@1 sha256:0000000000000000000000000000000000000000000000000000000000000000 structural-d4-v1 ........................ b p 9,9"
+      }
+    },
+    {
+      "id": "canonicalize-mpk-digest-missing",
+      "operation": "canonicalize",
+      "comparison": "semantic-equality",
+      "expectedStatus": "error",
+      "expectedCode": "mpk-semantic-digest-missing",
+      "payload": {
+        "format": "MPK/1.0",
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "value": "MPK/1.0 mill24-state-v1 example-morris@1 structural-d4-v1 ........................ b p 9,9"
+      }
+    },
+    {
+      "id": "canonicalize-mpk-digest-uppercase",
+      "operation": "canonicalize",
+      "comparison": "semantic-equality",
+      "expectedStatus": "error",
+      "expectedCode": "non-canonical-digest",
+      "payload": {
+        "format": "MPK/1.0",
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "value": "MPK/1.0 mill24-state-v1 example-morris@1 sha256:224F7E368E322A4CC8C1225A025FB548D5B41EB096D34B7AE0543182D1AA9393 structural-d4-v1 ........................ b p 9,9"
+      }
+    },
+    {
+      "id": "canonicalize-mpk-missing-manifest",
+      "operation": "canonicalize",
+      "comparison": "semantic-equality",
+      "expectedStatus": "error",
+      "expectedCode": "manifest-missing",
+      "payload": {
+        "format": "MPK/1.0",
+        "value": "MPK/1.0 mill24-state-v1 example-morris@1 sha256:224f7e368e322a4cc8c1225a025fb548d5b41eb096d34b7ae0543182d1aa9393 structural-d4-v1 ........................ b p 9,9"
+      }
+    },
+    {
+      "id": "canonicalize-mpk-ruleset-conflict",
+      "operation": "canonicalize",
+      "comparison": "semantic-equality",
+      "expectedStatus": "error",
+      "expectedCode": "manifest-conflict",
+      "payload": {
+        "format": "MPK/1.0",
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "value": "MPK/1.0 mill24-state-v1 other-morris@1 sha256:224f7e368e322a4cc8c1225a025fb548d5b41eb096d34b7ae0543182d1aa9393 structural-d4-v1 ........................ b p 9,9"
+      }
+    },
+    {
+      "id": "execute-initial-black",
+      "operation": "execute",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "origin": "MFEN/1.0 mill24-state-v1 ......../......../........ b p p 9,9 - 0 0 -",
+        "events": [],
+        "repetitionSeed": [],
+        "preOriginClaims": []
+      }
+    },
+    {
+      "id": "execute-white-loses-initial-black",
+      "operation": "execute",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json",
+          "$patch": [
+            { "op": "replace", "path": "/boardFull/action", "value": "white-loses" },
+            {
+              "op": "replace",
+              "path": "/pieces",
+              "value": { "black": 13, "minimumLive": 3, "white": 13 }
+            }
+          ]
+        },
+        "origin": "MFEN/1.0 mill24-state-v1 WBWBWBWB/BWBWBWBW/WBWBWBWB b p p 1,1 - 0 0 -",
+        "events": [],
+        "repetitionSeed": [],
+        "preOriginClaims": []
+      }
+    },
+    {
+      "id": "execute-placing-full-board-loss",
+      "operation": "execute",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json",
+          "$patch": [
+            {
+              "op": "replace",
+              "path": "/pieces",
+              "value": { "black": 13, "minimumLive": 3, "white": 13 }
+            }
+          ]
+        },
+        "origin": "MFEN/1.0 mill24-state-v1 WBWBWBWB/BWBWBWBW/WBWBWBWB w p p 1,1 - 0 0 -",
+        "events": [],
+        "repetitionSeed": [],
+        "preOriginClaims": []
+      }
+    },
+    {
+      "id": "execute-placing-full-board-draw",
+      "operation": "execute",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json",
+          "$patch": [
+            {
+              "op": "replace",
+              "path": "/pieces",
+              "value": { "black": 13, "minimumLive": 3, "white": 13 }
+            },
+            { "op": "replace", "path": "/placing/noLegalPrimaryAction", "value": "draw" }
+          ]
+        },
+        "origin": "MFEN/1.0 mill24-state-v1 WBWBWBWB/BWBWBWBW/WBWBWBWB w p p 1,1 - 0 0 -",
+        "events": [],
+        "repetitionSeed": [],
+        "preOriginClaims": []
+      }
+    },
+    {
+      "id": "execute-invalid-placing-policy",
+      "operation": "execute",
+      "comparison": "semantic-equality",
+      "expectedStatus": "error",
+      "expectedCode": "no-legal-primary-action-policy-invalid",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json",
+          "$patch": [
+            { "op": "replace", "path": "/placing/noLegalPrimaryAction", "value": "apply-board-full" }
+          ]
+        },
+        "origin": "MFEN/1.0 mill24-state-v1 ......../......../........ b p p 9,9 - 0 0 -",
+        "events": [],
+        "repetitionSeed": [],
+        "preOriginClaims": []
+      }
+    },
+    {
+      "id": "execute-placing-cycle-stable-primary",
+      "operation": "execute",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json",
+          "$patch": [
+            { "op": "replace", "path": "/placing/movementAllowed", "value": true }
+          ]
+        },
+        "origin": "MFEN/1.0 mill24-state-v1 W......./B......./........ w p p 8,8 - 0 0 -",
+        "events": [
+          { "actor": "w", "from": "a7", "seq": 1, "to": "a4", "type": "move" },
+          { "actor": "b", "from": "b6", "seq": 2, "to": "b4", "type": "move" },
+          { "actor": "w", "from": "a4", "seq": 3, "to": "a7", "type": "move" },
+          { "actor": "b", "from": "b4", "seq": 4, "to": "b6", "type": "move" }
+        ],
+        "repetitionSeed": [],
+        "preOriginClaims": []
+      }
+    },
+    {
+      "id": "execute-placing-cycle-stable-moving",
+      "operation": "execute",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json",
+          "$patch": [
+            { "op": "replace", "path": "/placing/movementAllowed", "value": true },
+            { "op": "replace", "path": "/draw/repetition/observation", "value": "stable-moving-v1" }
+          ]
+        },
+        "origin": "MFEN/1.0 mill24-state-v1 W......./B......./........ w p p 8,8 - 0 0 -",
+        "events": [
+          { "actor": "w", "from": "a7", "seq": 1, "to": "a4", "type": "move" },
+          { "actor": "b", "from": "b6", "seq": 2, "to": "b4", "type": "move" },
+          { "actor": "w", "from": "a4", "seq": 3, "to": "a7", "type": "move" },
+          { "actor": "b", "from": "b4", "seq": 4, "to": "b6", "type": "move" }
+        ],
+        "repetitionSeed": [],
+        "preOriginClaims": []
+      }
+    },
+    {
+      "id": "execute-claim-negotiation-preserves-right",
+      "operation": "execute",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "origin": "MFEN/1.0 mill24-state-v1 ......../......../........ b p p 9,9 - 0 0 -",
+        "events": [
+          { "actor": "b", "seq": 1, "type": "offer-draw" },
+          { "actor": "w", "offerEventSeq": 1, "seq": 2, "type": "decline-draw" }
+        ],
+        "repetitionSeed": [
+          {
+            "source": "pre-origin",
+            "key": {
+              "$json": "artifacts/mif-1.0/corpus/instances/repetition-observation.json"
+            }
+          },
+          {
+            "source": "pre-origin",
+            "key": {
+              "$json": "artifacts/mif-1.0/corpus/instances/repetition-observation.json"
+            }
+          }
+        ],
+        "preOriginClaims": []
+      }
+    },
+    {
+      "id": "execute-primary-expires-old-claim-right",
+      "operation": "execute",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "origin": "MFEN/1.0 mill24-state-v1 ......../......../........ b p p 9,9 - 0 0 -",
+        "events": [
+          { "actor": "b", "seq": 1, "type": "offer-draw" },
+          { "actor": "w", "offerEventSeq": 1, "seq": 2, "type": "decline-draw" },
+          { "actor": "b", "at": "a7", "seq": 3, "type": "place" }
+        ],
+        "repetitionSeed": [
+          {
+            "source": "pre-origin",
+            "key": {
+              "$json": "artifacts/mif-1.0/corpus/instances/repetition-observation.json"
+            }
+          },
+          {
+            "source": "pre-origin",
+            "key": {
+              "$json": "artifacts/mif-1.0/corpus/instances/repetition-observation.json"
+            }
+          }
+        ],
+        "preOriginClaims": []
+      }
+    },
+    {
+      "id": "execute-claim-forbidden-during-removal",
+      "operation": "execute",
+      "comparison": "semantic-equality",
+      "expectedStatus": "error",
+      "expectedCode": "claim-during-obligation",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "origin": "MFEN/1.0 mill24-state-v1 BB....../......../W....... b p p 8,7 - 0 3 -",
+        "events": [
+          { "actor": "b", "at": "g7", "seq": 1, "type": "place" },
+          { "actor": "b", "reason": "repetition", "seq": 2, "type": "claim-draw" }
+        ],
+        "repetitionSeed": [
+          {
+            "source": "pre-origin",
+            "key": {
+              "$json": "artifacts/mif-1.0/corpus/instances/repetition-observation.json"
+            }
+          },
+          {
+            "source": "pre-origin",
+            "key": {
+              "$json": "artifacts/mif-1.0/corpus/instances/repetition-observation.json"
+            }
+          }
+        ],
+        "preOriginClaims": []
+      }
+    },
+    {
+      "id": "replay-offer-r1",
+      "operation": "replay",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "mstate": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-offer-r1.json"
+        }
+      }
+    },
+    {
+      "id": "replay-offer-r2",
+      "operation": "replay",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "mstate": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-offer-r2.json"
+        }
+      }
+    },
+    {
+      "id": "replay-offer-r1-portable",
+      "operation": "replay",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "mstate": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-offer-r1.json",
+          "$patch": [
+            {
+              "op": "replace",
+              "path": "/ruleset",
+              "value": {
+                "$json": "artifacts/mif-1.0/corpus/instances/mifpos-portable.json",
+                "$pointer": "/ruleset"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "replay-origin-stabilization",
+      "operation": "replay",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/x-origin-stabilization@1.json"
+        },
+        "mstate": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-origin-stabilization.json"
+        }
+      }
+    },
+    {
+      "id": "replay-reference-without-manifest",
+      "operation": "replay",
+      "comparison": "semantic-equality",
+      "expectedStatus": "error",
+      "expectedCode": "manifest-missing",
+      "payload": {
+        "mstate": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-offer-r1.json"
+        }
+      }
+    },
+    {
+      "id": "project-draw-negotiation-empty",
+      "operation": "project-logical-turns",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "mstate": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-offer-r1.json"
+        }
+      }
+    },
+    {
+      "id": "project-origin-stabilization",
+      "operation": "project-logical-turns",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/x-origin-stabilization@1.json"
+        },
+        "mstate": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-origin-stabilization.json"
+        }
+      }
+    },
+    {
+      "id": "transform-mstate-i",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "kind": "mstate",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-origin-stabilization.json"
+        },
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/x-origin-stabilization@1.json"
+        },
+        "transform": "i",
+        "verifyReplay": true,
+        "requireEquivalence": false
+      }
+    },
+    {
+      "id": "transform-mstate-r90ccw",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "kind": "mstate",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-origin-stabilization.json"
+        },
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/x-origin-stabilization@1.json"
+        },
+        "transform": "r90ccw",
+        "verifyReplay": true,
+        "requireEquivalence": false
+      }
+    },
+    {
+      "id": "transform-mstate-r180",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "kind": "mstate",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-origin-stabilization.json"
+        },
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/x-origin-stabilization@1.json"
+        },
+        "transform": "r180",
+        "verifyReplay": true,
+        "requireEquivalence": false
+      }
+    },
+    {
+      "id": "transform-mstate-r90cw",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "kind": "mstate",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-origin-stabilization.json"
+        },
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/x-origin-stabilization@1.json"
+        },
+        "transform": "r90cw",
+        "verifyReplay": true,
+        "requireEquivalence": false
+      }
+    },
+    {
+      "id": "transform-mstate-mirror-v",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "kind": "mstate",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-origin-stabilization.json"
+        },
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/x-origin-stabilization@1.json"
+        },
+        "transform": "mirror-v",
+        "verifyReplay": true,
+        "requireEquivalence": false
+      }
+    },
+    {
+      "id": "transform-mstate-mirror-h",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "kind": "mstate",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-origin-stabilization.json"
+        },
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/x-origin-stabilization@1.json"
+        },
+        "transform": "mirror-h",
+        "verifyReplay": true,
+        "requireEquivalence": false
+      }
+    },
+    {
+      "id": "transform-mstate-mirror-main",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "kind": "mstate",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-origin-stabilization.json"
+        },
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/x-origin-stabilization@1.json"
+        },
+        "transform": "mirror-main",
+        "verifyReplay": true,
+        "requireEquivalence": false
+      }
+    },
+    {
+      "id": "transform-mstate-mirror-anti",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "kind": "mstate",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-origin-stabilization.json"
+        },
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/x-origin-stabilization@1.json"
+        },
+        "transform": "mirror-anti",
+        "verifyReplay": true,
+        "requireEquivalence": false
+      }
+    },
+    {
+      "id": "transform-mstate-without-invariance",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "error",
+      "expectedCode": "transform-invariance-undeclared",
+      "payload": {
+        "kind": "mstate",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-origin-stabilization.json"
+        },
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/x-origin-stabilization@1.json"
+        },
+        "transform": "r90ccw",
+        "verifyReplay": true,
+        "requireEquivalence": true
+      }
+    },
+    {
+      "id": "transform-decision-i",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "kind": "decision-state",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/decision-state.json"
+        },
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "repetitionHistory": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-offer-r1.json",
+          "$pointer": "/repetitionHistory"
+        },
+        "transform": "i",
+        "verifyReplay": false,
+        "requireEquivalence": false
+      }
+    },
+    {
+      "id": "transform-decision-r90ccw",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "kind": "decision-state",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/decision-state.json"
+        },
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "repetitionHistory": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-offer-r1.json",
+          "$pointer": "/repetitionHistory"
+        },
+        "transform": "r90ccw",
+        "verifyReplay": false,
+        "requireEquivalence": false
+      }
+    },
+    {
+      "id": "transform-decision-r180",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "kind": "decision-state",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/decision-state.json"
+        },
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "repetitionHistory": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-offer-r1.json",
+          "$pointer": "/repetitionHistory"
+        },
+        "transform": "r180",
+        "verifyReplay": false,
+        "requireEquivalence": false
+      }
+    },
+    {
+      "id": "transform-decision-r90cw",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "kind": "decision-state",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/decision-state.json"
+        },
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "repetitionHistory": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-offer-r1.json",
+          "$pointer": "/repetitionHistory"
+        },
+        "transform": "r90cw",
+        "verifyReplay": false,
+        "requireEquivalence": false
+      }
+    },
+    {
+      "id": "transform-decision-mirror-v",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "kind": "decision-state",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/decision-state.json"
+        },
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "repetitionHistory": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-offer-r1.json",
+          "$pointer": "/repetitionHistory"
+        },
+        "transform": "mirror-v",
+        "verifyReplay": false,
+        "requireEquivalence": false
+      }
+    },
+    {
+      "id": "transform-decision-mirror-h",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "kind": "decision-state",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/decision-state.json"
+        },
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "repetitionHistory": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-offer-r1.json",
+          "$pointer": "/repetitionHistory"
+        },
+        "transform": "mirror-h",
+        "verifyReplay": false,
+        "requireEquivalence": false
+      }
+    },
+    {
+      "id": "transform-decision-mirror-main",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "kind": "decision-state",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/decision-state.json"
+        },
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "repetitionHistory": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-offer-r1.json",
+          "$pointer": "/repetitionHistory"
+        },
+        "transform": "mirror-main",
+        "verifyReplay": false,
+        "requireEquivalence": false
+      }
+    },
+    {
+      "id": "transform-decision-mirror-anti",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "kind": "decision-state",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/decision-state.json"
+        },
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "repetitionHistory": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-offer-r1.json",
+          "$pointer": "/repetitionHistory"
+        },
+        "transform": "mirror-anti",
+        "verifyReplay": false,
+        "requireEquivalence": false
+      }
+    },
+    {
+      "id": "transform-decision-missing-history",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "error",
+      "expectedCode": "insufficient-transform-history",
+      "payload": {
+        "kind": "decision-state",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/decision-state.json"
+        },
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "transform": "r90ccw",
+        "verifyReplay": false,
+        "requireEquivalence": false
+      }
+    },
+    {
+      "id": "transform-mifpos-r90ccw",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "kind": "mifpos",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mifpos-reference.json"
+        },
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "transform": "r90ccw",
+        "verifyReplay": false,
+        "requireEquivalence": false
+      }
+    },
+    {
+      "id": "transform-mifpos-mirror-anti",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "kind": "mifpos",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mifpos-reference.json"
+        },
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "transform": "mirror-anti",
+        "verifyReplay": false,
+        "requireEquivalence": false
+      }
+    },
+    {
+      "id": "transform-mifpos-portable-jcs-boundaries",
+      "operation": "transform",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "kind": "mifpos",
+        "document": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mifpos-portable.json",
+          "$patch": [
+            {
+              "op": "add",
+              "path": "/ruleset/manifest/annotations",
+              "value": {
+                "numberBoundaries": [
+                  -0.0,
+                  0.000001,
+                  1e-7,
+                  333333333.3333333,
+                  1424953923781206.2,
+                  5e-324
+                ],
+                "": "bmp-private-use",
+                "𐀀": "astral-plane"
+              }
+            },
+            {
+              "op": "replace",
+              "path": "/ruleset/documentDigest",
+              "value": "sha256:ba1209a494389396d4bef5e7aca54edd9035926655b21fe5e63215cac39165a7"
+            }
+          ]
+        },
+        "transform": "r90ccw",
+        "verifyReplay": false,
+        "requireEquivalence": false
+      }
+    },
+    {
+      "id": "project-legal-actions-initial-black",
+      "operation": "project-legal-actions",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "current": "MFEN/1.0 mill24-state-v1 ......../......../........ b p p 9,9 - 0 0 -"
+      }
+    },
+    {
+      "id": "project-legal-actions-placing-movement",
+      "operation": "project-legal-actions",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json",
+          "$patch": [
+            { "op": "replace", "path": "/placing/movementAllowed", "value": true }
+          ]
+        },
+        "current": "MFEN/1.0 mill24-state-v1 W......./B......./........ w p p 8,8 - 0 0 -"
+      }
+    },
+    {
+      "id": "project-legal-actions-moving-flying",
+      "operation": "project-legal-actions",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "current": "MFEN/1.0 mill24-state-v1 WWW...../BBB...../........ w m m 0,0 - 0 18 -"
+      }
+    },
+    {
+      "id": "project-legal-actions-pending-remove",
+      "operation": "project-legal-actions",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "current": "MFEN/1.0 mill24-state-v1 BBB...../......../W....... b p r 8,6 b:mill:b:w:1:010000:w 0 4 -"
+      }
+    },
+    {
+      "id": "project-legal-actions-terminal",
+      "operation": "project-legal-actions",
+      "comparison": "semantic-equality",
+      "expectedStatus": "ok",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json",
+          "$patch": [
+            {
+              "op": "replace",
+              "path": "/pieces",
+              "value": { "black": 13, "minimumLive": 3, "white": 13 }
+            }
+          ]
+        },
+        "current": "MFEN/1.0 mill24-state-v1 WBWBWBWB/BWBWBWBW/WBWBWBWB - o o 1,1 - 0 0 b:no-legal-primary-action"
+      }
+    },
+    {
+      "id": "project-legal-actions-unstabilized",
+      "operation": "project-legal-actions",
+      "comparison": "semantic-equality",
+      "expectedStatus": "error",
+      "expectedCode": "unstabilized-boundary",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json",
+          "$patch": [
+            {
+              "op": "replace",
+              "path": "/pieces",
+              "value": { "black": 13, "minimumLive": 3, "white": 13 }
+            }
+          ]
+        },
+        "current": "MFEN/1.0 mill24-state-v1 WBWBWBWB/BWBWBWBW/WBWBWBWB w p p 1,1 - 0 0 -"
+      }
+    }
+  ]
+}

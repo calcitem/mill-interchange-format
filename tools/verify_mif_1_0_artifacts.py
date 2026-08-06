@@ -511,6 +511,12 @@ def check_schema_vectors(check: Verification) -> None:
 
 def check_executable_vectors(check: Verification) -> None:
     path = CORPUS_DIR / "executable" / "reference-cases.json"
+    corpus_readme = (CORPUS_DIR / "README.md").read_text(encoding="utf-8")
+    check.require(
+        "candidate-3" in corpus_readme
+        and "`structural-d4-v1` MPK support" in corpus_readme,
+        "corpus README does not describe the candidate-3 MPK support boundary",
+    )
     check.require(path.is_file(), "missing executable reference corpus")
     if not path.is_file():
         return
@@ -522,7 +528,7 @@ def check_executable_vectors(check: Verification) -> None:
         capability = read_json(capability_path)
         check.require(
             capability.get("implementation")
-            == {"name": "mif-python-reference-runner", "version": "candidate-2"},
+            == {"name": "mif-python-reference-runner", "version": "candidate-3"},
             "reference runner capability identity mismatch",
         )
         check.require(capability.get("suites") == [], "candidate runner must not claim a suite")
@@ -539,8 +545,19 @@ def check_executable_vectors(check: Verification) -> None:
         class_levels = {item["id"]: item["level"] for item in capability["classes"]}
         check.require(
             class_levels.get("conversion") == "none"
-            and class_levels.get("key") == "none",
-            "reference runner capability overclaims conversion or MPK support",
+            and class_levels.get("key") == "implemented",
+            "reference runner capability conversion or MPK support mismatch",
+        )
+        format_levels = {
+            item["id"]: (item["read"], item["write"])
+            for item in capability["formats"]
+        }
+        check.require(
+            format_levels.get("MPK/1.0") == ("implemented", "implemented")
+            and capability["profiles"].get("key") == ["structural-d4-v1"]
+            and capability["profiles"].get("mpkBinding")
+            == ["inline-semantic-digest-v1"],
+            "reference runner MPK format/profile capability mismatch",
         )
         check.require(
             capability.get("invarianceDeclarations") == []

@@ -52,7 +52,7 @@ def validate_capability_binding(
     validate_schema(capability, "mifcap-1.0.schema.json")
     assert capability["implementation"] == {
         "name": "mif-python-reference-runner",
-        "version": "candidate-2",
+        "version": "candidate-3",
     }
     assert capability["suites"] == []
     corpus_digest = "sha256:" + hashlib.sha256(vector_path.read_bytes()).hexdigest()

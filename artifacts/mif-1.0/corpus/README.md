@@ -33,9 +33,11 @@ The origin-stabilization MIFTURN instance is bound to a real MSTATE replay and
 its exact `resumptionDigest`. The runner also records two contradictory frozen
 0.4 checkpoints as source rejections, so they cannot be silently upgraded.
 
-`instances/mifcap.json` names the candidate-2 Python implementation and binds
+`instances/mifcap.json` names the candidate-3 Python implementation and binds
 its tested classes to the raw SHA-256 of `executable/reference-cases.json`. It
-claims no suite, general conversion, MPK support, invariance or resource limit.
+declares `structural-d4-v1` MPK support at `implemented` (not executable-corpus
+`tested`) and claims no suite, general conversion, invariance or resource
+limit.
 
 Passing these vectors is single-implementation evidence. No file in this
 directory is a published MIF Suite 1.0 conformance claim.

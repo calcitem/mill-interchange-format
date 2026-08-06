@@ -173,9 +173,7 @@ def build_registry() -> tuple[Registry, dict[Path, Any]]:
     documents: dict[Path, Any] = {}
     schema_paths = [
         *sorted((ARTIFACT / "schema").glob("*.json")),
-        MESSAGE_SCHEMA,
-        CONFIG_SCHEMA,
-        CASES_SCHEMA,
+        *sorted((INTEROP / "schema").glob("*.json")),
     ]
     for path in schema_paths:
         document = read_json(path)
@@ -437,6 +435,46 @@ def validate_result(
             registry,
             documents,
         )
+        return
+    if operation == "project-legal-actions":
+        if set(result) != {"document"}:
+            raise HarnessError("legal-action result member set mismatch")
+        validate_document(
+            result["document"],
+            INTEROP / "schema" / "legal-actions-v1.schema.json",
+            registry,
+            documents,
+        )
+        if result["document"]["current"] != case["payload"]["current"]:
+            raise HarnessError("legal-action projection changed current MFEN")
+        actions = result["document"]["actions"]
+        encoded = [jcs_bytes(action) for action in actions]
+        if len(encoded) != len(set(encoded)):
+            raise HarnessError("legal-action projection contains duplicates")
+        point_order = {
+            point: index
+            for index, point in enumerate(
+                (
+                    "a7", "d7", "g7", "g4", "g1", "d1", "a1", "a4",
+                    "b6", "d6", "f6", "f4", "f2", "d2", "b2", "b4",
+                    "c5", "d5", "e5", "e4", "e3", "d3", "c3", "c4",
+                )
+            )
+        }
+
+        def action_key(action: Mapping[str, Any]) -> tuple[int, int, int]:
+            action_type = action["type"]
+            if action_type == "place":
+                return 0, point_order[action["at"]], 0
+            if action_type == "move":
+                return 1, point_order[action["from"]], point_order[action["to"]]
+            target = action["target"]
+            if target["zone"] == "board":
+                return 2, 0, point_order[target["at"]]
+            return 2, 1, 0 if target["player"] == "w" else 1
+
+        if actions != sorted(actions, key=action_key):
+            raise HarnessError("legal-action projection order is non-canonical")
         return
     if operation == "transform":
         kind = case["payload"]["kind"]

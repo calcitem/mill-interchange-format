@@ -2,7 +2,7 @@
   "classes": [
     { "id": "conversion", "level": "none" },
     { "id": "identity", "level": "tested" },
-    { "id": "key", "level": "none" },
+    { "id": "key", "level": "implemented" },
     { "id": "position", "level": "tested" },
     { "id": "replay", "level": "tested" },
     { "id": "ruleset", "level": "tested" },
@@ -19,21 +19,21 @@
     { "id": "MIFPOS/1.0", "read": "implemented", "write": "implemented" },
     { "id": "MIFSUITE/1.0", "read": "none", "write": "none" },
     { "id": "MIFTURN/1.0", "read": "implemented", "write": "tested" },
-    { "id": "MPK/1.0", "read": "none", "write": "none" },
+    { "id": "MPK/1.0", "read": "implemented", "write": "implemented" },
     { "id": "MRS/1.0", "read": "tested", "write": "none" },
     { "id": "MSTATE/1.0", "read": "tested", "write": "tested" }
   ],
   "implementation": {
     "name": "mif-python-reference-runner",
-    "version": "candidate-2"
+    "version": "candidate-3"
   },
   "invarianceDeclarations": [],
   "profiles": {
     "claimLifecycle": ["stable-claim-rights-v1"],
     "decision": ["decision-state-v1"],
-    "key": [],
+    "key": ["structural-d4-v1"],
     "logicalTurn": ["logical-turn-v1"],
-    "mpkBinding": [],
+    "mpkBinding": ["inline-semantic-digest-v1"],
     "observation": ["stable-moving-v1", "stable-primary-decision-v1"],
     "placingLiveness": ["apply-board-full", "draw", "loss"],
     "repetitionProjection": ["repetition-observation-v1"],

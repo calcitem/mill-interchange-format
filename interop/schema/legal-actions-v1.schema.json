@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/calcitem/mill-interchange-format/raw/master/interop/schema/legal-actions-v1.schema.json",
+  "title": "MIF interoperability legal gameplay action projection v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile", "stateProfile", "semanticDigest", "current", "actions"
+  ],
+  "properties": {
+    "profile": { "const": "legal-actions-v1" },
+    "stateProfile": { "const": "mill24-state-v1" },
+    "semanticDigest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "current": { "type": "string", "minLength": 1 },
+    "actions": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "$ref": "#/$defs/place" },
+          { "$ref": "#/$defs/move" },
+          { "$ref": "#/$defs/remove" }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "player": { "enum": ["w", "b"] },
+    "point": {
+      "enum": [
+        "a7", "d7", "g7", "g4", "g1", "d1", "a1", "a4",
+        "b6", "d6", "f6", "f4", "f2", "d2", "b2", "b4",
+        "c5", "d5", "e5", "e4", "e3", "d3", "c3", "c4"
+      ]
+    },
+    "place": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor", "type", "at"],
+      "properties": {
+        "actor": { "$ref": "#/$defs/player" },
+        "type": { "const": "place" },
+        "at": { "$ref": "#/$defs/point" }
+      }
+    },
+    "move": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor", "type", "from", "to"],
+      "properties": {
+        "actor": { "$ref": "#/$defs/player" },
+        "type": { "const": "move" },
+        "from": { "$ref": "#/$defs/point" },
+        "to": { "$ref": "#/$defs/point" }
+      }
+    },
+    "remove": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor", "type", "target"],
+      "properties": {
+        "actor": { "$ref": "#/$defs/player" },
+        "type": { "const": "remove" },
+        "target": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["zone", "at"],
+              "properties": {
+                "zone": { "const": "board" },
+                "at": { "$ref": "#/$defs/point" }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["zone", "player"],
+              "properties": {
+                "zone": { "const": "hand" },
+                "player": { "$ref": "#/$defs/player" }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

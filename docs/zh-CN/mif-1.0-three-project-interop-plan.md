@@ -33,16 +33,19 @@ docs/zh-CN/mif-1.0.md
 sha256:9cc06abb57425e2bc2e26432b6da53abe503e9b5415ea0b4f854f19f68722cc1
 
 artifacts/mif-1.0/index.json
-sha256:3849a70897829d6d994c790b64e63484469483a940887fe828a1a0d421d78e90
+sha256:2bd247cd7e27ff4b0e142d8a0b2d6dececd619c882bb67f0be11bf763a794895
 
 artifacts/mif-1.0/corpus/executable/reference-cases.json
 sha256:a48c50352caebce30deb1de11f8f73dbc4540ee538651c3a139d9bcb166ba983
 
 interop/adapter-protocol-v1.md
-sha256:a59e5e5af3e948f6c7cac6a39a490c6eae6338151741b6c7fcdde5c88d991e2d
+sha256:253c1d201ea1db625e0c534da445ca4ecaa0b07597dfc7dbf59fbd6adf89874f
 
 interop/cases/smoke-v1.json
 sha256:a6d292f4d19381172fbc19f89d3ee42145a6d5533d6d81fd719394e25342bb53
+
+interop/cases/deterministic-v1.json
+sha256:c2d7017b2a8583914aff1eeea38bc02b078814ca11346c484e0a2b38b5e94f0c
 ```
 
 0.4 是冻结的历史迁移输入。Sanmill 与 NMM_LLM 不需要先实现 0.4，也不以
@@ -123,7 +126,7 @@ NMM_LLM 同样实现 Adapter CLI，并输出准确的 `MIFCAP/1.0`。
 Sanmill 与 NMM_LLM 可以在 M1 完成后并行开发，不需要等待对方。两边不得通过
 交换状态机代码来修复差异。
 
-### 5.1 当前进度（candidate-2）
+### 5.1 当前进度（candidate-3 M3 基线）
 
 - M0 与 M1 的 candidate-2 基线、runner、Schema、比较器和 loopback 已完成；
 - M2 的首批退出条件已满足：Sanmill 与 NMM_LLM 均有独立 adapter、
@@ -131,8 +134,52 @@ Sanmill 与 NMM_LLM 可以在 M1 完成后并行开发，不需要等待对方�
 - candidate-2 统一修复了 reference/harness 的 RFC 8785 JCS，wire contract
   及其中英文 raw-file hashes 未改变；
 - 17-case smoke 已在 MIF reference、Sanmill 与 NMM_LLM 三个进程间零差异；
-- M3 尚未完成：下一阶段仍须扩展并执行完整 deterministic corpus，而不是把
-  当前 smoke 结果表述为 Suite conformance。
+- MIF reference 已增加其声明规则集范围内的 `structural-d4-v1` MPK
+  canonicalization 与非规范 legal-action 投影，runner capability 版本提升为
+  `candidate-3`，MIFCAP 与 artifact index 已据实刷新；
+- 55-case deterministic corpus 的双 reference loopback 为零差异；当前三方运行
+  通过 44 项、失败 11 项，其中 6 项是两个外部 adapter 尚未实现新的
+  `project-legal-actions`；
+- M3 尚未完成：下列适配器差异必须归零，当前结果不得表述为 Suite
+  conformance。
+
+### 5.2 当前 M3 差异与外部项目调整项
+
+两个外部项目都须先实现 `MIF-INTEROP/1` 的
+`project-legal-actions` 操作及独立版本化 `legal-actions-v1` 投影。其 payload、
+闭合对象、动作模板和规范排序见 `interop/adapter-protocol-v1.md` 3.7 及
+`interop/schema/legal-actions-v1.schema.json`。六个案例覆盖 initial placing、
+placing move、flying、pending remove、terminal 空集与
+`inconsistent/unstabilized-boundary` 拒绝。
+
+MIF reference 与 NMM_LLM 对 `stable-moving-v1` 的 placing 行为一致，并符合
+11.7：phase/action 仍为 `p` 时不产生 observation。因此该案例的 active
+`repetitionHistory` 是空数组，decision repetition root 是规范空根
+`sha256:e9fbf966ccdff764594a5e199e6aea0cc36034b46c8057cc3df88a088c20101a`。
+
+Sanmill 调整项：
+
+1. 缺少 MPK semantic digest 时返回
+   `integrity/mpk-semantic-digest-missing`；
+2. digest 含大写十六进制时返回 `canonical/non-canonical-digest`；
+3. MPK 的 `ruleset-id@version` 与 manifest 不同时返回
+   `integrity/manifest-conflict`；
+4. `stable-moving-v1` 在 placing phase 不记录 origin/event observations，按空
+   active map 构造 repetition root 和 decision identity；
+5. pending removal 中 claim-draw 返回
+   `inconsistent/claim-during-obligation`。
+
+NMM_LLM 调整项：
+
+1. 缺少 MPK semantic digest 时返回
+   `integrity/mpk-semantic-digest-missing`；
+2. digest 含大写十六进制时返回 `canonical/non-canonical-digest`；
+3. pending removal 中 claim-draw 返回
+   `inconsistent/claim-during-obligation`。
+
+错误响应的 `message` 不参与比较；上述 category/code、`eventSeq` 及其他规范
+字段参与 replay-level 一致性比较。两项目完成调整并锁定本节基线后，重跑同一
+55-case 文件；只有三方 55/55 才完成 M3。
 
 ## 6. 比较要求
 

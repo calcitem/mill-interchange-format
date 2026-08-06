@@ -26,7 +26,7 @@ BASELINE_DIGESTS = {
         "9cc06abb57425e2bc2e26432b6da53abe503e9b5415ea0b4f854f19f68722cc1"
     ),
     ROOT / "artifacts" / "mif-1.0" / "index.json": (
-        "3849a70897829d6d994c790b64e63484469483a940887fe828a1a0d421d78e90"
+        "2bd247cd7e27ff4b0e142d8a0b2d6dececd619c882bb67f0be11bf763a794895"
     ),
     ROOT
     / "artifacts"
@@ -37,10 +37,13 @@ BASELINE_DIGESTS = {
         "a48c50352caebce30deb1de11f8f73dbc4540ee538651c3a139d9bcb166ba983"
     ),
     INTEROP / "adapter-protocol-v1.md": (
-        "a59e5e5af3e948f6c7cac6a39a490c6eae6338151741b6c7fcdde5c88d991e2d"
+        "253c1d201ea1db625e0c534da445ca4ecaa0b07597dfc7dbf59fbd6adf89874f"
     ),
     INTEROP / "cases" / "smoke-v1.json": (
         "a6d292f4d19381172fbc19f89d3ee42145a6d5533d6d81fd719394e25342bb53"
+    ),
+    INTEROP / "cases" / "deterministic-v1.json": (
+        "c2d7017b2a8583914aff1eeea38bc02b078814ca11346c484e0a2b38b5e94f0c"
     ),
     ROOT / "mif-0.4.md": (
         "f1f1d839318a4d45f3ecea4850fee080c47ffcbc81025bd74e3ea48c815f3093"
@@ -49,15 +52,14 @@ BASELINE_DIGESTS = {
 TEXT_FILES = [
     ROOT / "README.md",
     ROOT / "reference" / "README.md",
-    ROOT / "reference" / "jcs.py",
-    ROOT / "reference" / "mif1.py",
     PLAN,
     INTEROP / "README.md",
     INTEROP / "adapter-protocol-v1.md",
     INTEROP / "adapters.reference-loopback.json",
     INTEROP / "cases" / "smoke-v1.json",
+    INTEROP / "cases" / "deterministic-v1.json",
     *sorted((INTEROP / "schema").glob("*.json")),
-    ROOT / "reference" / "mif1_adapter.py",
+    *sorted((ROOT / "reference").glob("*.py")),
     ROOT / "tools" / "compare_mif_1_0_adapters.py",
     ROOT / "tools" / "mif_1_0_reference_adapter.py",
     Path(__file__).resolve(),
@@ -108,13 +110,93 @@ def verify_text() -> None:
 
 
 def verify_json_and_schemas() -> None:
+    documents: dict[Path, Any] = {}
     for path in sorted(INTEROP.rglob("*.json")):
         document = json.loads(
             path.read_text(encoding="utf-8"),
             object_pairs_hook=reject_duplicate_members,
         )
+        documents[path.resolve()] = document
         if path.parent.name == "schema":
             Draft202012Validator.check_schema(document)
+
+    cases_schema = documents[
+        (INTEROP / "schema" / "adapter-cases-v1.schema.json").resolve()
+    ]
+    cases_validator = Draft202012Validator(cases_schema)
+    expected_counts = {"smoke-v1.json": 17, "deterministic-v1.json": 55}
+    for path in sorted((INTEROP / "cases").glob("*.json")):
+        document = documents[path.resolve()]
+        errors = sorted(
+            cases_validator.iter_errors(document),
+            key=lambda item: list(item.absolute_path),
+        )
+        if errors:
+            first = errors[0]
+            pointer = "".join(f"/{token}" for token in first.absolute_path)
+            raise VerificationError(
+                f"case Schema failure: {path.relative_to(ROOT)}{pointer}: "
+                f"{first.message}"
+            )
+        ids = [case["id"] for case in document["cases"]]
+        if len(ids) != len(set(ids)):
+            raise VerificationError(f"duplicate case ID: {path.relative_to(ROOT)}")
+        expected_count = expected_counts.get(path.name)
+        if expected_count is None:
+            raise VerificationError(f"unregistered case source: {path.relative_to(ROOT)}")
+        if len(ids) != expected_count:
+            raise VerificationError(
+                f"fixed case count mismatch for {path.name}: {len(ids)}"
+            )
+
+    deterministic = documents[
+        (INTEROP / "cases" / "deterministic-v1.json").resolve()
+    ]["cases"]
+    operation_counts = {
+        operation: sum(case["operation"] == operation for case in deterministic)
+        for operation in {
+            "capabilities",
+            "canonicalize",
+            "execute",
+            "project-legal-actions",
+            "project-logical-turns",
+            "replay",
+            "transform",
+        }
+    }
+    expected_operation_counts = {
+        "capabilities": 1,
+        "canonicalize": 10,
+        "execute": 10,
+        "project-legal-actions": 6,
+        "project-logical-turns": 2,
+        "replay": 5,
+        "transform": 21,
+    }
+    if operation_counts != expected_operation_counts:
+        raise VerificationError(
+            f"deterministic operation coverage changed: {operation_counts}"
+        )
+    required_ids = {
+        "canonicalize-mpk-digest-missing",
+        "canonicalize-mpk-digest-uppercase",
+        "execute-placing-cycle-stable-moving",
+        "execute-claim-forbidden-during-removal",
+        "project-legal-actions-moving-flying",
+        "project-legal-actions-pending-remove",
+        "project-legal-actions-unstabilized",
+        "replay-offer-r1-portable",
+        "project-origin-stabilization",
+        "transform-mstate-mirror-anti",
+        "transform-decision-mirror-anti",
+        "transform-mifpos-portable-jcs-boundaries",
+    }
+    actual_ids = {case["id"] for case in deterministic}
+    missing = required_ids.difference(actual_ids)
+    if missing:
+        raise VerificationError(
+            f"deterministic corpus omits required cases: {sorted(missing)}"
+        )
 
 
 def verify_python() -> None:
@@ -157,6 +239,8 @@ def verify_required_language() -> None:
         "execute",
         "replay",
         "transform",
+        "project-legal-actions",
+        "legal-actions-v1",
         "project-logical-turns",
         "semantic-equality",
         "$pointer",
@@ -178,31 +262,36 @@ def verify_required_language() -> None:
 
 
 def verify_loopback() -> None:
-    command = [
-        sys.executable,
-        "-B",
-        "tools/compare_mif_1_0_adapters.py",
-        "--config",
-        "interop/adapters.reference-loopback.json",
-        "--cases",
-        "interop/cases/smoke-v1.json",
-    ]
-    completed = subprocess.run(
-        command,
-        cwd=ROOT,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        encoding="utf-8",
-        timeout=120,
-        check=False,
-    )
-    if completed.returncode != 0:
-        details = (completed.stdout + completed.stderr).strip()
-        raise VerificationError(f"reference loopback failed: {details}")
-    expected = "MIF interop comparison passed: 17 cases across 2 adapters"
-    if expected not in completed.stdout:
-        raise VerificationError("reference loopback did not report the fixed case count")
+    for case_name, count in (("smoke-v1.json", 17), ("deterministic-v1.json", 55)):
+        command = [
+            sys.executable,
+            "-B",
+            "tools/compare_mif_1_0_adapters.py",
+            "--config",
+            "interop/adapters.reference-loopback.json",
+            "--cases",
+            f"interop/cases/{case_name}",
+        ]
+        completed = subprocess.run(
+            command,
+            cwd=ROOT,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            encoding="utf-8",
+            timeout=180,
+            check=False,
+        )
+        if completed.returncode != 0:
+            details = (completed.stdout + completed.stderr).strip()
+            raise VerificationError(
+                f"reference loopback failed for {case_name}: {details}"
+            )
+        expected = f"MIF interop comparison passed: {count} cases across 2 adapters"
+        if expected not in completed.stdout:
+            raise VerificationError(
+                f"reference loopback did not report the fixed {case_name} count"
+            )
 
 
 def main() -> int:
@@ -219,7 +308,7 @@ def main() -> int:
         return 1
     print(
         "MIF 1.0 interop launch gate passed: fixed baselines, documents, "
-        "Schema and 17-case reference loopback "
+        "Schema and 17-case smoke plus 55-case deterministic reference loopbacks "
         "(harness evidence only; independent conformance not established)"
     )
     return 0

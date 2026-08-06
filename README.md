@@ -46,8 +46,9 @@ The design basis is retained for decision history:
 The contracts freeze wire syntax, closed JSON members, algorithms and inline
 ABNF. The candidate machine artifacts are derived from that contract and are
 integrity-checked. The separate candidate reference runner executes gameplay,
-replay, identities, transforms and logical-turn projection, but one
-implementation does not publish a suite. Until the release gates and
+replay, identities, MPK canonicalization, transforms, logical-turn projection
+and the non-normative legal-action comparison projection, but one implementation
+does not publish a suite. Until the release gates and
 `mif-suite-1.0.json` are complete, this repository has no MIF Suite 1.0
 conformance target.
 
@@ -55,6 +56,11 @@ The candidate-2 reference/harness baseline uses one RFC 8785 implementation for
 all digest and canonical NDJSON paths and adds executable UTF-16 ordering,
 binary64 and annotation-identity vectors. This is a tooling/artifact correction:
 the frozen wire contract and its bilingual raw-file identities are unchanged.
+
+The candidate-3 M3 engineering baseline adds reference MPK canonicalization,
+the 55-case deterministic comparison set and the non-normative
+`legal-actions-v1` adapter projection. It changes harness and artifact-index
+identities, not frozen MIF wire semantics.
 
 Raw-file identities of the frozen bilingual contracts are:
 
@@ -112,13 +118,17 @@ Run the comparator directly when substituting product adapter commands:
 
 ```text
 python -B tools/compare_mif_1_0_adapters.py --config interop/adapters.reference-loopback.json --cases interop/cases/smoke-v1.json
+
+python -B tools/compare_mif_1_0_adapters.py --config interop/adapters.reference-loopback.json --cases interop/cases/deterministic-v1.json
 ```
 
 A passing loopback proves process framing, Schema validation, case expansion
 and comparison behavior only. Replace the two command arrays in the adapter
 configuration with the Sanmill and NMM_LLM executables for independent
 byte-, state- and replay-level evidence. It is still not a published-suite
-conformance result.
+conformance result. The 55-case deterministic reference loopback passes; the
+current three-project run is 44/55, with the remaining adapter work recorded in
+the collaboration plan.
 
 ## Sources and implementation artifacts
 

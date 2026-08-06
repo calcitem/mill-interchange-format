@@ -96,9 +96,9 @@ contains exactly:
 - `decisionState`; and
 - `decisionDigest`.
 
-`final` equals the last trace entry. Adapters may later add a separately
-versioned legal-action projection; v1 deliberately compares state transitions
-before standardizing action-list encoding.
+`final` equals the last trace entry. Legal gameplay actions are compared by the
+separately versioned projection in 3.7; they are not added to this closed
+snapshot shape.
 
 ### 3.4 `replay`
 
@@ -137,6 +137,40 @@ returns `insufficient-transform-history`.
 
 Payload contains `mstate` and optional `manifest`. Result contains exactly
 `document`, a complete `MIFTURN/1.0` object.
+
+### 3.7 `project-legal-actions`
+
+This is a non-normative harness projection, not a MIF wire format. Payload
+contains exactly `manifest` and canonical `current` MFEN. The input must already
+be a stable primary boundary, a pending-obligation boundary or terminal;
+otherwise the adapter returns
+`inconsistent/unstabilized-boundary`. The projection does not infer history or
+apply a state transition.
+
+Result contains exactly `document`, a closed `legal-actions-v1` object with:
+
+- `profile`: `legal-actions-v1`;
+- `stateProfile`: `mill24-state-v1`;
+- `semanticDigest`: the exact manifest semantic digest;
+- `current`: the unchanged canonical MFEN; and
+- `actions`: every currently legal primary or supplementary gameplay action.
+
+Action templates omit `seq`. They are closed event-shaped objects:
+
+- place: `actor`, `type: place`, `at`;
+- move: `actor`, `type: move`, `from`, `to`;
+- remove: `actor`, `type: remove`, and structured board/hand `target`.
+
+Draw negotiation, draw claim and resignation are excluded because they are not
+primary or supplementary gameplay actions. There are no duplicate templates.
+Canonical order is place before move before remove; place sorts by Annex A point
+ordinal; move by source then destination ordinal; remove sorts board before
+hand, board by point ordinal and hand by White then Black identity. Terminal
+states produce an empty array.
+
+The object is validated by `schema/legal-actions-v1.schema.json`. Its profile
+version is independent of both MIF wire signatures and the enclosing
+`MIF-INTEROP/1` process protocol.
 
 ## 4. Comparison rules
 

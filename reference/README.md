@@ -3,10 +3,13 @@
 This package is an executable reading of the frozen MIF 1.0 Candidate Wire
 Contract. It implements the finite-rules state machine, MSTATE replay,
 claim/repetition processing, decision and resumption identities, full-state D4
-coordinate transforms, invariance gating and logical-turn projection.
+coordinate transforms, invariance gating, logical-turn projection, the
+non-normative `legal-actions-v1` comparison projection and extension-free
+`structural-d4-v1` MPK canonicalization for its declared rulesets.
 
 Canonical JSON and digest inputs use the shared dependency-free RFC 8785
-implementation in `jcs.py`. The candidate-2 executable corpus covers the 24
+implementation in `jcs.py`. The candidate-3 runner retains the executable
+corpus's 24
 finite Appendix B number samples, UTF-16 member ordering, invalid I-JSON
 rejection and the MRS annotation/document-identity boundary.
 
@@ -38,6 +41,8 @@ Run two isolated instances to verify the adapter framing and comparator:
 
 ```text
 python -B tools/compare_mif_1_0_adapters.py --config interop/adapters.reference-loopback.json --cases interop/cases/smoke-v1.json
+
+python -B tools/compare_mif_1_0_adapters.py --config interop/adapters.reference-loopback.json --cases interop/cases/deterministic-v1.json
 ```
 
 The adapter surface is defined by
@@ -60,6 +65,8 @@ Passing this runner demonstrates one implementation's agreement with the
 candidate executable corpus. It is not a published MIF Suite 1.0 target and is
 not cross-implementation conformance. Sanmill and NMM_LLM now have independent
 adapters, and the candidate-2 17-case smoke has zero differences across all
-three implementations. The complete deterministic corpus, differential tests
-and remaining release gates must still pass before a suite manifest can be
-released.
+three implementations. The 55-case deterministic reference loopback also
+passes; its current three-project run passes 44 cases and exposes 11 adapter
+gaps, including the new legal-action projection. Those differences,
+differential tests and the remaining release gates must be closed before a
+suite manifest can be released.
