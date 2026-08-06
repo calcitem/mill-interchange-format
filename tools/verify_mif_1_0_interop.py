@@ -19,6 +19,10 @@ ROOT = Path(__file__).resolve().parents[1]
 INTEROP = ROOT / "interop"
 PLAN = ROOT / "docs" / "zh-CN" / "mif-1.0-three-project-interop-plan.md"
 M3_EVIDENCE = INTEROP / "evidence" / "mif-1.0-candidate-4-m3.json"
+M4_LAUNCH = INTEROP / "differential-candidate-4-v1.json"
+M4_BASELINE = (
+    INTEROP / "evidence" / "mif-1.0-candidate-4-m4-reference-baseline.json"
+)
 BASELINE_DIGESTS = {
     ROOT / "mif-1.0.md": (
         "330e65145ceb26fe582e58b89405d87bd73e8be200b476aef82c0ee27731d995"
@@ -49,6 +53,30 @@ BASELINE_DIGESTS = {
     M3_EVIDENCE: (
         "a354e810de0c74dd26226bee39b09f05c2677dbd693f95574fccc17d8c0c6671"
     ),
+    M4_LAUNCH: (
+        "560ef369fde248bd96d3468a4336442db1d970ede04f488821509e69925fd48e"
+    ),
+    INTEROP / "differential-v1.md": (
+        "57056faf5fc347dc97876ada350784feb84acff2324ef00175c915c6d019a133"
+    ),
+    INTEROP / "cases" / "differential-negative-v1.json": (
+        "b4072a2fd786104c5344619a818d59b657904e92c419175e795cc03fcd0697ff"
+    ),
+    INTEROP / "schema" / "adapter-cases-v1.schema.json": (
+        "74877776612215ffa9c894ba659b7ce0e41b60fb4cb65e5b4f40a187b537ef7d"
+    ),
+    INTEROP / "schema" / "differential-launch-v1.schema.json": (
+        "4452be5b48e085ad7887985fd5066f899bb96b00bef225e2b8c8b41a740a1f60"
+    ),
+    INTEROP / "schema" / "differential-report-v1.schema.json": (
+        "d69646ac0a3746d4ac72d3bb1958e28019813da48dc71ea80e45a1d6d253c29e"
+    ),
+    ROOT / "tools" / "run_mif_1_0_differential.py": (
+        "bcd23bf5666f3ba07e78e653fa4777a190719877341aa4e6adb159178fc6c505"
+    ),
+    M4_BASELINE: (
+        "29d198dbcf8221fa0235af6a72db9d6a82646b45fc653c584071821a9a4bb61b"
+    ),
     ROOT / "mif-0.4.md": (
         "f1f1d839318a4d45f3ecea4850fee080c47ffcbc81025bd74e3ea48c815f3093"
     ),
@@ -62,11 +90,15 @@ TEXT_FILES = [
     INTEROP / "adapters.reference-loopback.json",
     INTEROP / "cases" / "smoke-v1.json",
     INTEROP / "cases" / "deterministic-v1.json",
+    INTEROP / "cases" / "differential-negative-v1.json",
+    M4_LAUNCH,
+    INTEROP / "differential-v1.md",
     *sorted((INTEROP / "schema").glob("*.json")),
     *sorted((INTEROP / "evidence").glob("*.json")),
     *sorted((ROOT / "reference").glob("*.py")),
     ROOT / "tools" / "compare_mif_1_0_adapters.py",
     ROOT / "tools" / "mif_1_0_reference_adapter.py",
+    ROOT / "tools" / "run_mif_1_0_differential.py",
     Path(__file__).resolve(),
 ]
 PYTHON_FILES = [path for path in TEXT_FILES if path.suffix == ".py"]
@@ -129,7 +161,11 @@ def verify_json_and_schemas() -> None:
         (INTEROP / "schema" / "adapter-cases-v1.schema.json").resolve()
     ]
     cases_validator = Draft202012Validator(cases_schema)
-    expected_counts = {"smoke-v1.json": 17, "deterministic-v1.json": 58}
+    expected_counts = {
+        "smoke-v1.json": 17,
+        "deterministic-v1.json": 58,
+        "differential-negative-v1.json": 4,
+    }
     for path in sorted((INTEROP / "cases").glob("*.json")):
         document = documents[path.resolve()]
         errors = sorted(
@@ -420,6 +456,189 @@ def verify_m3_evidence() -> None:
         raise VerificationError("M3 independent verification record mismatch")
 
 
+def verify_m4_launch() -> None:
+    launch = json.loads(
+        M4_LAUNCH.read_text(encoding="utf-8"),
+        object_pairs_hook=reject_duplicate_members,
+    )
+    baseline = json.loads(
+        M4_BASELINE.read_text(encoding="utf-8"),
+        object_pairs_hook=reject_duplicate_members,
+    )
+    for document, schema_name, label in (
+        (launch, "differential-launch-v1.schema.json", "M4 launch"),
+        (baseline, "differential-report-v1.schema.json", "M4 baseline"),
+    ):
+        schema = json.loads(
+            (INTEROP / "schema" / schema_name).read_text(encoding="utf-8"),
+            object_pairs_hook=reject_duplicate_members,
+        )
+        errors = sorted(
+            Draft202012Validator(schema).iter_errors(document),
+            key=lambda item: list(item.absolute_path),
+        )
+        if errors:
+            first = errors[0]
+            pointer = "".join(f"/{token}" for token in first.absolute_path)
+            raise VerificationError(
+                f"{label} Schema failure at {pointer or '/'}: {first.message}"
+            )
+
+    if launch["baseline"] != {
+        "mifCommit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978",
+        "m3ClosureCommit": "736801412e11dee9d2bfb65082757e0609a5ade3",
+        "m3Evidence": {
+            "path": "interop/evidence/mif-1.0-candidate-4-m3.json",
+            "sha256": (
+                "sha256:"
+                "a354e810de0c74dd26226bee39b09f05c2677dbd693f95574fccc17d8c0c6671"
+            ),
+        },
+    }:
+        raise VerificationError("M4 launch baseline binding mismatch")
+    if launch["suiteConformance"] is not False or launch["status"] != "candidate-only":
+        raise VerificationError("M4 launch overclaims conformance")
+    expected_seeds = {
+        "placing-standard": ["0000000000000000", "0000000000000001"],
+        "moving-standard": ["0123456789abcdef", "deadbeefcafef00d"],
+        "flying-three-pieces": ["0000000000000002", "0000000000000003"],
+        "pending-removal": ["1111111111111111"],
+        "claim-right-at-origin": ["2222222222222222"],
+        "terminal-full-board": ["3333333333333333"],
+        "resource-limit-probe": ["4444444444444444"],
+    }
+    actual_seeds = {
+        scenario["id"]: scenario["seeds"] for scenario in launch["scenarios"]
+    }
+    if actual_seeds != expected_seeds:
+        raise VerificationError("M4 scenario or seed matrix mismatch")
+    if launch["negativeCases"] != {
+        "path": "interop/cases/differential-negative-v1.json",
+        "families": [
+            "illegal-event",
+            "noncanonical-text",
+            "digest-envelope-conflict",
+            "truncated-history",
+            "resource-limit",
+        ],
+    }:
+        raise VerificationError("M4 negative mutation family mismatch")
+
+    if (
+        baseline["status"] != "passed"
+        or baseline["suiteConformance"] is not False
+        or baseline["launchDigest"]
+        != "sha256:560ef369fde248bd96d3468a4336442db1d970ede04f488821509e69925fd48e"
+        or baseline["configDigest"]
+        != "sha256:2af95a7eacb11b854286df1312928d3e20c06055a488ddc54637d4db306e34a4"
+        or baseline["adapters"] != ["reference-a", "reference-b"]
+        or baseline["summary"]
+        != {
+            "runsPassed": 10,
+            "runsFailed": 0,
+            "negativePassed": 5,
+            "negativeFailed": 0,
+        }
+    ):
+        raise VerificationError("M4 reference baseline summary mismatch")
+    expected_implementations = [
+        {
+            "adapter": name,
+            "name": "mif-python-reference-runner",
+            "version": "candidate-4",
+            "capabilitiesDigest": (
+                "sha256:"
+                "f2a9890b9d3b4bca6f2197a8ba48e0075db88e2d25007536431d883d4ca76f8a"
+            ),
+        }
+        for name in ("reference-a", "reference-b")
+    ]
+    if baseline["implementations"] != expected_implementations:
+        raise VerificationError("M4 reference capability binding mismatch")
+
+    scenarios = {scenario["id"]: scenario for scenario in launch["scenarios"]}
+    expected_pairs = {
+        (scenario, seed)
+        for scenario, seeds in expected_seeds.items()
+        for seed in seeds
+    }
+    actual_pairs = {(run["scenario"], run["seed"]) for run in baseline["runs"]}
+    if len(baseline["runs"]) != 10 or actual_pairs != expected_pairs:
+        raise VerificationError("M4 reference run identity mismatch")
+    for run in baseline["runs"]:
+        if run["status"] != "passed" or "failure" in run:
+            raise VerificationError("M4 reference run is not clean")
+        scenario = scenarios[run["scenario"]]
+        if not set(scenario["requiredCoverage"]).issubset(run["coverage"]):
+            raise VerificationError(
+                f"M4 reference coverage missing for {run['scenario']}"
+            )
+        if run["logicalTurns"] > scenario["maxLogicalTurns"]:
+            raise VerificationError("M4 reference logical-turn limit exceeded")
+        if run["eventCount"] > scenario["maxEvents"]:
+            raise VerificationError("M4 reference event limit exceeded")
+    resource_runs = [
+        run for run in baseline["runs"] if run["scenario"] == "resource-limit-probe"
+    ]
+    if (
+        len(resource_runs) != 1
+        or resource_runs[0]["stopReason"] != "logical-turn-limit"
+        or resource_runs[0]["eventCount"] != 0
+        or "resource-limit" not in resource_runs[0]["coverage"]
+    ):
+        raise VerificationError("M4 resource-limit probe mismatch")
+
+    expected_negative = {
+        "mutation-illegal-remove-without-obligation": (
+            "illegal-event",
+            "remove-without-obligation",
+        ),
+        "mutation-noncanonical-mpk-digest-uppercase": (
+            "noncanonical-text",
+            "non-canonical-digest",
+        ),
+        "mutation-envelope-semantic-digest-mismatch": (
+            "digest-envelope-conflict",
+            "semantic-digest-mismatch",
+        ),
+        "mutation-repetition-history-truncated": (
+            "truncated-history",
+            "repetition-history-mismatch",
+        ),
+        "mutation-harness-resource-limit": ("resource-limit", None),
+    }
+    actual_negative = {
+        item["id"]: (item["family"], item["expectedCode"])
+        for item in baseline["negativeCases"]
+        if item["status"] == "passed" and "failure" not in item
+    }
+    if len(baseline["negativeCases"]) != 5 or actual_negative != expected_negative:
+        raise VerificationError("M4 reference negative results mismatch")
+
+    command = [
+        sys.executable,
+        "-B",
+        str(ROOT / "tools" / "run_mif_1_0_differential.py"),
+        "--config",
+        str(INTEROP / "adapters.reference-loopback.json"),
+        "--launch",
+        str(M4_LAUNCH),
+        "--expect-report",
+        str(M4_BASELINE),
+    ]
+    completed = subprocess.run(
+        command,
+        cwd=ROOT,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        timeout=180,
+        check=False,
+        text=True,
+        encoding="utf-8",
+    )
+    if completed.returncode != 0:
+        detail = (completed.stdout + completed.stderr).strip()
+        raise VerificationError(f"M4 reference baseline is not reproducible: {detail}")
 def verify_loopback() -> None:
     for case_name, count in (("smoke-v1.json", 17), ("deterministic-v1.json", 58)):
         command = [
@@ -462,6 +681,7 @@ def main() -> int:
         verify_markdown()
         verify_required_language()
         verify_m3_evidence()
+        verify_m4_launch()
         verify_loopback()
     except (OSError, UnicodeError, json.JSONDecodeError, VerificationError) as exc:
         print(f"MIF 1.0 interop launch gate FAILED: {exc}")
@@ -469,7 +689,8 @@ def main() -> int:
     print(
         "MIF 1.0 interop launch gate passed: fixed baselines, documents, "
         "Schema, 17-case smoke, 58-case deterministic reference loopbacks and "
-        "commit-bound three-project M3 evidence "
+        "commit-bound three-project M3 evidence plus the reproducible 10-run/"
+        "5-mutation M4 reference launch baseline "
         "(candidate evidence only; Suite conformance not established)"
     )
     return 0

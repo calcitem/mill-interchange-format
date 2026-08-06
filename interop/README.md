@@ -19,6 +19,15 @@ conformance target.
 - `evidence/mif-1.0-candidate-4-m3.json` binds the completed M3 result to all
   three tested commits, the seven fixed inputs, Sanmill's raw 58/58 report and
   its companion evidence manifest.
+- `differential-v1.md` defines the M4 PRNG, consensus selection, replay,
+  first-difference, coverage, limit and deterministic report algorithms.
+- `differential-candidate-4-v1.json` fixes seven scenarios, ten seeds and five
+  mutation families. Its raw SHA-256 is
+  `560ef369fde248bd96d3468a4336442db1d970ede04f488821509e69925fd48e`.
+- `cases/differential-negative-v1.json` supplies the four protocol-level
+  mutations; the zero-turn launch scenario supplies the resource-limit probe.
+- `evidence/mif-1.0-candidate-4-m4-reference-baseline.json` is the byte-stable
+  10/10 run and 5/5 mutation two-reference baseline.
 - `adapters.reference-loopback.json` starts two isolated instances of the
   candidate Python reference adapter to test the harness itself.
 
@@ -40,6 +49,25 @@ python -B tools/compare_mif_1_0_adapters.py \
   --cases interop/cases/deterministic-v1.json
 ```
 
+## M4 differential launch
+
+Reproduce the fixed two-reference baseline without creating or changing a file:
+
+```text
+python -B tools/run_mif_1_0_differential.py --config interop/adapters.reference-loopback.json --launch interop/differential-candidate-4-v1.json --expect-report interop/evidence/mif-1.0-candidate-4-m4-reference-baseline.json
+```
+
+For the three-project run, keep the launch file byte-identical, substitute the
+three adapter commands in an `MIF-INTEROP-CONFIG/1` file and write a new report:
+
+```text
+python -B tools/run_mif_1_0_differential.py --config <three-project-config.json> --launch interop/differential-candidate-4-v1.json --report <three-project-report.json>
+```
+
+The report must then be bound to the exact MIF, Sanmill and NMM_LLM commits in a
+separate evidence manifest. Do not edit the launch file or regenerate seeds in
+a product repository.
+
 The loopback result proves only that the process protocol and comparator are
 deterministic. Use independent Sanmill and NMM_LLM entries for
 cross-implementation evidence. The current candidate-2 smoke has zero
@@ -48,9 +76,12 @@ candidate evidence rather than MIF Suite 1.0 conformance. The 58-case
 candidate-4 set passes reference loopback and the three independent adapters.
 The commit-bound [`M3 evidence record`](evidence/mif-1.0-candidate-4-m3.json)
 fixes all three tested commits, seven input hashes, the 58/58 report and
-Sanmill's companion binding. M3 is complete as Candidate evidence; M4
-differential testing is next. No result in this directory claims Suite
-conformance.
+Sanmill's companion binding. M3 is complete as Candidate evidence. The fixed
+M4 launch and two-reference baseline now pass 10/10 seeded runs and 5/5
+mutation families, so Sanmill and NMM_LLM may begin with the byte-identical
+inputs. M4 remains open until independent reports and a commit-bound
+three-project comparison are published. No result in this directory claims
+Suite conformance.
 
 Adapter authors may use the specification, schemas, registries and corpus, but
 must not import or copy gameplay implementation code from `reference/`.

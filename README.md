@@ -141,6 +141,23 @@ deterministic milestone with 58/58 and advances collaboration to M4
 differential testing. This remains Candidate evidence, not MIF Suite 1.0
 conformance.
 
+M4 now has a fixed, versioned differential launch package. Its
+[`harness contract`](interop/differential-v1.md),
+[`launch document`](interop/differential-candidate-4-v1.json) and
+[`two-reference baseline`](interop/evidence/mif-1.0-candidate-4-m4-reference-baseline.json)
+define SplitMix64 test vectors, ten seeded trajectories, stable-boundary
+execute/replay comparison, five negative mutation families and explicit
+process limits. Reproduce the baseline without writing a report:
+
+```text
+python -B tools/run_mif_1_0_differential.py --config interop/adapters.reference-loopback.json --launch interop/differential-candidate-4-v1.json --expect-report interop/evidence/mif-1.0-candidate-4-m4-reference-baseline.json
+```
+
+Sanmill and NMM_LLM should use the same launch file with a three-project
+adapter config and `--report <path>`, then bind the raw report to all three
+tested commits. A passing reference baseline validates the launch machinery;
+it is not independent implementation evidence.
+
 ## Sources and implementation artifacts
 
 | Artifact | Role |

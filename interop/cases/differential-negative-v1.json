@@ -1,0 +1,90 @@
+{
+  "protocol": "MIF-INTEROP-CASES/1",
+  "cases": [
+    {
+      "id": "mutation-illegal-remove-without-obligation",
+      "operation": "execute",
+      "comparison": "semantic-equality",
+      "expectedStatus": "error",
+      "expectedCode": "remove-without-obligation",
+      "family": "illegal-event",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "origin": "MFEN/1.0 mill24-state-v1 ......../......../........ b p p 9,9 - 0 0 -",
+        "events": [
+          {
+            "actor": "b",
+            "seq": 1,
+            "target": { "zone": "board", "at": "a7" },
+            "type": "remove"
+          }
+        ],
+        "repetitionSeed": [],
+        "preOriginClaims": []
+      }
+    },
+    {
+      "id": "mutation-noncanonical-mpk-digest-uppercase",
+      "operation": "canonicalize",
+      "comparison": "semantic-equality",
+      "expectedStatus": "error",
+      "expectedCode": "non-canonical-digest",
+      "family": "noncanonical-text",
+      "payload": {
+        "format": "MPK/1.0",
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "value": "MPK/1.0 mill24-state-v1 example-morris@1 sha256:224F7E368E322A4CC8C1225A025FB548D5B41EB096D34B7AE0543182D1AA9393 structural-d4-v1 ........................ b p 9,9"
+      }
+    },
+    {
+      "id": "mutation-envelope-semantic-digest-mismatch",
+      "operation": "replay",
+      "comparison": "semantic-equality",
+      "expectedStatus": "error",
+      "expectedCode": "semantic-digest-mismatch",
+      "family": "digest-envelope-conflict",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "mstate": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-offer-r1.json",
+          "$patch": [
+            {
+              "op": "replace",
+              "path": "/ruleset/semanticDigest",
+              "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "mutation-repetition-history-truncated",
+      "operation": "replay",
+      "comparison": "semantic-equality",
+      "expectedStatus": "error",
+      "expectedCode": "repetition-history-mismatch",
+      "family": "truncated-history",
+      "payload": {
+        "manifest": {
+          "$json": "artifacts/mif-1.0/corpus/fixtures/example-morris@1.json"
+        },
+        "mstate": {
+          "$json": "artifacts/mif-1.0/corpus/instances/mstate-offer-r1.json",
+          "$patch": [
+            {
+              "op": "replace",
+              "path": "/repetitionHistory",
+              "value": []
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

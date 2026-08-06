@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/calcitem/mill-interchange-format/raw/master/interop/schema/differential-launch-v1.schema.json",
+  "title": "MIF candidate differential launch package v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol",
+    "status",
+    "suiteConformance",
+    "baseline",
+    "resources",
+    "prng",
+    "resourceLimits",
+    "selection",
+    "scenarios",
+    "negativeCases"
+  ],
+  "properties": {
+    "protocol": { "const": "MIF-INTEROP-DIFFERENTIAL/1" },
+    "status": { "const": "candidate-only" },
+    "suiteConformance": { "const": false },
+    "baseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mifCommit", "m3ClosureCommit", "m3Evidence"],
+      "properties": {
+        "mifCommit": { "$ref": "#/$defs/commit" },
+        "m3ClosureCommit": { "$ref": "#/$defs/commit" },
+        "m3Evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "sha256"],
+          "properties": {
+            "path": { "type": "string", "minLength": 1 },
+            "sha256": { "$ref": "#/$defs/digest" }
+          }
+        }
+      }
+    },
+    "resources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/resource" }
+    },
+    "prng": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile", "wordSize", "seedEncoding", "constants", "vectors"],
+      "properties": {
+        "profile": { "const": "splitmix64-v1" },
+        "wordSize": { "const": 64 },
+        "seedEncoding": { "const": "lowercase-hex16" },
+        "constants": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["gamma", "mul1", "mul2"],
+          "properties": {
+            "gamma": { "$ref": "#/$defs/hex64" },
+            "mul1": { "$ref": "#/$defs/hex64" },
+            "mul2": { "$ref": "#/$defs/hex64" }
+          }
+        },
+        "vectors": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["seed", "outputs"],
+            "properties": {
+              "seed": { "$ref": "#/$defs/hex64" },
+              "outputs": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": { "$ref": "#/$defs/hex64" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "resourceLimits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["perRequestTimeoutMs", "maxResponseBytes", "maxTotalRequests"],
+      "properties": {
+        "perRequestTimeoutMs": { "type": "integer", "minimum": 1 },
+        "maxResponseBytes": { "type": "integer", "minimum": 1024 },
+        "maxTotalRequests": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "sourceOperation",
+        "drawsPerEvent",
+        "indexRule",
+        "stopAtFirstDifference",
+        "reproduction"
+      ],
+      "properties": {
+        "profile": { "const": "consensus-legal-action-splitmix64-v1" },
+        "sourceOperation": { "const": "project-legal-actions" },
+        "drawsPerEvent": { "const": 1 },
+        "indexRule": { "const": "uint64-mod-action-count" },
+        "stopAtFirstDifference": { "const": true },
+        "reproduction": { "const": "scenario-seed-event-prefix-v1" }
+      }
+    },
+    "scenarios": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/scenario" }
+    },
+    "negativeCases": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "families"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "families": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "illegal-event",
+              "noncanonical-text",
+              "digest-envelope-conflict",
+              "truncated-history",
+              "resource-limit"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "hex64": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9.-]{0,127}$"
+    },
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "manifest",
+        "origin",
+        "repetitionSeed",
+        "preOriginClaims",
+        "seeds",
+        "maxLogicalTurns",
+        "maxEvents",
+        "replayEveryLogicalTurns",
+        "allowedStops",
+        "requiredCoverage"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "manifest": { "type": "object" },
+        "origin": { "type": "string", "minLength": 1 },
+        "repetitionSeed": { "type": "array", "items": { "type": "object" } },
+        "preOriginClaims": { "type": "array", "items": { "type": "object" } },
+        "seeds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/hex64" }
+        },
+        "maxLogicalTurns": { "type": "integer", "minimum": 0 },
+        "maxEvents": { "type": "integer", "minimum": 0 },
+        "replayEveryLogicalTurns": { "type": "integer", "minimum": 1 },
+        "allowedStops": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["terminal", "logical-turn-limit"] }
+        },
+        "requiredCoverage": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "placing",
+              "moving",
+              "flying",
+              "removal",
+              "claim-right",
+              "repetition",
+              "terminal",
+              "resource-limit"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

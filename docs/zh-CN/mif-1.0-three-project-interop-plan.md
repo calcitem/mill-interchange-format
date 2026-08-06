@@ -188,6 +188,49 @@ MIF 发布该 launch package 和开工 hash 之前，Sanmill 与 NMM_LLM 不需�
 各自及三方报告；若发现差异，继续按第 7 节分类。M4 的退出条件是全部固定 seed
 和必需负向变异均无未解释差异，且每个失败都可由单一 seed 与最小输入重放。
 
+### 5.4 M4 开工基线
+
+MIF 已实现并验证第 5.3 节要求的 launch package，现固定以下输入：
+
+- 算法合同：`interop/differential-v1.md`；
+- launch：`interop/differential-candidate-4-v1.json`，raw SHA-256 为
+  `560ef369fde248bd96d3468a4336442db1d970ede04f488821509e69925fd48e`；
+- launch/report Schema：`interop/schema/differential-launch-v1.schema.json`
+  与 `interop/schema/differential-report-v1.schema.json`；
+- 协议级负向 case：`interop/cases/differential-negative-v1.json`；
+- driver：`tools/run_mif_1_0_differential.py`；
+- 双 reference 基线：
+  `interop/evidence/mif-1.0-candidate-4-m4-reference-baseline.json`，raw
+  SHA-256 为
+  `29d198dbcf8221fa0235af6a72db9d6a82646b45fc653c584071821a9a4bb61b`。
+
+该基线使用 `splitmix64-v1` 的四组跨语言测试向量，执行 7 个场景、10 个
+`(scenario, seed)` trajectory 和 5 个负向 mutation family。双 reference
+结果为 10/10 与 5/5，且只读重跑可逐字节恢复同一报告。它只证明 launch 与
+harness 可重现，不是独立实现证据，也不改变 candidate-4 wire、artifact 或 M3
+corpus。
+
+Sanmill 与 NMM_LLM 现在可以开工，且不需要修改玩法语义或 adapter protocol。
+两边应：
+
+1. 固定本次 MIF M4 launch 提交的完整 SHA，并核验上述 launch hash；
+2. 保持 launch 文件逐字节不变，只在 `MIF-INTEROP-CONFIG/1` 中替换 adapter
+   command；
+3. 使用现有 `project-legal-actions`、`execute`、`replay` 与
+   `project-logical-turns` 实现运行：
+
+   ```text
+   python -B tools/run_mif_1_0_differential.py --config <three-project-config.json> --launch interop/differential-candidate-4-v1.json --report <three-project-report.json>
+   ```
+
+4. 先各自持久化与 reference 的报告，再由任一项目持久化三 adapter 报告；
+5. companion evidence 必须绑定三个被测 commit、MIF launch commit、launch
+   hash、config hash 与 raw report hash。
+
+如出现差异，报告已包含首次差异 stage、JSON Pointer、expected/actual、固定 seed
+和最短 event prefix；直接按第 7 节分类，不得重新选 seed 或改写 launch。M4 只有
+在两个独立实现的相同输入结果与三方报告均无未解释差异后才关闭。
+
 ## 6. 比较要求
 
 ### 6.1 Byte-level
