@@ -527,7 +527,8 @@ def main() -> int:
     except (KeyError, TypeError, VerificationError) as exc:
         print(f"verification failed: {exc}", file=sys.stderr)
         return 1
-    print("MIF 0.4 corpus verification passed")
+    print("MIF 0.4 corpus integrity passed "
+          "(file integrity only; rule execution not performed)")
     return 0
 
 
