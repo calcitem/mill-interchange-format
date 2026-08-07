@@ -83,7 +83,7 @@
       "role": "policy",
       "repository": "https://github.com/calcitem/mill-interchange-format.git",
       "path": ".github/workflows/conformance.yml",
-      "sha256": "sha256:2668029684aa153cae616a7e0341e750c7d844dc7aecf2a69efada6b7cdc6d4f"
+      "sha256": "sha256:2d11cccb5c84984f995bd821b8fd86c68e2bf3653ed789fe5a5a5dbcb008e3c4"
     },
     {
       "id": "mif-1.0-contributing-policy",
@@ -296,7 +296,7 @@
       "role": "policy",
       "repository": "https://github.com/calcitem/mill-interchange-format.git",
       "path": ".github/workflows/release.yml",
-      "sha256": "sha256:49fbbf53ecb90ea5299e8b7bf725a4b0e5fa47765047355e0435b66b070a6629"
+      "sha256": "sha256:60e78969f517d4cab20321c845cc777e0956566c9c024b298ddd8367f1516742"
     },
     {
       "id": "mif-1.0-schema-root",
