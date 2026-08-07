@@ -28,6 +28,10 @@ conformance target.
   mutations; the zero-turn launch scenario supplies the resource-limit probe.
 - `evidence/mif-1.0-candidate-4-m4-reference-baseline.json` is the byte-stable
   10/10 run and 5/5 mutation two-reference baseline.
+- `evidence/mif-1.0-candidate-4-m4.json` binds both independent two-party
+  reports, the final three-project report, all tested and evidence commits,
+  and MIF's byte-identical independent reruns. It closes M4 only for the fixed
+  Candidate-4 launch domain.
 - `adapters.reference-loopback.json` starts two isolated instances of the
   candidate Python reference adapter to test the harness itself.
 
@@ -77,11 +81,12 @@ candidate-4 set passes reference loopback and the three independent adapters.
 The commit-bound [`M3 evidence record`](evidence/mif-1.0-candidate-4-m3.json)
 fixes all three tested commits, seven input hashes, the 58/58 report and
 Sanmill's companion binding. M3 is complete as Candidate evidence. The fixed
-M4 launch and two-reference baseline now pass 10/10 seeded runs and 5/5
-mutation families, so Sanmill and NMM_LLM may begin with the byte-identical
-inputs. M4 remains open until independent reports and a commit-bound
-three-project comparison are published. No result in this directory claims
-Suite conformance.
+M4 launch now passes 10/10 seeded runs and 5/5 mutation families for each
+independent product adapter and the three-project comparison. The commit-bound
+[`M4 evidence record`](evidence/mif-1.0-candidate-4-m4.json) records two
+byte-identical MIF reruns and closes the differential milestone with verdict
+`exact-for-tested-domain`. No result in this directory claims Suite
+conformance.
 
 Adapter authors may use the specification, schemas, registries and corpus, but
 must not import or copy gameplay implementation code from `reference/`.

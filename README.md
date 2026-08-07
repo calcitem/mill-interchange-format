@@ -17,9 +17,11 @@ runner is available under [`reference/`](reference/). The non-normative
 three-project adapter protocol, smoke cases and comparator are under
 [`interop/`](interop/), with the collaboration plan in
 [`docs/zh-CN/mif-1.0-three-project-interop-plan.md`](docs/zh-CN/mif-1.0-three-project-interop-plan.md).
-Two agreeing independent product adapters and release governance still have to
-be delivered and bound by `mif-suite-1.0.json`. Neither edition is an ISO, IEC,
-CEN, WMD or tournament-federation standard and shall not be cited as one.
+Two agreeing independent product adapters have now published commit-bound M3
+and M4 Candidate evidence. Release governance and the actual signed
+`mif-suite-1.0.json` binding still have to be delivered. Neither edition is an
+ISO, IEC, CEN, WMD or tournament-federation standard and shall not be cited as
+one.
 
 The immutable baselines are WD 0.2 at `4346b24` and WD 0.3 at
 `3f1ffc30`. MIF/0.4 at
@@ -153,10 +155,13 @@ process limits. Reproduce the baseline without writing a report:
 python -B tools/run_mif_1_0_differential.py --config interop/adapters.reference-loopback.json --launch interop/differential-candidate-4-v1.json --expect-report interop/evidence/mif-1.0-candidate-4-m4-reference-baseline.json
 ```
 
-Sanmill and NMM_LLM should use the same launch file with a three-project
-adapter config and `--report <path>`, then bind the raw report to all three
-tested commits. A passing reference baseline validates the launch machinery;
-it is not independent implementation evidence.
+Sanmill and NMM_LLM used the same byte-identical launch with their independent
+adapters, published their two-party reports and a commit-bound three-project
+report, and MIF independently reproduced that report twice. The resulting
+[`M4 evidence record`](interop/evidence/mif-1.0-candidate-4-m4.json) closes the
+fixed Candidate-4 differential domain at 10/10 seeded trajectories and 5/5
+negative mutation families with no unexplained difference. Its verdict is
+`exact-for-tested-domain`; it is not MIF Suite 1.0 conformance.
 
 ## Sources and implementation artifacts
 
@@ -168,6 +173,7 @@ it is not independent implementation evidence.
 | [`artifacts/mif-1.0/`](artifacts/mif-1.0/) | Derived candidate machine artifacts; not a published suite |
 | [`reference/`](reference/) | Candidate Python reference runner; single-implementation evidence only |
 | [`interop/`](interop/) | Non-normative adapter protocol, Schema, cases and loopback configuration |
+| [`interop/evidence/mif-1.0-candidate-4-m4.json`](interop/evidence/mif-1.0-candidate-4-m4.json) | Commit-bound M4 Candidate evidence; exact only for the fixed tested domain |
 | [`mif-0.4.md`](mif-0.4.md) | Frozen English historical working draft |
 | [`conformance/`](conformance/) | Frozen 0.4 corpus and migration-test input |
 | [`conformance/mif-0.4.abnf`](conformance/mif-0.4.abnf) | Standalone ABNF |

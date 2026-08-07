@@ -1,0 +1,144 @@
+{
+  "artifact": "mif-1.0-candidate-4-m4-evidence",
+  "status": "m4-differential-complete-suite-unpublished",
+  "suiteConformance": false,
+  "verdict": {
+    "classification": "exact-for-tested-domain",
+    "domain": "mif-1.0-candidate-4-m4-fixed-launch",
+    "unexplainedDifferences": 0
+  },
+  "baseline": {
+    "repository": "https://github.com/calcitem/mill-interchange-format.git",
+    "branch": "master",
+    "wireCommit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978",
+    "m3ClosureCommit": "736801412e11dee9d2bfb65082757e0609a5ade3",
+    "m4LaunchCommit": "40718e80d36ec9c060fc17997568d637a74e6d9f",
+    "launch": {
+      "path": "interop/differential-candidate-4-v1.json",
+      "sha256": "sha256:560ef369fde248bd96d3468a4336442db1d970ede04f488821509e69925fd48e",
+      "resourceCount": 29
+    },
+    "referenceBaseline": {
+      "path": "interop/evidence/mif-1.0-candidate-4-m4-reference-baseline.json",
+      "sha256": "sha256:29d198dbcf8221fa0235af6a72db9d6a82646b45fc653c584071821a9a4bb61b"
+    }
+  },
+  "implementations": [
+    {
+      "project": "MIF",
+      "adapter": "mif-reference",
+      "repository": "https://github.com/calcitem/mill-interchange-format.git",
+      "branch": "master",
+      "testedCommit": "40718e80d36ec9c060fc17997568d637a74e6d9f"
+    },
+    {
+      "project": "Sanmill",
+      "adapter": "sanmill-rust",
+      "repository": "https://github.com/calcitem/Sanmill.git",
+      "branch": "master",
+      "implementationCommit": "ae9a1d8a16261478631a3a7583cbf35c7b6e0df5",
+      "testedCommit": "9431b95f151502f415f096c7d96ca944e5d578de",
+      "evidenceCommit": "2a53a89893daae528af64503cc87e34bf07e66e3"
+    },
+    {
+      "project": "NMM_LLM",
+      "adapter": "nmm-llm-python",
+      "repository": "https://github.com/benmarkbrandwood-blip/NMM_LLM.git",
+      "branch": "dev",
+      "implementationCommit": "6c1538082fc551203d827782d137a5799c810535",
+      "testedCommit": "382eddd1c5a3364c0056e152b524f517d126a113",
+      "evidenceCommit": "382eddd1c5a3364c0056e152b524f517d126a113"
+    }
+  ],
+  "independentReports": [
+    {
+      "project": "Sanmill",
+      "adapter": "sanmill-rust",
+      "repository": "https://github.com/calcitem/Sanmill.git",
+      "commit": "9431b95f151502f415f096c7d96ca944e5d578de",
+      "path": "interop/evidence/mif-interop-candidate-4-m4-reference-sanmill-report-2026-08-07.json",
+      "sha256": "sha256:0135ba7778a4623cecc0fe07173f50d76d3f06b6afd7830269b2c01e168604a7",
+      "protocol": "MIF-INTEROP-DIFFERENTIAL-REPORT/1",
+      "launchDigest": "sha256:560ef369fde248bd96d3468a4336442db1d970ede04f488821509e69925fd48e",
+      "adapters": ["mif-reference", "sanmill-rust"],
+      "configDigest": "sha256:dc08c6747c6e0ced26a1d3855d4dca14077a2a430bb7571e2e746e59637e89ca",
+      "summary": {
+        "runsPassed": 10,
+        "runsFailed": 0,
+        "negativePassed": 5,
+        "negativeFailed": 0
+      },
+      "commitBinding": {
+        "commit": "9431b95f151502f415f096c7d96ca944e5d578de",
+        "path": "interop/evidence/mif-interop-candidate-4-m4-reference-sanmill-evidence-manifest-2026-08-07.json",
+        "sha256": "sha256:f26de619528aeba6648277a5b97a1d6ea1dbf47bae46adf93dbe05d9bcf53f5f",
+        "protocol": "SANMILL-MIF-INTEROP-EVIDENCE/1"
+      }
+    },
+    {
+      "project": "NMM_LLM",
+      "adapter": "nmm-llm-python",
+      "repository": "https://github.com/benmarkbrandwood-blip/NMM_LLM.git",
+      "commit": "382eddd1c5a3364c0056e152b524f517d126a113",
+      "path": "docs/evidence/mif-interop-candidate-4-m4-reference-nmm-report-2026-08-07.json",
+      "sha256": "sha256:2bc434699902a1c468b604797d4456ee0c968817b057ec4dc8254a623a1ba64c",
+      "protocol": "MIF-INTEROP-DIFFERENTIAL-REPORT/1",
+      "launchDigest": "sha256:560ef369fde248bd96d3468a4336442db1d970ede04f488821509e69925fd48e",
+      "adapters": ["mif-reference", "nmm-llm-python"],
+      "configDigest": "sha256:c6eb5edc21773c017e7a2d5d9050b38cb08450658a286e64a395f1edc6b7074e",
+      "summary": {
+        "runsPassed": 10,
+        "runsFailed": 0,
+        "negativePassed": 5,
+        "negativeFailed": 0
+      },
+      "commitBinding": {
+        "commit": "382eddd1c5a3364c0056e152b524f517d126a113",
+        "path": "docs/evidence/mif-interop-candidate-4-m4-reference-nmm-evidence-manifest-2026-08-07.json",
+        "sha256": "sha256:58206e6acc193180cbb20fe02b001381b13d01f959340e32f9609eb7ccfd3c65",
+        "protocol": "NMM_LLM-MIF-INTEROP-EVIDENCE/1"
+      }
+    }
+  ],
+  "threeProjectReport": {
+    "repository": "https://github.com/calcitem/Sanmill.git",
+    "commit": "2a53a89893daae528af64503cc87e34bf07e66e3",
+    "path": "interop/evidence/mif-interop-candidate-4-m4-three-project-report-2026-08-07.json",
+    "sha256": "sha256:7956c320cf771767dcb3ecf1fbdb5b10c7313028f25aab3a53f9f0d42021d967",
+    "protocol": "MIF-INTEROP-DIFFERENTIAL-REPORT/1",
+    "adapters": ["mif-reference", "sanmill-rust", "nmm-llm-python"],
+    "launchDigest": "sha256:560ef369fde248bd96d3468a4336442db1d970ede04f488821509e69925fd48e",
+    "configDigest": "sha256:4184d56c696b2e5031d95cc18918757af9f91fa5634dded579ecfae2ef3cf70f",
+    "summary": {
+      "runsPassed": 10,
+      "runsFailed": 0,
+      "negativePassed": 5,
+      "negativeFailed": 0
+    }
+  },
+  "commitBinding": {
+    "repository": "https://github.com/calcitem/Sanmill.git",
+    "commit": "2a53a89893daae528af64503cc87e34bf07e66e3",
+    "path": "interop/evidence/mif-interop-candidate-4-m4-three-project-evidence-manifest-2026-08-07.json",
+    "sha256": "sha256:5ebc54b551c1b6258d07843cdc86447565ef7710be9678e354ac27ddec5c191f",
+    "protocol": "SANMILL-MIF-INTEROP-EVIDENCE/1"
+  },
+  "verification": {
+    "method": "independent-rerun-and-byte-identity-v1",
+    "date": "2026-08-07",
+    "consecutiveRuns": 2,
+    "rawReportsByteIdentical": true,
+    "reportSha256": "sha256:7956c320cf771767dcb3ecf1fbdb5b10c7313028f25aab3a53f9f0d42021d967",
+    "summary": {
+      "runsPassed": 10,
+      "runsFailed": 0,
+      "negativePassed": 5,
+      "negativeFailed": 0
+    },
+    "nmmFocusedTests": {
+      "passed": 62,
+      "failed": 0
+    }
+  },
+  "nextMilestone": "M5-release"
+}

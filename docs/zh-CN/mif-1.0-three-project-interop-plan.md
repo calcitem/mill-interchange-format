@@ -231,6 +231,37 @@ Sanmill 与 NMM_LLM 现在可以开工，且不需要修改玩法语义或 adapt
 和最短 event prefix；直接按第 7 节分类，不得重新选 seed 或改写 launch。M4 只有
 在两个独立实现的相同输入结果与三方报告均无未解释差异后才关闭。
 
+### 5.5 M4 闭合结果
+
+M4 已完成。两个产品项目没有修改 frozen wire、launch、seed 或 mutation：
+
+- Sanmill 的 adapter 实现提交为
+  `ae9a1d8a16261478631a3a7583cbf35c7b6e0df5`，两方 evidence 提交为
+  `9431b95f151502f415f096c7d96ca944e5d578de`；Reference + Sanmill 报告为
+  10/10 seeded trajectories 与 5/5 negative mutation families，raw SHA-256
+  为 `0135ba7778a4623cecc0fe07173f50d76d3f06b6afd7830269b2c01e168604a7`；
+- NMM_LLM 的 adapter 诊断修复提交为
+  `6c1538082fc551203d827782d137a5799c810535`，evidence 提交为
+  `382eddd1c5a3364c0056e152b524f517d126a113`；Reference + NMM_LLM 报告为
+  10/10 与 5/5，raw SHA-256 为
+  `2bc434699902a1c468b604797d4456ee0c968817b057ec4dc8254a623a1ba64c`；
+- Sanmill 在 `2a53a89893daae528af64503cc87e34bf07e66e3` 发布最终三方报告和
+  companion manifest。三方报告为 10/10 与 5/5，raw SHA-256 为
+  `7956c320cf771767dcb3ecf1fbdb5b10c7313028f25aab3a53f9f0d42021d967`，
+  manifest raw SHA-256 为
+  `5ebc54b551c1b6258d07843cdc86447565ef7710be9678e354ac27ddec5c191f`；
+- MIF 在三个已发布提交上独立连续复跑两次，均逐字节产生同一三方报告；
+  NMM_LLM 的 62 项 MIF 聚焦测试也独立通过。
+
+`interop/evidence/mif-1.0-candidate-4-m4.json` 固定全部 commit、launch、报告、
+manifest 与复核 identity。M4 的结论为 `exact-for-tested-domain`：只覆盖该固定
+Candidate-4 launch 的 10 个 trajectory 与 5 个 mutation family，不外推为所有
+规则集、所有历史或所有实现输入的一般等价性，也不是 MIF Suite 1.0 conformance。
+
+下一里程碑为 M5 Release：完成治理、许可、媒体类型、文件扩展名、签名 release
+manifest、最终 suite artifact 绑定与 Git tag 后，才可发布实际
+`mif-suite-1.0.json`。
+
 ## 6. 比较要求
 
 ### 6.1 Byte-level

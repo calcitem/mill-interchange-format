@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 INTEROP = ROOT / "interop"
 PLAN = ROOT / "docs" / "zh-CN" / "mif-1.0-three-project-interop-plan.md"
 M3_EVIDENCE = INTEROP / "evidence" / "mif-1.0-candidate-4-m3.json"
+M4_EVIDENCE = INTEROP / "evidence" / "mif-1.0-candidate-4-m4.json"
 M4_LAUNCH = INTEROP / "differential-candidate-4-v1.json"
 M4_BASELINE = (
     INTEROP / "evidence" / "mif-1.0-candidate-4-m4-reference-baseline.json"
@@ -52,6 +53,9 @@ BASELINE_DIGESTS = {
     ),
     M3_EVIDENCE: (
         "a354e810de0c74dd26226bee39b09f05c2677dbd693f95574fccc17d8c0c6671"
+    ),
+    M4_EVIDENCE: (
+        "c02715f966481ba9d46ccb13cc2fbb2b58913123a85dab988fd6069fdd6d4bce"
     ),
     M4_LAUNCH: (
         "560ef369fde248bd96d3468a4336442db1d970ede04f488821509e69925fd48e"
@@ -302,6 +306,7 @@ def verify_required_language() -> None:
         "M5 Release",
         "M3 已完成",
         "M4 Differential",
+        "M4 已完成",
     ):
         if token not in plan:
             raise VerificationError(f"collaboration plan omits required token: {token}")
@@ -454,6 +459,227 @@ def verify_m3_evidence() -> None:
         "failed": 0,
     }:
         raise VerificationError("M3 independent verification record mismatch")
+
+
+def verify_m4_evidence() -> None:
+    evidence = json.loads(
+        M4_EVIDENCE.read_text(encoding="utf-8"),
+        object_pairs_hook=reject_duplicate_members,
+    )
+    expected_members = {
+        "artifact",
+        "status",
+        "suiteConformance",
+        "verdict",
+        "baseline",
+        "implementations",
+        "independentReports",
+        "threeProjectReport",
+        "commitBinding",
+        "verification",
+        "nextMilestone",
+    }
+    if set(evidence) != expected_members:
+        raise VerificationError("M4 evidence member set mismatch")
+    if (
+        evidence["artifact"] != "mif-1.0-candidate-4-m4-evidence"
+        or evidence["status"]
+        != "m4-differential-complete-suite-unpublished"
+        or evidence["suiteConformance"] is not False
+        or evidence["nextMilestone"] != "M5-release"
+    ):
+        raise VerificationError("M4 evidence status mismatch")
+    if evidence["verdict"] != {
+        "classification": "exact-for-tested-domain",
+        "domain": "mif-1.0-candidate-4-m4-fixed-launch",
+        "unexplainedDifferences": 0,
+    }:
+        raise VerificationError("M4 evidence verdict mismatch")
+
+    launch_digest = (
+        "sha256:560ef369fde248bd96d3468a4336442db1d970ede04f488821509e69925fd48e"
+    )
+    reference_digest = (
+        "sha256:29d198dbcf8221fa0235af6a72db9d6a82646b45fc653c584071821a9a4bb61b"
+    )
+    summary = {
+        "runsPassed": 10,
+        "runsFailed": 0,
+        "negativePassed": 5,
+        "negativeFailed": 0,
+    }
+    if evidence["baseline"] != {
+        "repository": "https://github.com/calcitem/mill-interchange-format.git",
+        "branch": "master",
+        "wireCommit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978",
+        "m3ClosureCommit": "736801412e11dee9d2bfb65082757e0609a5ade3",
+        "m4LaunchCommit": "40718e80d36ec9c060fc17997568d637a74e6d9f",
+        "launch": {
+            "path": "interop/differential-candidate-4-v1.json",
+            "sha256": launch_digest,
+            "resourceCount": 29,
+        },
+        "referenceBaseline": {
+            "path": (
+                "interop/evidence/"
+                "mif-1.0-candidate-4-m4-reference-baseline.json"
+            ),
+            "sha256": reference_digest,
+        },
+    }:
+        raise VerificationError("M4 evidence baseline mismatch")
+
+    expected_implementations = [
+        {
+            "project": "MIF",
+            "adapter": "mif-reference",
+            "repository": (
+                "https://github.com/calcitem/mill-interchange-format.git"
+            ),
+            "branch": "master",
+            "testedCommit": "40718e80d36ec9c060fc17997568d637a74e6d9f",
+        },
+        {
+            "project": "Sanmill",
+            "adapter": "sanmill-rust",
+            "repository": "https://github.com/calcitem/Sanmill.git",
+            "branch": "master",
+            "implementationCommit": (
+                "ae9a1d8a16261478631a3a7583cbf35c7b6e0df5"
+            ),
+            "testedCommit": "9431b95f151502f415f096c7d96ca944e5d578de",
+            "evidenceCommit": "2a53a89893daae528af64503cc87e34bf07e66e3",
+        },
+        {
+            "project": "NMM_LLM",
+            "adapter": "nmm-llm-python",
+            "repository": "https://github.com/benmarkbrandwood-blip/NMM_LLM.git",
+            "branch": "dev",
+            "implementationCommit": (
+                "6c1538082fc551203d827782d137a5799c810535"
+            ),
+            "testedCommit": "382eddd1c5a3364c0056e152b524f517d126a113",
+            "evidenceCommit": "382eddd1c5a3364c0056e152b524f517d126a113",
+        },
+    ]
+    if evidence["implementations"] != expected_implementations:
+        raise VerificationError("M4 implementation commit binding mismatch")
+
+    expected_reports = [
+        {
+            "project": "Sanmill",
+            "adapter": "sanmill-rust",
+            "repository": "https://github.com/calcitem/Sanmill.git",
+            "commit": "9431b95f151502f415f096c7d96ca944e5d578de",
+            "path": (
+                "interop/evidence/"
+                "mif-interop-candidate-4-m4-reference-sanmill-report-"
+                "2026-08-07.json"
+            ),
+            "sha256": (
+                "sha256:0135ba7778a4623cecc0fe07173f50d76d3f06b6afd7830269b2c01e168604a7"
+            ),
+            "protocol": "MIF-INTEROP-DIFFERENTIAL-REPORT/1",
+            "launchDigest": launch_digest,
+            "adapters": ["mif-reference", "sanmill-rust"],
+            "configDigest": (
+                "sha256:dc08c6747c6e0ced26a1d3855d4dca14077a2a430bb7571e2e746e59637e89ca"
+            ),
+            "summary": summary,
+            "commitBinding": {
+                "commit": "9431b95f151502f415f096c7d96ca944e5d578de",
+                "path": (
+                    "interop/evidence/"
+                    "mif-interop-candidate-4-m4-reference-sanmill-evidence-"
+                    "manifest-2026-08-07.json"
+                ),
+                "sha256": (
+                    "sha256:f26de619528aeba6648277a5b97a1d6ea1dbf47bae46adf93dbe05d9bcf53f5f"
+                ),
+                "protocol": "SANMILL-MIF-INTEROP-EVIDENCE/1",
+            },
+        },
+        {
+            "project": "NMM_LLM",
+            "adapter": "nmm-llm-python",
+            "repository": "https://github.com/benmarkbrandwood-blip/NMM_LLM.git",
+            "commit": "382eddd1c5a3364c0056e152b524f517d126a113",
+            "path": (
+                "docs/evidence/"
+                "mif-interop-candidate-4-m4-reference-nmm-report-"
+                "2026-08-07.json"
+            ),
+            "sha256": (
+                "sha256:2bc434699902a1c468b604797d4456ee0c968817b057ec4dc8254a623a1ba64c"
+            ),
+            "protocol": "MIF-INTEROP-DIFFERENTIAL-REPORT/1",
+            "launchDigest": launch_digest,
+            "adapters": ["mif-reference", "nmm-llm-python"],
+            "configDigest": (
+                "sha256:c6eb5edc21773c017e7a2d5d9050b38cb08450658a286e64a395f1edc6b7074e"
+            ),
+            "summary": summary,
+            "commitBinding": {
+                "commit": "382eddd1c5a3364c0056e152b524f517d126a113",
+                "path": (
+                    "docs/evidence/"
+                    "mif-interop-candidate-4-m4-reference-nmm-evidence-"
+                    "manifest-2026-08-07.json"
+                ),
+                "sha256": (
+                    "sha256:58206e6acc193180cbb20fe02b001381b13d01f959340e32f9609eb7ccfd3c65"
+                ),
+                "protocol": "NMM_LLM-MIF-INTEROP-EVIDENCE/1",
+            },
+        },
+    ]
+    if evidence["independentReports"] != expected_reports:
+        raise VerificationError("M4 independent report binding mismatch")
+
+    report = evidence["threeProjectReport"]
+    if report != {
+        "repository": "https://github.com/calcitem/Sanmill.git",
+        "commit": "2a53a89893daae528af64503cc87e34bf07e66e3",
+        "path": (
+            "interop/evidence/"
+            "mif-interop-candidate-4-m4-three-project-report-2026-08-07.json"
+        ),
+        "sha256": (
+            "sha256:7956c320cf771767dcb3ecf1fbdb5b10c7313028f25aab3a53f9f0d42021d967"
+        ),
+        "protocol": "MIF-INTEROP-DIFFERENTIAL-REPORT/1",
+        "adapters": ["mif-reference", "sanmill-rust", "nmm-llm-python"],
+        "launchDigest": launch_digest,
+        "configDigest": (
+            "sha256:4184d56c696b2e5031d95cc18918757af9f91fa5634dded579ecfae2ef3cf70f"
+        ),
+        "summary": summary,
+    }:
+        raise VerificationError("M4 three-project report binding mismatch")
+    if evidence["commitBinding"] != {
+        "repository": "https://github.com/calcitem/Sanmill.git",
+        "commit": "2a53a89893daae528af64503cc87e34bf07e66e3",
+        "path": (
+            "interop/evidence/"
+            "mif-interop-candidate-4-m4-three-project-evidence-manifest-"
+            "2026-08-07.json"
+        ),
+        "sha256": (
+            "sha256:5ebc54b551c1b6258d07843cdc86447565ef7710be9678e354ac27ddec5c191f"
+        ),
+        "protocol": "SANMILL-MIF-INTEROP-EVIDENCE/1",
+    }:
+        raise VerificationError("M4 companion evidence binding mismatch")
+    if evidence["verification"] != {
+        "method": "independent-rerun-and-byte-identity-v1",
+        "date": "2026-08-07",
+        "consecutiveRuns": 2,
+        "rawReportsByteIdentical": True,
+        "reportSha256": report["sha256"],
+        "summary": summary,
+        "nmmFocusedTests": {"passed": 62, "failed": 0},
+    }:
+        raise VerificationError("M4 independent verification record mismatch")
 
 
 def verify_m4_launch() -> None:
@@ -681,15 +907,16 @@ def main() -> int:
         verify_markdown()
         verify_required_language()
         verify_m3_evidence()
+        verify_m4_evidence()
         verify_m4_launch()
         verify_loopback()
     except (OSError, UnicodeError, json.JSONDecodeError, VerificationError) as exc:
-        print(f"MIF 1.0 interop launch gate FAILED: {exc}")
+        print(f"MIF 1.0 interop gate FAILED: {exc}")
         return 1
     print(
-        "MIF 1.0 interop launch gate passed: fixed baselines, documents, "
-        "Schema, 17-case smoke, 58-case deterministic reference loopbacks and "
-        "commit-bound three-project M3 evidence plus the reproducible 10-run/"
+        "MIF 1.0 interop gate passed: fixed baselines, documents, Schema, "
+        "17-case smoke, 58-case deterministic reference loopbacks, commit-bound "
+        "three-project M3 and M4 evidence, plus the reproducible 10-run/"
         "5-mutation M4 reference launch baseline "
         "(candidate evidence only; Suite conformance not established)"
     )
