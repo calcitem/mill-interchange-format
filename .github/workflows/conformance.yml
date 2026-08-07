@@ -1,4 +1,4 @@
-name: Conformance corpus
+name: MIF verification
 
 on:
   push:
@@ -12,5 +12,18 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Verify draft and corpus integrity
-        run: python tools/verify_conformance.py
+          cache: pip
+      - name: Install verification dependencies
+        run: python -m pip install --requirement requirements-ci.txt
+      - name: Verify frozen MIF 0.4 corpus integrity
+        run: python -B tools/verify_corpus_integrity.py
+      - name: Verify MIF 1.0 wire contract
+        run: python -B tools/verify_wire_contract.py
+      - name: Verify MIF 1.0 machine artifacts
+        run: python -B tools/verify_mif_1_0_artifacts.py
+      - name: Execute MIF 1.0 reference corpus
+        run: python -B tools/run_mif_1_0_reference.py
+      - name: Verify MIF 1.0 interoperability evidence
+        run: python -B tools/verify_mif_1_0_interop.py
+      - name: Verify MIF Suite 1.0 release candidate
+        run: python -B tools/verify_mif_1_0_release.py

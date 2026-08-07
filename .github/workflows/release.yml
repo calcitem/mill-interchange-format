@@ -1,0 +1,54 @@
+name: Publish MIF Suite 1.0
+
+on:
+  push:
+    tags:
+      - mif-suite-1.0
+
+jobs:
+  publish:
+    if: github.repository == 'calcitem/mill-interchange-format'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install verification dependencies
+        run: python -m pip install --requirement requirements-ci.txt
+      - name: Verify complete release gate
+        run: |
+          python -B tools/verify_corpus_integrity.py
+          python -B tools/verify_wire_contract.py
+          python -B tools/verify_mif_1_0_artifacts.py
+          python -B tools/run_mif_1_0_reference.py
+          python -B tools/verify_mif_1_0_interop.py
+          python -B tools/verify_mif_1_0_release.py --require-ready --require-tag
+      - name: Attest suite manifest
+        uses: actions/attest@v4
+        with:
+          subject-path: mif-suite-1.0.json
+      - name: Attest release manifest
+        uses: actions/attest@v4
+        with:
+          subject-path: release/mif-1.0-release-manifest.json
+      - name: Publish immutable GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "${GITHUB_REF_NAME}"
+          mif-suite-1.0.json
+          mif-suite-1.0.sha256
+          release/mif-1.0-release-manifest.json
+          LICENSE
+          NOTICE
+          --verify-tag
+          --title "MIF Suite 1.0"
+          --notes-file release/mif-1.0-release-notes.md

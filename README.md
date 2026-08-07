@@ -9,17 +9,22 @@ Community working draft for Mill-game interchange formats: positions
 This repository contains the byte-frozen historical **MIF Community Working
 Draft 0.4** and the frozen **MIF 1.0 Candidate Wire Contract**.
 
-The 1.0 wire meanings are frozen, but MIF Suite 1.0 is not yet a conformance
-target. Candidate standalone ABNF, JSON Schemas, registries and an initial
+The 1.0 wire meanings are frozen. The exact MIF Suite 1.0 release-candidate
+object is now available, but it is not a released conformance target until the
+two independent adapters bind its digest and the signed tag is published.
+Standalone ABNF, JSON Schemas, registries and an initial
 structural, identity and executable corpus are available under
 [`artifacts/mif-1.0/`](artifacts/mif-1.0/). A candidate Python reference
 runner is available under [`reference/`](reference/). The non-normative
 three-project adapter protocol, smoke cases and comparator are under
 [`interop/`](interop/), with the collaboration plan in
 [`docs/zh-CN/mif-1.0-three-project-interop-plan.md`](docs/zh-CN/mif-1.0-three-project-interop-plan.md).
-Two agreeing independent product adapters have now published commit-bound M3
-and M4 Candidate evidence. Release governance and the actual signed
-`mif-suite-1.0.json` binding still have to be delivered. Neither edition is an
+Two agreeing independent product adapters have published commit-bound M3 and
+M4 Candidate evidence. Apache-2.0 licensing, registry governance, release
+policy, media/extension assignments and the future Sigstore-backed tag
+workflow are now fixed. The remaining release gate is suite-digest-bound
+adapter evidence followed by the immutable tag and attestations. Neither
+edition is an
 ISO, IEC, CEN, WMD or tournament-federation standard and shall not be cited as
 one.
 
@@ -50,8 +55,8 @@ ABNF. The candidate machine artifacts are derived from that contract and are
 integrity-checked. The separate candidate reference runner executes gameplay,
 replay, identities, MPK canonicalization, transforms, logical-turn projection
 and the non-normative legal-action comparison projection, but one implementation
-does not publish a suite. Until the release gates and
-`mif-suite-1.0.json` are complete, this repository has no MIF Suite 1.0
+does not by itself publish conformance. Until the suite-bound adapter gate and
+signed tag are complete, this repository has no released MIF Suite 1.0
 conformance target.
 
 The candidate-2 reference/harness baseline uses one RFC 8785 implementation for
@@ -163,6 +168,31 @@ fixed Candidate-4 differential domain at 10/10 seeded trajectories and 5/5
 negative mutation families with no unexplained difference. Its verdict is
 `exact-for-tested-domain`; it is not MIF Suite 1.0 conformance.
 
+## MIF Suite 1.0 release candidate
+
+[`mif-suite-1.0.json`](mif-suite-1.0.json) freezes the component/profile
+combination, exact specifications and artifacts, tested rulesets, independent
+adapter records, media types, extensions and compatibility policy. Its RFC
+8785 JCS SHA-256 is:
+
+```text
+sha256:81a5feabc281bfc4f830addabc2c6846d1f191bbbcf04e548f04b35dd358ae6f
+```
+
+[`mif-suite-1.0.sha256`](mif-suite-1.0.sha256) records that value. The
+release manifest currently has status `awaiting-adapter-suite-pin`; Sanmill
+and NMM_LLM must bind this exact digest before the repository may create the
+`mif-suite-1.0` tag. Verify the candidate package with:
+
+```text
+python -B tools/verify_mif_1_0_release.py
+```
+
+See [`release/README.md`](release/README.md) for release and training gates,
+[`GOVERNANCE.md`](GOVERNANCE.md) for registry governance and
+[`docs/zh-CN/mif-1.0-release.md`](docs/zh-CN/mif-1.0-release.md) for the
+Chinese release summary.
+
 ## Sources and implementation artifacts
 
 | Artifact | Role |
@@ -174,6 +204,9 @@ negative mutation families with no unexplained difference. Its verdict is
 | [`reference/`](reference/) | Candidate Python reference runner; single-implementation evidence only |
 | [`interop/`](interop/) | Non-normative adapter protocol, Schema, cases and loopback configuration |
 | [`interop/evidence/mif-1.0-candidate-4-m4.json`](interop/evidence/mif-1.0-candidate-4-m4.json) | Commit-bound M4 Candidate evidence; exact only for the fixed tested domain |
+| [`mif-suite-1.0.json`](mif-suite-1.0.json) | Exact Suite 1.0 release-candidate object; not released until signed tag |
+| [`release/`](release/) | Release policy, manifest, schema, notes and vendored adapter evidence |
+| [`GOVERNANCE.md`](GOVERNANCE.md) | Registry, lifecycle and immutable-release governance |
 | [`mif-0.4.md`](mif-0.4.md) | Frozen English historical working draft |
 | [`conformance/`](conformance/) | Frozen 0.4 corpus and migration-test input |
 | [`conformance/mif-0.4.abnf`](conformance/mif-0.4.abnf) | Standalone ABNF |
@@ -213,6 +246,8 @@ a compatibility entry point with the same limited meaning.
 
 ## License
 
-License terms are not yet declared in this repository. Until a LICENSE file
-is added, default copyright rules apply; ask the maintainers before
-redistributing.
+The complete repository—specifications, translations, schemas, registries,
+corpora, reference code and tooling—is licensed under the
+[Apache License 2.0](LICENSE). Attribution information is recorded in
+[`NOTICE`](NOTICE). Contributions are accepted under the same terms as
+described in [`CONTRIBUTING.md`](CONTRIBUTING.md).

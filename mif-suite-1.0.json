@@ -1,0 +1,236 @@
+{
+  "format": "MIFSUITE/1.0",
+  "id": "mif-suite-1.0",
+  "components": {
+    "mfen": "MFEN/1.0",
+    "mpk": "MPK/1.0",
+    "mifpos": "MIFPOS/1.0",
+    "mstate": "MSTATE/1.0",
+    "mrs": "MRS/1.0",
+    "diagnostics": "MIFDIAG/1.0",
+    "capabilities": "MIFCAP/1.0",
+    "conversion": "MIFCONV/1.0",
+    "invariance": "MIFINV/1.0",
+    "logicalTurn": "MIFTURN/1.0"
+  },
+  "profiles": {
+    "semantics": "mif-finite-rules-v3",
+    "semanticProjection": "mrs-semantic-v1",
+    "state": "mill24-state-v1",
+    "key": [
+      "structural-aut16-v1",
+      "structural-d4-v1"
+    ],
+    "repetitionProjection": "repetition-observation-v1",
+    "observation": [
+      "stable-moving-v1",
+      "stable-primary-decision-v1"
+    ],
+    "repetitionSummary": "reset-count-smt-v1",
+    "resumption": "resumption-state-v1",
+    "decision": "decision-state-v1",
+    "claimLifecycle": "stable-claim-rights-v1",
+    "mpkBinding": "inline-semantic-digest-v1",
+    "transform": "mill24-full-state-v1",
+    "logicalTurn": "logical-turn-v1"
+  },
+  "specifications": [
+    {
+      "id": "mif-1.0-en",
+      "sha256": "sha256:330e65145ceb26fe582e58b89405d87bd73e8be200b476aef82c0ee27731d995",
+      "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+    },
+    {
+      "id": "mif-1.0-zh-cn",
+      "sha256": "sha256:9cc06abb57425e2bc2e26432b6da53abe503e9b5415ea0b4f854f19f68722cc1",
+      "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+    }
+  ],
+  "artifacts": {
+    "registries": [
+      {
+        "id": "mif-1.0-diagnostics-registry",
+        "sha256": "sha256:faaff9e38b6e3e5bb9130dd4abbe91013371a595953cc19f67b74c2b8b9ee35b",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      },
+      {
+        "id": "mif-1.0-formats-registry",
+        "sha256": "sha256:c6fbb09e44e93e5538ea221f01abd0d1e852aabf37908b8025996bb925752f0c",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      },
+      {
+        "id": "mif-1.0-mill24-registry",
+        "sha256": "sha256:bf5f983b74e26a0e192211725afc7cc02a4cbb39428cca6c584e1fc89ed0c267",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      },
+      {
+        "id": "mif-1.0-profiles-registry",
+        "sha256": "sha256:53cc5f920bbf4f759ade96dbd9396507ab3950cd86b554312bea3ab86da40f26",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      },
+      {
+        "id": "mif-1.0-tokens-registry",
+        "sha256": "sha256:8b093c81ed1f497381ef952ce24ca7e76bf73152e0a8c58bfaeea259e0e9b1bb",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      }
+    ],
+    "corpora": [
+      {
+        "id": "mif-1.0-artifact-index",
+        "sha256": "sha256:5acbb714bed77e24eaac72fa5f24d2e54d1e17aaf568a8b60718c840281a6541",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      },
+      {
+        "id": "mif-1.0-deterministic-interop-corpus",
+        "sha256": "sha256:d11317a090300f8a47f77afed647bdbd236dcdb1996c0147a81c874fa39dfd82",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      },
+      {
+        "id": "mif-1.0-differential-launch",
+        "sha256": "sha256:560ef369fde248bd96d3468a4336442db1d970ede04f488821509e69925fd48e",
+        "commit": "40718e80d36ec9c060fc17997568d637a74e6d9f"
+      },
+      {
+        "id": "mif-1.0-m3-evidence",
+        "sha256": "sha256:a354e810de0c74dd26226bee39b09f05c2677dbd693f95574fccc17d8c0c6671",
+        "commit": "736801412e11dee9d2bfb65082757e0609a5ade3"
+      },
+      {
+        "id": "mif-1.0-m4-evidence",
+        "sha256": "sha256:c02715f966481ba9d46ccb13cc2fbb2b58913123a85dab988fd6069fdd6d4bce",
+        "commit": "9c308c4924d77ddf8bcd6851b4a4042875ee672c"
+      },
+      {
+        "id": "mif-1.0-reference-corpus",
+        "sha256": "sha256:350b7ff02772e820a57431e11c4e2f15a874d0779fb6e7afb01e9b16f6992741",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      }
+    ],
+    "schemas": [
+      {
+        "id": "mif-1.0-schema-root",
+        "sha256": "sha256:771f2c46ee4a83c08218caa5b026abfa98f72feb32b8945639c0340d73fd4bb9",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      },
+      {
+        "id": "mif-1.0-suite-schema",
+        "sha256": "sha256:bc1e482dd4fea799c5c64f174e25f90d88640926df1852bae7618bec8292c090",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      }
+    ],
+    "abnf": [
+      {
+        "id": "mif-1.0-abnf",
+        "sha256": "sha256:1f23294067b1c1b6842fc35b1f30ce889af367a4d2fee8606b3a5a765e94e51d",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      }
+    ],
+    "conversions": [
+      {
+        "id": "mif-0.4-to-1.0-conversion-vectors",
+        "sha256": "sha256:baed6068b00d8f7b943d60559de8d83dcbfb9328926739c20cc448c955b36bf8",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      }
+    ],
+    "runners": [
+      {
+        "id": "mif-0.4-corpus-integrity-verifier",
+        "sha256": "sha256:84dec8b35b6466811b99b60c1636ff9d5c226e3911d52d123503c55bf2891ca1",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      },
+      {
+        "id": "mif-1.0-adapter-cli",
+        "sha256": "sha256:57795b46a8e9762d135f1c4556dc3004792a883f968d66a50a21869882fc9165",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      },
+      {
+        "id": "mif-1.0-artifact-verifier",
+        "sha256": "sha256:c029da648741ef74df37fbb904b178b58c7d49f16f936a9807901a963b5fd385",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      },
+      {
+        "id": "mif-1.0-comparison-runner",
+        "sha256": "sha256:b0ebeafe76e704725c3dc130b09d40236d0e453fa63378e2649d7c5b8270df48",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      },
+      {
+        "id": "mif-1.0-differential-runner",
+        "sha256": "sha256:bcd23bf5666f3ba07e78e653fa4777a190719877341aa4e6adb159178fc6c505",
+        "commit": "40718e80d36ec9c060fc17997568d637a74e6d9f"
+      },
+      {
+        "id": "mif-1.0-jcs",
+        "sha256": "sha256:dad5ba9ed0fedab9682540990866dd9805f30a668b2d6d84e690e19ac48c06f5",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      },
+      {
+        "id": "mif-1.0-reference-core",
+        "sha256": "sha256:0ef50b5f382db4567081282eec13a99c07874668b758879532f2e67347e5e847",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      },
+      {
+        "id": "mif-1.0-reference-key",
+        "sha256": "sha256:47283bb86ae9cb50d6430c1e38d099263df9803f0e10e77b290a0ee8e06d9a4f",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      },
+      {
+        "id": "mif-1.0-reference-runner",
+        "sha256": "sha256:e4acc49eb7685889a1fa68d5135cb131c1f61817834d171852649993cec7ad87",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      },
+      {
+        "id": "mif-1.0-reference-transform",
+        "sha256": "sha256:5a1d474b50e0e555c401d5ee187ec343e5f3e21336f3a4fbb1b4147cd83d9361",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      },
+      {
+        "id": "mif-1.0-reference-turns",
+        "sha256": "sha256:5c3f1ce5c59b67edf9bc595d285c3c443fe5e0199b45751f8a1361eb92fceef3",
+        "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978"
+      }
+    ],
+    "adapters": [
+      {
+        "id": "nmm-llm-python-candidate-4",
+        "sha256": "sha256:58206e6acc193180cbb20fe02b001381b13d01f959340e32f9609eb7ccfd3c65"
+      },
+      {
+        "id": "sanmill-rust-candidate-4",
+        "sha256": "sha256:f26de619528aeba6648277a5b97a1d6ea1dbf47bae46adf93dbe05d9bcf53f5f"
+      }
+    ]
+  },
+  "rulesets": [
+    "sha256:173caf8189defd1ab7d4a3e8b9e26688a07fd77976bf09d56bff5fe0c273e1a1",
+    "sha256:224f7e368e322a4cc8c1225a025fb548d5b41eb096d34b7ae0543182d1aa9393"
+  ],
+  "invarianceDeclarations": [],
+  "compatibilityPolicy": "mif-1x-strict-v1",
+  "mediaTypes": [
+    { "format": "MFEN/1.0", "value": "text/plain; charset=us-ascii" },
+    { "format": "MIFCAP/1.0", "value": "application/json" },
+    { "format": "MIFCONV/1.0", "value": "application/json" },
+    { "format": "MIFDIAG/1.0", "value": "application/json" },
+    { "format": "MIFINV/1.0", "value": "application/json" },
+    { "format": "MIFPOS/1.0", "value": "application/json" },
+    { "format": "MIFSUITE/1.0", "value": "application/json" },
+    { "format": "MIFTURN/1.0", "value": "application/json" },
+    { "format": "MPK/1.0", "value": "text/plain; charset=us-ascii" },
+    { "format": "MRS/1.0", "value": "application/json" },
+    { "format": "MSTATE/1.0", "value": "application/json" }
+  ],
+  "fileExtensions": [
+    { "format": "MFEN/1.0", "value": ".mfen" },
+    { "format": "MIFCAP/1.0", "value": ".mifcap.json" },
+    { "format": "MIFCONV/1.0", "value": ".mifconv.json" },
+    { "format": "MIFDIAG/1.0", "value": ".mifdiag.json" },
+    { "format": "MIFINV/1.0", "value": ".mifinv.json" },
+    { "format": "MIFPOS/1.0", "value": ".mifpos.json" },
+    { "format": "MIFSUITE/1.0", "value": ".mifsuite.json" },
+    { "format": "MIFTURN/1.0", "value": ".mifturn.json" },
+    { "format": "MPK/1.0", "value": ".mpk" },
+    { "format": "MRS/1.0", "value": ".mrs.json" },
+    { "format": "MSTATE/1.0", "value": ".mstate.json" }
+  ],
+  "releaseManifest": "release/mif-1.0-release-manifest.json"
+}
