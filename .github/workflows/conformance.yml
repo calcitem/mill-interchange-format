@@ -32,3 +32,5 @@ jobs:
         run: python -B tools/verify_mif_1_0_release.py
       - name: Verify adapter finalization launch
         run: python -B tools/verify_mif_1_0_finalization.py
+      - name: Verify final Suite-bound evidence
+        run: python -B tools/verify_mif_1_0_final_evidence.py

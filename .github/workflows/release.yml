@@ -32,6 +32,7 @@ jobs:
           python -B tools/run_mif_1_0_reference.py
           python -B tools/verify_mif_1_0_interop.py
           python -B tools/verify_mif_1_0_finalization.py
+          python -B tools/verify_mif_1_0_final_evidence.py
           python -B tools/verify_mif_1_0_release.py --require-ready --require-tag
       - name: Attest suite manifest
         uses: actions/attest@v4
@@ -49,6 +50,9 @@ jobs:
           mif-suite-1.0.json
           mif-suite-1.0.sha256
           release/mif-1.0-release-manifest.json
+          release/evidence/mif-suite-1.0-final-evidence-2026-08-07.json
+          release/mif-1.0-adapter-evidence.schema.json
+          release/mif-1.0-final-evidence.schema.json
           LICENSE
           NOTICE
           --verify-tag

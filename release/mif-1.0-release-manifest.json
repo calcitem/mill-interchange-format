@@ -1,6 +1,6 @@
 {
   "format": "MIF-RELEASE-MANIFEST/1",
-  "status": "awaiting-adapter-suite-pin",
+  "status": "ready-for-tag",
   "release": {
     "id": "mif-suite-1.0",
     "tag": "mif-suite-1.0",
@@ -46,6 +46,13 @@
       "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978",
       "path": "tools/mif_1_0_reference_adapter.py",
       "sha256": "sha256:57795b46a8e9762d135f1c4556dc3004792a883f968d66a50a21869882fc9165"
+    },
+    {
+      "id": "mif-1.0-adapter-evidence-schema",
+      "role": "schema",
+      "repository": "https://github.com/calcitem/mill-interchange-format.git",
+      "path": "release/mif-1.0-adapter-evidence.schema.json",
+      "sha256": "sha256:993a1507b70fc50db2adc46d35e679ec42575631c7d15b91c50a82a572a3ca90"
     },
     {
       "id": "mif-1.0-adapter-finalization-launch",
@@ -104,7 +111,7 @@
       "role": "policy",
       "repository": "https://github.com/calcitem/mill-interchange-format.git",
       "path": ".github/workflows/conformance.yml",
-      "sha256": "sha256:0aa267bf620a8be94e228c7d39d0fe59c453f4a56d4ca96aa1bdbf8ed7302372"
+      "sha256": "sha256:4e8f3258b16941a1816cc9fa5928407e2c6ea367aa3edfea1fa0a012f6f755f6"
     },
     {
       "id": "mif-1.0-contributing-policy",
@@ -154,11 +161,46 @@
       "sha256": "sha256:330e65145ceb26fe582e58b89405d87bd73e8be200b476aef82c0ee27731d995"
     },
     {
+      "id": "mif-1.0-final-evidence",
+      "role": "evidence",
+      "repository": "https://github.com/calcitem/mill-interchange-format.git",
+      "path": "release/evidence/mif-suite-1.0-final-evidence-2026-08-07.json",
+      "sha256": "sha256:2c23983281858386bc66e3adfce52f365c712d9e63a31c53f6a68bd6b2de08e1"
+    },
+    {
+      "id": "mif-1.0-final-evidence-schema",
+      "role": "schema",
+      "repository": "https://github.com/calcitem/mill-interchange-format.git",
+      "path": "release/mif-1.0-final-evidence.schema.json",
+      "sha256": "sha256:bfaaee5bb7bbff4b11397fe2f2b566b7952c7ca2fbfaf6487ae6a82be21cb49d"
+    },
+    {
+      "id": "mif-1.0-final-evidence-verifier",
+      "role": "runner",
+      "repository": "https://github.com/calcitem/mill-interchange-format.git",
+      "path": "tools/verify_mif_1_0_final_evidence.py",
+      "sha256": "sha256:00d8329976de6354116493839f4344f127603ddb433a50b8ebfb16543a6fab6d"
+    },
+    {
+      "id": "mif-1.0-final-three-adapter-deterministic-report",
+      "role": "evidence",
+      "repository": "https://github.com/calcitem/mill-interchange-format.git",
+      "path": "release/evidence/mif-suite-1.0-three-adapter-deterministic-report-2026-08-07.json",
+      "sha256": "sha256:61467c6593fd5b2a528edaa87b346651d5d1076ba3ce35d50afdab1369babebc"
+    },
+    {
+      "id": "mif-1.0-final-three-adapter-differential-report",
+      "role": "evidence",
+      "repository": "https://github.com/calcitem/mill-interchange-format.git",
+      "path": "release/evidence/mif-suite-1.0-three-adapter-differential-report-2026-08-07.json",
+      "sha256": "sha256:c571fd8039d7385b5b63b3f3c0f2182794cf150df847002a593a72e76ba151c6"
+    },
+    {
       "id": "mif-1.0-finalization-verifier",
       "role": "runner",
       "repository": "https://github.com/calcitem/mill-interchange-format.git",
       "path": "tools/verify_mif_1_0_finalization.py",
-      "sha256": "sha256:11c5d6ee68268bf41294c233bf62476c857e22bd5219b1a2e51c22d613667d80"
+      "sha256": "sha256:ea08b50868aebb01f2e120cf9e3fd25c4a1edc622b0c1cb901fa93e8be5f16c0"
     },
     {
       "id": "mif-1.0-formats-registry",
@@ -234,7 +276,7 @@
       "role": "policy",
       "repository": "https://github.com/calcitem/mill-interchange-format.git",
       "path": "README.md",
-      "sha256": "sha256:cedb85777a59f4b9f0e07dce924cb7aebd6af635af773943c6a71f19aa876931"
+      "sha256": "sha256:0efd7870a02f6219e72d4b3143498edd40722c9e9af05a34a1da501cee00e77e"
     },
     {
       "id": "mif-1.0-reference-core",
@@ -289,7 +331,7 @@
       "role": "policy",
       "repository": "https://github.com/calcitem/mill-interchange-format.git",
       "path": "release/mif-1.0-release-notes.md",
-      "sha256": "sha256:30343ee78abe110d780af461070da23bec5294714482941541bc35242662a9e6"
+      "sha256": "sha256:bfd8e0c438246e8b22b01ee3c8c9b474381aca2a287722cc70531256e3cdc962"
     },
     {
       "id": "mif-1.0-release-policy",
@@ -303,7 +345,7 @@
       "role": "policy",
       "repository": "https://github.com/calcitem/mill-interchange-format.git",
       "path": "docs/zh-CN/mif-1.0-release.md",
-      "sha256": "sha256:fa05bcc198ff595f0d2f1a86de3ad42273515d977a60fcfefaa0bfc939c42fa9"
+      "sha256": "sha256:980c537a5b1ac09478b649f9411012a846e6cb57b1c8837319bdc3b1aee760b6"
     },
     {
       "id": "mif-1.0-release-schema",
@@ -324,7 +366,7 @@
       "role": "policy",
       "repository": "https://github.com/calcitem/mill-interchange-format.git",
       "path": ".github/workflows/release.yml",
-      "sha256": "sha256:2cdb0a16c85e04f45112a63faaded832772f9351efcda5cb3aeb9f912803c762"
+      "sha256": "sha256:ce4cefedfa379588724f7239e05adbc4287a6910c031bd10d66a25b9e3fabb00"
     },
     {
       "id": "mif-1.0-schema-root",
@@ -373,11 +415,67 @@
       "sha256": "sha256:58206e6acc193180cbb20fe02b001381b13d01f959340e32f9609eb7ccfd3c65"
     },
     {
+      "id": "nmm-llm-python-suite-1.0-capability",
+      "role": "evidence",
+      "repository": "https://github.com/calcitem/mill-interchange-format.git",
+      "path": "release/evidence/mif-suite-1.0-nmm-capability-2026-08-07.json",
+      "sha256": "sha256:cd661b1156bf7269f976e050446d01797c9959482f1e1843e21ae3ea7f70dcce"
+    },
+    {
+      "id": "nmm-llm-python-suite-1.0-deterministic-report",
+      "role": "evidence",
+      "repository": "https://github.com/calcitem/mill-interchange-format.git",
+      "path": "release/evidence/mif-suite-1.0-nmm-deterministic-report-2026-08-07.json",
+      "sha256": "sha256:3463f438531fd52847df44fa4186dcba13ed22c7c570a0cc216d9a7eaa797665"
+    },
+    {
+      "id": "nmm-llm-python-suite-1.0-differential-report",
+      "role": "evidence",
+      "repository": "https://github.com/calcitem/mill-interchange-format.git",
+      "path": "release/evidence/mif-suite-1.0-nmm-differential-report-2026-08-07.json",
+      "sha256": "sha256:4c86725bfcd1759433374938c8d8eb2a1dacfa6ea3723592eff759162fce8da6"
+    },
+    {
+      "id": "nmm-llm-python-suite-1.0-evidence",
+      "role": "evidence",
+      "repository": "https://github.com/calcitem/mill-interchange-format.git",
+      "path": "release/evidence/mif-suite-1.0-nmm-adapter-evidence-2026-08-07.json",
+      "sha256": "sha256:a482563cfa413141a133b4ade8c53592bc19e5d4a566492b80ef8168f3e2e88d"
+    },
+    {
       "id": "sanmill-rust-candidate-4",
       "role": "adapter",
       "repository": "https://github.com/calcitem/mill-interchange-format.git",
       "path": "release/evidence/sanmill-candidate-4-m4.json",
       "sha256": "sha256:f26de619528aeba6648277a5b97a1d6ea1dbf47bae46adf93dbe05d9bcf53f5f"
+    },
+    {
+      "id": "sanmill-rust-suite-1.0-capability",
+      "role": "evidence",
+      "repository": "https://github.com/calcitem/mill-interchange-format.git",
+      "path": "release/evidence/mif-suite-1.0-sanmill-capability-2026-08-07.json",
+      "sha256": "sha256:219f444661d9d8362bb4924e0482040ef08555481f7fcea9028aa7738349e2b0"
+    },
+    {
+      "id": "sanmill-rust-suite-1.0-deterministic-report",
+      "role": "evidence",
+      "repository": "https://github.com/calcitem/mill-interchange-format.git",
+      "path": "release/evidence/mif-suite-1.0-sanmill-deterministic-report-2026-08-07.json",
+      "sha256": "sha256:cde7b3d9ce3192c3d05f97e2a5fdc3cff5a64717c687e1d69e5be537a8d012e1"
+    },
+    {
+      "id": "sanmill-rust-suite-1.0-differential-report",
+      "role": "evidence",
+      "repository": "https://github.com/calcitem/mill-interchange-format.git",
+      "path": "release/evidence/mif-suite-1.0-sanmill-differential-report-2026-08-07.json",
+      "sha256": "sha256:9085c0e188c84428b9fa65378011d99fab13350800c3baeae5060c88da5d3dd4"
+    },
+    {
+      "id": "sanmill-rust-suite-1.0-evidence",
+      "role": "evidence",
+      "repository": "https://github.com/calcitem/mill-interchange-format.git",
+      "path": "release/evidence/mif-suite-1.0-sanmill-adapter-evidence-2026-08-07.json",
+      "sha256": "sha256:808ba75d83ff5bc2880ce1c386f255c93a3728e0d33c713ee0fc24720a5546f9"
     }
   ],
   "implementations": [
@@ -387,8 +485,9 @@
       "adapter": "nmm-llm-python",
       "repository": "https://github.com/benmarkbrandwood-blip/NMM_LLM.git",
       "branch": "dev",
-      "implementationCommit": "6c1538082fc551203d827782d137a5799c810535",
-      "artifactBinding": "nmm-llm-python-candidate-4"
+      "implementationCommit": "a7e7dbd5461cc2d8d8c0a09317d6091598202214",
+      "artifactBinding": "nmm-llm-python-candidate-4",
+      "suiteEvidenceBinding": "mif-1.0-final-evidence"
     },
     {
       "id": "sanmill-rust",
@@ -396,8 +495,9 @@
       "adapter": "sanmill-rust",
       "repository": "https://github.com/calcitem/Sanmill.git",
       "branch": "master",
-      "implementationCommit": "ae9a1d8a16261478631a3a7583cbf35c7b6e0df5",
-      "artifactBinding": "sanmill-rust-candidate-4"
+      "implementationCommit": "7e86de7e8156a7d7f46a6a6179a8878051699505",
+      "artifactBinding": "sanmill-rust-candidate-4",
+      "suiteEvidenceBinding": "mif-1.0-final-evidence"
     }
   ],
   "signing": {

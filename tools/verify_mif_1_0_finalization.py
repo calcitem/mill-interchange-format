@@ -242,8 +242,11 @@ def verify_policy(launch: dict[str, Any], suite: dict[str, Any]) -> None:
         fail("formal training must remain gated before the signed suite tag")
 
     current_manifest = load_json(CURRENT_MANIFEST_PATH)
-    if current_manifest["status"] != "awaiting-adapter-suite-pin":
-        fail("finalization launch is stale after release status changed")
+    if current_manifest["status"] not in {
+        "awaiting-adapter-suite-pin",
+        "ready-for-tag",
+    }:
+        fail("release manifest has an unsupported finalization status")
     if current_manifest["release"]["license"] != "Apache-2.0":
         fail("release manifest does not bind the repository Apache-2.0 policy")
 

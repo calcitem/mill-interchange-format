@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/calcitem/mill-interchange-format/raw/master/release/mif-1.0-final-evidence.schema.json",
+  "title": "MIF Suite 1.0 final interoperability evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol",
+    "status",
+    "date",
+    "suiteDigest",
+    "suiteConformance",
+    "unexplainedDifferences",
+    "suite",
+    "testedDomain",
+    "adapters",
+    "threeAdapter",
+    "verification"
+  ],
+  "properties": {
+    "protocol": { "const": "MIF-SUITE-FINAL-EVIDENCE/1" },
+    "status": { "const": "ready-for-tag" },
+    "date": { "const": "2026-08-07" },
+    "suiteDigest": { "$ref": "#/$defs/digest" },
+    "suiteConformance": { "const": true },
+    "unexplainedDifferences": { "const": 0 },
+    "suite": { "$ref": "#/$defs/suite" },
+    "testedDomain": { "$ref": "#/$defs/testedDomain" },
+    "adapters": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/adapter" }
+    },
+    "threeAdapter": { "$ref": "#/$defs/threeAdapter" },
+    "verification": { "$ref": "#/$defs/verification" }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9.-]{0,127}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._@/-]+$"
+    },
+    "boundFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "rawSha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/relativePath" },
+        "rawSha256": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "suite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "candidateCommit",
+        "wireCommit",
+        "jcsSha256",
+        "rawSha256"
+      ],
+      "properties": {
+        "id": { "const": "mif-suite-1.0" },
+        "candidateCommit": { "$ref": "#/$defs/commit" },
+        "wireCommit": { "$ref": "#/$defs/commit" },
+        "jcsSha256": { "$ref": "#/$defs/digest" },
+        "rawSha256": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "testedDomain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "classes",
+        "rulesetSemanticDigests",
+        "fullConformance",
+        "conversionClaimed"
+      ],
+      "properties": {
+        "classification": { "const": "exact-for-tested-domain" },
+        "classes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/identifier" }
+        },
+        "rulesetSemanticDigests": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/digest" }
+        },
+        "fullConformance": { "const": false },
+        "conversionClaimed": { "const": false }
+      }
+    },
+    "adapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "adapter",
+        "repository",
+        "branch",
+        "implementationCommit",
+        "evidenceArtifactCommit",
+        "evidencePublicationCommit",
+        "evidence",
+        "capability",
+        "deterministicReport",
+        "differentialReport"
+      ],
+      "properties": {
+        "id": { "enum": ["nmm-llm", "sanmill"] },
+        "adapter": { "enum": ["nmm-llm-python", "sanmill-rust"] },
+        "repository": {
+          "type": "string",
+          "pattern": "^https://github\\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+(?:\\.git)?$"
+        },
+        "branch": { "type": "string", "minLength": 1 },
+        "implementationCommit": { "$ref": "#/$defs/commit" },
+        "evidenceArtifactCommit": { "$ref": "#/$defs/commit" },
+        "evidencePublicationCommit": { "$ref": "#/$defs/commit" },
+        "evidence": { "$ref": "#/$defs/boundFile" },
+        "capability": { "$ref": "#/$defs/boundFile" },
+        "deterministicReport": { "$ref": "#/$defs/boundFile" },
+        "differentialReport": { "$ref": "#/$defs/boundFile" }
+      }
+    },
+    "threeAdapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "configDigest",
+        "adapters",
+        "deterministic",
+        "differential",
+        "repetitionsByteIdentical"
+      ],
+      "properties": {
+        "configDigest": { "$ref": "#/$defs/digest" },
+        "adapters": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/identifier" }
+        },
+        "deterministic": { "$ref": "#/$defs/deterministic" },
+        "differential": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "path",
+            "rawSha256",
+            "launchDigest",
+            "runsPassed",
+            "runsFailed",
+            "mutationFamiliesPassed",
+            "mutationFamiliesFailed"
+          ],
+          "properties": {
+            "path": { "$ref": "#/$defs/relativePath" },
+            "rawSha256": { "$ref": "#/$defs/digest" },
+            "launchDigest": { "$ref": "#/$defs/digest" },
+            "runsPassed": { "const": 10 },
+            "runsFailed": { "const": 0 },
+            "mutationFamiliesPassed": { "const": 5 },
+            "mutationFamiliesFailed": { "const": 0 }
+          }
+        },
+        "repetitionsByteIdentical": { "const": true }
+      }
+    },
+    "deterministic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "rawSha256", "passed", "failed"],
+      "properties": {
+        "path": { "$ref": "#/$defs/relativePath" },
+        "rawSha256": { "$ref": "#/$defs/digest" },
+        "passed": { "const": 58 },
+        "failed": { "const": 0 }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "suiteConformance",
+        "unexplainedDifferences",
+        "adapterEvidenceSchemasPassed",
+        "capabilitySchemasPassed",
+        "reportSchemasPassed",
+        "independentMifRerun"
+      ],
+      "properties": {
+        "suiteConformance": { "const": true },
+        "unexplainedDifferences": { "const": 0 },
+        "adapterEvidenceSchemasPassed": { "const": 2 },
+        "capabilitySchemasPassed": { "const": 2 },
+        "reportSchemasPassed": { "const": 4 },
+        "independentMifRerun": { "const": true }
+      }
+    }
+  }
+}

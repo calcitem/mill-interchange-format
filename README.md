@@ -9,9 +9,8 @@ Community working draft for Mill-game interchange formats: positions
 This repository contains the byte-frozen historical **MIF Community Working
 Draft 0.4** and the frozen **MIF 1.0 Candidate Wire Contract**.
 
-The 1.0 wire meanings are frozen. The exact MIF Suite 1.0 release-candidate
-object is now available, but it is not a released conformance target until the
-two independent adapters bind its digest and the signed tag is published.
+The 1.0 wire meanings are frozen. The exact MIF Suite 1.0 object is published
+by the immutable `mif-suite-1.0` tag and its attested release manifest.
 Standalone ABNF, JSON Schemas, registries and an initial
 structural, identity and executable corpus are available under
 [`artifacts/mif-1.0/`](artifacts/mif-1.0/). A candidate Python reference
@@ -20,10 +19,10 @@ three-project adapter protocol, smoke cases and comparator are under
 [`interop/`](interop/), with the collaboration plan in
 [`docs/zh-CN/mif-1.0-three-project-interop-plan.md`](docs/zh-CN/mif-1.0-three-project-interop-plan.md).
 Two agreeing independent product adapters have published commit-bound M3 and
-M4 Candidate evidence. Apache-2.0 licensing, registry governance, release
-policy, media/extension assignments and the future Sigstore-backed tag
-workflow are now fixed. The remaining release gate is suite-digest-bound
-adapter evidence followed by the immutable tag and attestations. Neither
+M4 Candidate evidence. Their final Suite-bound adapter evidence and the
+MIF-controlled three-adapter reports are bound by the release manifest.
+Apache-2.0 licensing, registry governance, release policy, media/extension
+assignments and the Sigstore-backed tag workflow are fixed. Neither
 edition is an
 ISO, IEC, CEN, WMD or tournament-federation standard and shall not be cited as
 one.
@@ -54,10 +53,10 @@ The contracts freeze wire syntax, closed JSON members, algorithms and inline
 ABNF. The candidate machine artifacts are derived from that contract and are
 integrity-checked. The separate candidate reference runner executes gameplay,
 replay, identities, MPK canonicalization, transforms, logical-turn projection
-and the non-normative legal-action comparison projection, but one implementation
-does not by itself publish conformance. Until the suite-bound adapter gate and
-signed tag are complete, this repository has no released MIF Suite 1.0
-conformance target.
+and the non-normative legal-action comparison projection. One implementation
+alone does not establish conformance. The two independent Suite-bound adapters
+and final MIF-controlled rerun establish only the six tested classes recorded
+in the release manifest, not `full` conformance or conversion.
 
 The candidate-2 reference/harness baseline uses one RFC 8785 implementation for
 all digest and canonical NDJSON paths and adds executable UTF-16 ordering,
@@ -168,7 +167,7 @@ fixed Candidate-4 differential domain at 10/10 seeded trajectories and 5/5
 negative mutation families with no unexplained difference. Its verdict is
 `exact-for-tested-domain`; it is not MIF Suite 1.0 conformance.
 
-## MIF Suite 1.0 release candidate
+## MIF Suite 1.0 release
 
 [`mif-suite-1.0.json`](mif-suite-1.0.json) freezes the component/profile
 combination, exact specifications and artifacts, tested rulesets, independent
@@ -179,13 +178,16 @@ adapter records, media types, extensions and compatibility policy. Its RFC
 sha256:81a5feabc281bfc4f830addabc2c6846d1f191bbbcf04e548f04b35dd358ae6f
 ```
 
-[`mif-suite-1.0.sha256`](mif-suite-1.0.sha256) records that value. The
-release manifest currently has status `awaiting-adapter-suite-pin`; Sanmill
-and NMM_LLM must bind this exact digest before the repository may create the
-`mif-suite-1.0` tag. Verify the candidate package with:
+[`mif-suite-1.0.sha256`](mif-suite-1.0.sha256) records that value. The release
+manifest has status `ready-for-tag` and binds NMM_LLM, Sanmill and the final
+MIF-controlled three-adapter rerun. The aggregate final evidence SHA-256 is
+`sha256:2c23983281858386bc66e3adfce52f365c712d9e63a31c53f6a68bd6b2de08e1`.
+Its verdict is `exact-for-tested-domain` for six tested classes; it is not a
+`full` or conversion claim. Verify the released package with:
 
 ```text
 python -B tools/verify_mif_1_0_release.py
+python -B tools/verify_mif_1_0_final_evidence.py
 ```
 
 See [`release/README.md`](release/README.md) for release and training gates,
@@ -204,7 +206,7 @@ Chinese release summary.
 | [`reference/`](reference/) | Candidate Python reference runner; single-implementation evidence only |
 | [`interop/`](interop/) | Non-normative adapter protocol, Schema, cases and loopback configuration |
 | [`interop/evidence/mif-1.0-candidate-4-m4.json`](interop/evidence/mif-1.0-candidate-4-m4.json) | Commit-bound M4 Candidate evidence; exact only for the fixed tested domain |
-| [`mif-suite-1.0.json`](mif-suite-1.0.json) | Exact Suite 1.0 release-candidate object; not released until signed tag |
+| [`mif-suite-1.0.json`](mif-suite-1.0.json) | Exact immutable Suite 1.0 object published by the signed tag |
 | [`release/`](release/) | Release policy, manifest, schema, notes and vendored adapter evidence |
 | [`GOVERNANCE.md`](GOVERNANCE.md) | Registry, lifecycle and immutable-release governance |
 | [`mif-0.4.md`](mif-0.4.md) | Frozen English historical working draft |
