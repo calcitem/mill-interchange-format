@@ -28,3 +28,5 @@ jobs:
         run: python -B tools/verify_mif_1_0_interop.py
       - name: Verify MIF Suite 1.0 release candidate
         run: python -B tools/verify_mif_1_0_release.py
+      - name: Verify adapter finalization launch
+        run: python -B tools/verify_mif_1_0_finalization.py

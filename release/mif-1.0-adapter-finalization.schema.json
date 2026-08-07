@@ -1,0 +1,236 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/calcitem/mill-interchange-format/raw/master/release/mif-1.0-adapter-finalization.schema.json",
+  "title": "MIF Suite 1.0 adapter finalization launch",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocol",
+    "status",
+    "baseline",
+    "requiredClasses",
+    "rulesets",
+    "projects",
+    "requiredEvidence",
+    "trainingGate"
+  ],
+  "properties": {
+    "protocol": { "const": "MIF-SUITE-FINALIZATION/1" },
+    "status": { "const": "ready-for-independent-adapter-pin" },
+    "baseline": { "$ref": "#/$defs/baseline" },
+    "requiredClasses": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/identifier" }
+    },
+    "rulesets": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/digest" }
+    },
+    "projects": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": { "$ref": "#/$defs/project" }
+    },
+    "requiredEvidence": { "$ref": "#/$defs/evidence" },
+    "trainingGate": { "$ref": "#/$defs/trainingGate" }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9.-]{0,62}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._@/-]+$"
+    },
+    "boundFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "rawSha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/relativePath" },
+        "rawSha256": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "baseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "branch",
+        "suiteCandidateCommit",
+        "wireCommit",
+        "ci",
+        "suite",
+        "releaseManifest",
+        "artifactIndex",
+        "deterministicCorpus",
+        "differentialLaunch",
+        "license"
+      ],
+      "properties": {
+        "repository": {
+          "const": "https://github.com/calcitem/mill-interchange-format.git"
+        },
+        "branch": { "const": "master" },
+        "suiteCandidateCommit": { "$ref": "#/$defs/commit" },
+        "wireCommit": { "$ref": "#/$defs/commit" },
+        "ci": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["workflow", "runId", "url", "conclusion"],
+          "properties": {
+            "workflow": { "const": "MIF verification" },
+            "runId": { "type": "integer", "minimum": 1 },
+            "url": { "type": "string", "format": "uri" },
+            "conclusion": { "const": "success" }
+          }
+        },
+        "suite": { "$ref": "#/$defs/suiteFile" },
+        "releaseManifest": { "$ref": "#/$defs/releaseManifestFile" },
+        "artifactIndex": { "$ref": "#/$defs/boundFile" },
+        "deterministicCorpus": { "$ref": "#/$defs/deterministicFile" },
+        "differentialLaunch": { "$ref": "#/$defs/differentialFile" },
+        "license": { "$ref": "#/$defs/licenseFile" }
+      }
+    },
+    "suiteFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "rawSha256", "jcsSha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/relativePath" },
+        "rawSha256": { "$ref": "#/$defs/digest" },
+        "jcsSha256": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "releaseManifestFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "rawSha256", "status"],
+      "properties": {
+        "path": { "$ref": "#/$defs/relativePath" },
+        "rawSha256": { "$ref": "#/$defs/digest" },
+        "status": { "const": "awaiting-adapter-suite-pin" }
+      }
+    },
+    "deterministicFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "rawSha256", "cases"],
+      "properties": {
+        "path": { "$ref": "#/$defs/relativePath" },
+        "rawSha256": { "$ref": "#/$defs/digest" },
+        "cases": { "const": 58 }
+      }
+    },
+    "differentialFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "rawSha256", "seededRuns", "mutationFamilies"],
+      "properties": {
+        "path": { "$ref": "#/$defs/relativePath" },
+        "rawSha256": { "$ref": "#/$defs/digest" },
+        "seededRuns": { "const": 10 },
+        "mutationFamilies": { "const": 5 }
+      }
+    },
+    "licenseFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "rawSha256", "spdx"],
+      "properties": {
+        "path": { "$ref": "#/$defs/relativePath" },
+        "rawSha256": { "$ref": "#/$defs/digest" },
+        "spdx": { "const": "Apache-2.0" }
+      }
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "adapter",
+        "repository",
+        "branch",
+        "implementationCommit",
+        "independentEvidenceCommit",
+        "requiredOutcome"
+      ],
+      "properties": {
+        "id": { "enum": ["nmm-llm", "sanmill"] },
+        "adapter": { "enum": ["nmm-llm-python", "sanmill-rust"] },
+        "repository": {
+          "type": "string",
+          "pattern": "^https://github\\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+(?:\\.git)?$"
+        },
+        "branch": { "type": "string", "minLength": 1 },
+        "implementationCommit": { "$ref": "#/$defs/commit" },
+        "independentEvidenceCommit": { "$ref": "#/$defs/commit" },
+        "threeProjectEvidenceCommit": { "$ref": "#/$defs/commit" },
+        "requiredOutcome": { "const": "suite-bound-evidence-pushed" }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol",
+        "classification",
+        "suiteConformance",
+        "unexplainedDifferences",
+        "deterministicCases",
+        "differentialRuns",
+        "mutationFamilies",
+        "requiredFields"
+      ],
+      "properties": {
+        "protocol": { "const": "MIF-SUITE-ADAPTER-EVIDENCE/1" },
+        "classification": { "const": "exact-for-tested-domain" },
+        "suiteConformance": { "const": true },
+        "unexplainedDifferences": { "const": 0 },
+        "deterministicCases": { "const": 58 },
+        "differentialRuns": { "const": 10 },
+        "mutationFamilies": { "const": 5 },
+        "requiredFields": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "trainingGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "engineeringSmoke",
+        "longRunningArchival",
+        "currentDecision"
+      ],
+      "properties": {
+        "engineeringSmoke": {
+          "const": "allowed-with-candidate-suite-and-experiment-digest"
+        },
+        "longRunningArchival": {
+          "const": "requires-signed-tag-and-two-suite-bound-adapters"
+        },
+        "currentDecision": { "const": "not-yet-authorized" }
+      }
+    }
+  }
+}

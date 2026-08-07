@@ -31,6 +31,7 @@ jobs:
           python -B tools/verify_mif_1_0_artifacts.py
           python -B tools/run_mif_1_0_reference.py
           python -B tools/verify_mif_1_0_interop.py
+          python -B tools/verify_mif_1_0_finalization.py
           python -B tools/verify_mif_1_0_release.py --require-ready --require-tag
       - name: Attest suite manifest
         uses: actions/attest@v4

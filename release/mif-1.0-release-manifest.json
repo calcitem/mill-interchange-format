@@ -48,6 +48,27 @@
       "sha256": "sha256:57795b46a8e9762d135f1c4556dc3004792a883f968d66a50a21869882fc9165"
     },
     {
+      "id": "mif-1.0-adapter-finalization-launch",
+      "role": "policy",
+      "repository": "https://github.com/calcitem/mill-interchange-format.git",
+      "path": "release/mif-1.0-adapter-finalization.json",
+      "sha256": "sha256:3ab079c44158979eb78221a64abe5347e9e3697b33972673659a0ea80053536d"
+    },
+    {
+      "id": "mif-1.0-adapter-finalization-schema",
+      "role": "schema",
+      "repository": "https://github.com/calcitem/mill-interchange-format.git",
+      "path": "release/mif-1.0-adapter-finalization.schema.json",
+      "sha256": "sha256:5b32612ff6d09e7c75bf6a4441be429c220097e2df00bd72c0d1d7cbe15dd5e5"
+    },
+    {
+      "id": "mif-1.0-adapter-finalization-zh-cn",
+      "role": "policy",
+      "repository": "https://github.com/calcitem/mill-interchange-format.git",
+      "path": "docs/zh-CN/mif-1.0-adapter-finalization.md",
+      "sha256": "sha256:dee1f21961a757a65f432374b6c9383590c53fe301607c143e88e3245acc84ab"
+    },
+    {
       "id": "mif-1.0-artifact-index",
       "role": "corpus",
       "repository": "https://github.com/calcitem/mill-interchange-format.git",
@@ -83,7 +104,7 @@
       "role": "policy",
       "repository": "https://github.com/calcitem/mill-interchange-format.git",
       "path": ".github/workflows/conformance.yml",
-      "sha256": "sha256:2d11cccb5c84984f995bd821b8fd86c68e2bf3653ed789fe5a5a5dbcb008e3c4"
+      "sha256": "sha256:11810d6b2a4631cf8e6f056ab38e51daa1252506da793866dd303c18dcc6cf15"
     },
     {
       "id": "mif-1.0-contributing-policy",
@@ -131,6 +152,13 @@
       "commit": "7e45d5a3fa970a535ed6a8a8ff5981aba4b9c978",
       "path": "mif-1.0.md",
       "sha256": "sha256:330e65145ceb26fe582e58b89405d87bd73e8be200b476aef82c0ee27731d995"
+    },
+    {
+      "id": "mif-1.0-finalization-verifier",
+      "role": "runner",
+      "repository": "https://github.com/calcitem/mill-interchange-format.git",
+      "path": "tools/verify_mif_1_0_finalization.py",
+      "sha256": "sha256:11c5d6ee68268bf41294c233bf62476c857e22bd5219b1a2e51c22d613667d80"
     },
     {
       "id": "mif-1.0-formats-registry",
@@ -296,7 +324,7 @@
       "role": "policy",
       "repository": "https://github.com/calcitem/mill-interchange-format.git",
       "path": ".github/workflows/release.yml",
-      "sha256": "sha256:60e78969f517d4cab20321c845cc777e0956566c9c024b298ddd8367f1516742"
+      "sha256": "sha256:2cdb0a16c85e04f45112a63faaded832772f9351efcda5cb3aeb9f912803c762"
     },
     {
       "id": "mif-1.0-schema-root",
