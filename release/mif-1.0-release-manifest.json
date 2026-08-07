@@ -104,7 +104,7 @@
       "role": "policy",
       "repository": "https://github.com/calcitem/mill-interchange-format.git",
       "path": ".github/workflows/conformance.yml",
-      "sha256": "sha256:11810d6b2a4631cf8e6f056ab38e51daa1252506da793866dd303c18dcc6cf15"
+      "sha256": "sha256:0aa267bf620a8be94e228c7d39d0fe59c453f4a56d4ca96aa1bdbf8ed7302372"
     },
     {
       "id": "mif-1.0-contributing-policy",
